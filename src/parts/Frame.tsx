@@ -17,12 +17,14 @@ const Wrap = styled.div`
   overflow: auto;
 
   >.${ classes[ '>menu' ] } {
-    width: 20rem;
+    min-width: 20rem;
+    max-width: 20rem;
+    border-right: 1px solid #E5E5E5;
   }
 
   >.${ classes[ '>content' ] } {
-    flex-grow: 1;
     overflow: auto;
+    flex-grow: 1;
   }
 `;
 

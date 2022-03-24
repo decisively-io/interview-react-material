@@ -281,14 +281,7 @@ const config = {
     'no-unmodified-loop-condition': 'error',
     'no-unneeded-ternary': 'error',
     'no-unused-expressions': 'error',
-    'no-unused-vars': [
-      'error',
-      {
-        vars: 'all',
-        args: 'after-used',
-        ignoreRestSiblings: true,
-      },
-    ],
+    'no-unused-vars': ['off'],
     'no-use-before-define': 'off',
     'no-useless-call': 'error',
     'no-useless-computed-key': 'error',
@@ -422,6 +415,7 @@ const config = {
     'react/jsx-props-no-spreading': 'off',
     'react/no-array-index-key': 'warn',
     'react/jsx-filename-extension': ['error', { extensions: ['.tsx', '.jsx'] }],
+
   },
 };
 

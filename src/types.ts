@@ -1,3 +1,7 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import produce from 'immer';
+
+
 export interface Step {
   /**  Unique ID of the screen */
   id: string;
@@ -21,6 +25,43 @@ export interface Step {
   visitable: boolean
   steps: Step[]
 }
+
+/**
+ * NOTE, this function mutates parameters because we use it
+ * with 'produce' from immer, so everything is still immutable
+ */
+function innerSetCurrent(s: Step, id: Step[ 'id' ]): typeof s {
+  if(s.steps.length !== 0) {
+    s.steps.forEach(s => innerSetCurrent(s, id));
+  }
+
+  // eslint-disable-next-line no-param-reassign
+  s.current = s.id === id;
+
+  return s;
+}
+
+export const setCurrentInStep = (s: Step, id: Step[ 'id' ]): typeof s => (
+  produce(s, draft => innerSetCurrent(draft, id))
+);
+
+
+export function containsCurrentStep(s: Step): boolean {
+  return s.current || s.steps.some(s => containsCurrentStep(s));
+}
+
+export function getCurrentStep(s: Step): typeof s | null {
+  if(s.current) return s;
+  if(s.steps.length === 0) return null;
+
+  return s.steps.reduce< typeof s | null >(
+    (a, s) => (a === null ? getCurrentStep(s) : a),
+    null,
+  );
+}
+
+// ===================================================================================
+
 
 export interface Interview {
   status: 'in-progress' |'complete' | 'error';

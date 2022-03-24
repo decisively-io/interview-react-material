@@ -3,9 +3,8 @@
 import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ReactDom from 'react-dom';
-import { Step } from 'types';
+import { Step, setCurrentInStep, getCurrentStep } from '../types';
 import { Parts } from '..';
-
 
 if(module.hot) {
   module.hot.accept();
@@ -33,22 +32,6 @@ const rootDiv = (() => {
 })();
 
 
-const contentJSX = (
-  <>
-    {
-      new Array(100)
-        .fill(0)
-        .reduce(
-          (acc, _, i) => acc.concat(
-            <span key={i}>{i}</span>,
-            <br />,
-          ),
-          [],
-        )
-    }
-  </>
-);
-
 const defaultStage: Step = {
   complete: false,
   context: { entity: '' },
@@ -61,67 +44,92 @@ const defaultStage: Step = {
   steps: [],
 };
 
-const menuJSX = (
-  <Parts.Menu._
-    stages={[
+const steps: Step[] = [
+  {
+    ...defaultStage,
+    id: '1',
+    title: 'Flight details',
+    steps: [
       {
         ...defaultStage,
-        id: '1',
-        title: 'Flight details',
-        steps: [
-          {
-            ...defaultStage,
-            id: '1.1',
-            title: 'Welcome',
-          },
-          {
-            ...defaultStage,
-            id: '1.2',
-            title: 'Itinerary',
-          },
-          {
-            ...defaultStage,
-            id: '1.3',
-            title: 'Grievance',
-          },
-          {
-            ...defaultStage,
-            id: '1.4',
-            title: 'Airline',
-          },
-          {
-            ...defaultStage,
-            id: '1.5',
-            title: 'Distance',
-          },
-        ],
+        id: '1.1',
+        title: 'Welcome',
       },
       {
         ...defaultStage,
-        id: '2.1',
-        title: 'What happened?',
+        id: '1.2',
+        title: 'Itinerary',
       },
       {
         ...defaultStage,
-        id: '3.1',
-        title: 'Outcome?',
+        id: '1.3',
+        title: 'Grievance',
       },
-    ]}
-  />
-);
+      {
+        ...defaultStage,
+        id: '1.4',
+        title: 'Airline',
+      },
+      {
+        ...defaultStage,
+        id: '1.5',
+        title: 'Distance',
+      },
+    ],
+  },
+  {
+    ...defaultStage,
+    id: '2.1',
+    title: 'What happened?',
+  },
+  {
+    ...defaultStage,
+    id: '3.1',
+    title: 'Outcome?',
+  },
+];
 
 
 const App = () => {
+  React.useEffect(() => Parts.Font.add(document), []);
+
+  const [stages, dispatch] = React.useReducer< React.Reducer< Step[], { type: 'click', payload: Step[ 'id' ] } > >(
+    (s, a) => {
+      switch(a.type) {
+        case 'click': return setCurrentInStep(
+          { ...defaultStage, steps: s }, a.payload,
+        ).steps;
+        default: return s;
+      }
+    },
+    steps,
+  );
+  const onClick = React.useCallback< Parts.Menu.IProps[ 'onClick' ] >(
+    id => dispatch({ type: 'click', payload: id }),
+    [dispatch],
+  );
+
+  const currentStep = React.useMemo(
+    () => getCurrentStep({ ...defaultStage, steps: stages }),
+    [stages],
+  );
+
   return (
     <Parts.Frame._
-      contentJSX={contentJSX}
-      menuJSX={menuJSX}
+      contentJSX={
+        <Parts.Content._ step={currentStep} />
+      }
+      menuJSX={(
+        <Parts.Menu._
+          stages={stages}
+          onClick={onClick}
+          estimate='8 min'
+          progress={25}
+        />
+      )}
     />
   );
 };
 
 
-ReactDom.render(
-  <App />,
-  rootDiv,
-);
+ReactDom.render(<App />, rootDiv);
