@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import produce from 'immer';
-
+import { Control } from './controls';
 
 export interface Step {
   /**  Unique ID of the screen */
@@ -63,12 +63,23 @@ export function getCurrentStep(s: Step): typeof s | null {
 // ===================================================================================
 
 
+export interface Screen {
+  /** The title of the screen. This may differ from the title in the step */
+  title: string,
+  id: string,
+  controls: Control[]
+}
+
+
+// ===================================================================================
+
+
 export interface Interview {
   status: 'in-progress' |'complete' | 'error';
   // context: {} // see Context page
   // data: {} // See Data page,
   // state: {}, // See State page,
   stages: Step[]
-  // screen: {} // See screen page
+  screen: Screen;
   sessionId: string;
 }
