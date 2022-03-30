@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-pascal-case */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -7,7 +8,8 @@ import styled from 'styled-components';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Typography from '@material-ui/core/Typography';
 import { DISPLAY_NAME_PREFIX } from '../constants';
-import { Step } from '../types';
+import { Step, Screen } from '../types';
+import * as Controls from './Controls';
 
 
 export const classes = {
@@ -75,13 +77,17 @@ const Wrap = styled.div`
 
 export interface IProps {
   className?: string;
-  step: Step | null
+  stepAndScreen: null | { step: Step; screen: Screen };
 }
 
 
 export const _: React.FC< IProps > = React.memo(
-  ({ className, step }) => (
-    step === null ? null : (
+  ({ className, stepAndScreen }) => {
+    if(stepAndScreen === null) return null;
+
+    const { step, screen } = stepAndScreen;
+
+    return (
       <Wrap className={className}>
         <div className={classes[ '>form' ]._}>
           <Typography variant='h4' className={classes[ '>form' ][ '>h' ]}>
@@ -92,6 +98,7 @@ export const _: React.FC< IProps > = React.memo(
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in ultricies purus. Sed eu viverra risus, et cursus tortor. Proin sagittis arcu at mi mattis malesuada. Ut malesuada vitae felis sit amet lacinia. Pellentesque sagittis elementum vestibulum. Fusce ac lectus ut odio convallis varius quis nec risus.
           </Typography>
 
+          <Controls._ controls={screen.controls} />
         </div>
         <div className={classes[ '>btns' ]._}>
           <Button size='medium' className={classes[ '>btns' ][ '>back' ]}>
@@ -102,7 +109,7 @@ export const _: React.FC< IProps > = React.memo(
           </Button>
         </div>
       </Wrap>
-    )
-  ),
+    );
+  },
 );
-_.displayName = `${ DISPLAY_NAME_PREFIX }/Frame`;
+_.displayName = `${ DISPLAY_NAME_PREFIX }/Content`;

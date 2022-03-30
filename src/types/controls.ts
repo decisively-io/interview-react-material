@@ -1,4 +1,9 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase,import/no-extraneous-dependencies */
+import produce from 'immer';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+
 /**
  * A control to collect a true or false response from a user. Usually rendered as a checkbox.
  * Note: the control needs to allow for an indeterminate (or uncertain) response - i.e. the
@@ -10,9 +15,9 @@ export interface IBoolean {
   // unique id of the control
   id: string;
   type: 'boolean';
-  label: string;
-  required: boolean;
-  default: boolean;
+  label?: string;
+  required?: boolean;
+  default?: boolean;
   // The GUID of the attribute
   attribute: string;
 }
@@ -26,16 +31,17 @@ export interface ICurrency {
   /** unique id of the control */
   id: string;
   type: 'currency';
-  label: string;
-  required: boolean;
-  default: boolean;
-  attribute: '<uuid>';
+  label?: string;
+  required?: boolean;
+  default?: number;
+  /** uuid */
+  attribute: string;
   /** If not set at design time, this will use the currency symbol in the locale settings for the release */
-  symbol: string;
+  symbol?: string;
   /** Minimum number allowed - if not set assume no restriction */
-  min: number;
+  min?: number;
   /** Maximum number allowed - if not set assume no restriction */
-  max: number;
+  max?: number;
 }
 /**
  * Allow a user to enter a date. This should send an ISO date string back to the server ('YYYY-MM-DD').
@@ -44,21 +50,21 @@ export interface ICurrency {
 export interface IDate {
   /** unique id of the control */
   id: string;
-  type: 'date',
-  label: string,
-  required: boolean,
-  default: '<date>',
-  attribute: '<uuid>',
-  /** Will be sent in this format regardless of release locale */
-  default: '<string: YYYY-MM-DD>'
-  /** Minimum date allowed */
-  min: '<string: YYYY-MM-DD>',
-  /** Maximum date allowed */
-  max: '<string: YYYY-MM-DD>',
+  type: 'date';
+  label?: string;
+  required?: boolean;
+  /** uuid */
+  attribute: string;
+  /** YYYY-MM-DD */
+  default?: string;
+  /** Minimum date allowed, YYYY-MM-DD */
+  min?: string;
+  /** Maximum date allowed, YYYY-MM-DD */
+  max?: string;
   /** Can the user input a future date? */
-  allow_future: boolean,
+  allow_future?: boolean,
   /** Can the user input a data in the past? */
-  allow_past: boolean,
+  allow_past?: boolean,
 }
 
 /**
@@ -69,22 +75,25 @@ export interface ITime {
   /** unique id of the control */
   id: string;
   type: 'time';
-  label: string;
-  required: boolean;
-  default: '<time>';
-  attribute: '<uuid>';
-  /** Will be sent in this format regardless of release locale */
-  default: '<string: YYYY-MM-DD>'
-  /** Minimum time allowed */
-  min: '<string: HH-mm-ss>';
-  /** Maximum time allowed */
-  max: '<string: HH-mm-ss';
-  /** Whether to display time with an 'AM/PM' or in 24 hour time. Regardless of this input the server expects 24 hour time */
-  format: '24' | '12';
+  label?: string;
+  required?: boolean;
+  /** uuid */
+  attribute: string;
+  /** HH:mm:ss */
+  default?: string;
+  /** Minimum time allowed, HH:mm:ss */
+  min?: string;
+  /** Maximum time allowed, HH:mm:ss */
+  max?: string;
+  /**
+   * Whether to display time with an 'AM/PM' or in 24 hour time.
+   * Regardless of this input the server expects 24 hour time
+   */
+  format?: '24' | '12';
   /** Eg: 15 = only allow time in 15 minute increments (3:00, 3:15, 3:30, 3:45). The increment is assumed to start from the hour and will not be greater than 60 */
-  minutes_increment: number;
+  minutes_increment?: number;
   /** As above but for seconds */
-  seconds_increment: number;
+  seconds_increment?: number;
 }
 
 
@@ -96,30 +105,32 @@ export interface IDateTime {
   /** unique id of the control */
   id: string;
   type: 'datetime',
-  label: string;
-  required: boolean;
-  default: '<datetime>',
-  attribute: '<uuid>',
-  /** Will be sent in this format regardless of release locale */
-  default: '<string: YYYY-MM-DD>'
-  /** Minimum date allowed */
-  date_min: '<string: YYYY-MM-DD>',
-  /** Maximum date allowed */
-  date_max: '<string: YYYY-MM-DD>',
-  /** Minimum time allowed */
-  time_min: '<string: HH-mm-ss>',
-  /** Maximum time allowed */
-  time_max: '<string: HH-mm-ss',
-  /** Whether to display time with an 'AM/PM' or in 24 hour time. Regardless of this input the server expects 24 hour time */
-  format: '24' | '12',
+  label?: string;
+  required?: boolean;
+  /** uuid */
+  attribute: string;
+  /** YYYY-MM-DD HH:mm:ss */
+  default?: string;
+  /** YYYY-MM-DD */
+  date_min?: string;
+  /** YYYY-MM-DD */
+  date_max?: string;
+  /** HH:mm:ss */
+  time_min?: string;
+  /** HH:mm:ss */
+  time_max?: string;
+  /** Whether to display time with an 'AM/PM' or in 24 hour time.
+   *  Regardless of this input the server expects 24 hour time
+   */
+  format?: '24' | '12',
   /** Eg: 15 = only allow time in 15 minute increments (3:00, 3:15, 3:30, 3:45). The increment is assumed to start from the hour and will not be greater than 60 */
-  minutes_increment: number;
+  minutes_increment?: number;
   /** As above but for seconds */
-  seconds_increment: number;
+  seconds_increment?: number;
   /** Can the user input a future date? */
-  allow_future: boolean;
+  allow_future?: boolean;
   /** Can the user input a data in the past? */
-  allow_past: boolean,
+  allow_past?: boolean,
 }
 
 /**
@@ -143,19 +154,19 @@ export interface IOptions {
   /** unique id of the control */
   id: string;
   type: 'options';
-  /** Display as a drop down or as a series of radio buttons. Default 'menu' */
-  as: 'radio' | 'menu';
-  label: string;
-  required: boolean;
+  /**
+   * Display as a drop down or as a series of radio buttons. \
+   * Default 'menu'
+   */
+  as?: 'radio' | 'menu';
+  label?: string;
+  required?: boolean;
   default: number;
-  attribute: '<uuid>';
-  /** Will be sent in this format regardless of release locale */
-  default: '<string: YYYY-MM-DD>';
-  options: Array<{ label: string, value: any }>;
+  /** uuid */
+  attribute: string;
+  options: Array<{ label: string, value: string }>;
   /** Allow a user to add their own option, not in the list, in */
-  allow_other: boolean;
-  /** The GUID of the enumeration to use for this option */
-  enum_id: '<uuid>';
+  allow_other?: boolean;
 }
 
 /**
@@ -166,15 +177,16 @@ export interface IFile {
   /** unique id of the control */
   id: string;
   type: 'file';
-  label: string;
-  required: boolean;
-  attribute: '<uuid>';
+  label?: string;
+  required?: boolean;
+  /** uuid */
+  attribute: string;
   /** The max number of files that can be uploaded. Defaults to 1 */
-  max: number;
+  max?: number;
   /** The types of file allowed (pdf docx etc) */
-  file_type: string;
-  /** The maximum size of a document */
-  max_size: '<number: 10mb>';
+  file_type?: string;
+  /** The maximum size of a document, in Mb */
+  max_size?: number;
 }
 
 
@@ -187,6 +199,7 @@ export interface IFile {
  * ```
  */
 export interface IImage {
+  id: string;
   type: 'image',
   /** The base64 date URI of the image */
   data: string
@@ -205,14 +218,17 @@ export interface INumberOfInstances {
   /** unique id of the control */
   id: string;
   type: 'number_of_instances',
-  label: string;
-  required: boolean;
-  default: number;
+  label?: string;
+  required?: boolean;
+  default?: number;
   /** The name of the entity */
   entity: string;
-  /** The minimum number of instances. 0 or greater. Default is 0 unless required, in which case 1. */
-  min: number;
-  max: number;
+  /**
+   * The minimum number of instances. 0 or greater.\
+   * Default is 0 unless required, in which case 1.
+   */
+  min?: number;
+  max?: number;
 }
 
 /** Collects text from the user.  */
@@ -220,12 +236,13 @@ export interface IText {
   /** unique id of the control */
   id: string;
   type: 'text',
-  label: string;
-  required: boolean;
-  default: number;
-  attribute: '<uuid>',
+  label?: string;
+  required?: boolean;
+  default?: number;
+  /** uuid */
+  attribute: string;
   /** The maximum length of the string */
-  max: number;
+  max?: number;
 }
 
 /**
@@ -234,6 +251,7 @@ export interface IText {
  * The end-styling of the text is up to the run time.
  */
 export interface ITypography {
+  id: string;
   type: 'typography',
   text: string;
   style:
@@ -256,11 +274,11 @@ export interface IEntity {
   /** unique id of the control */
   id: string;
   type: 'entity';
-  label: string;
-  required: boolean;
+  label?: string;
+  required?: boolean;
   /** Should all the fields be vertical (like table columns) or horizontal (individual rows) */
-  display: 'horizontal' | 'vertical';
-  template: Exclude< Control, IEntity>[]
+  display?: 'horizontal' | 'vertical';
+  template: Exclude< Control, IEntity >[]
 }
 
 
@@ -277,3 +295,44 @@ export type Control =
   | IText
   | ITypography
   | IEntity;
+
+
+export interface IControlsValue {
+  [ controlUUID: string ]: any;
+}
+
+
+export const deriveDefaultControlsValue = (cs: Control[]): IControlsValue => (
+  cs.reduce(
+    (a, c) => produce(a, draft => {
+      /* eslint-disable no-param-reassign */
+      switch(c.type) {
+        case 'boolean':
+          draft[ c.id ] = c.default;
+          break;
+        default:
+      }
+      /* eslint-enable no-param-reassign */
+    }),
+    {} as IControlsValue,
+  )
+);
+
+export const generateValidator = (cs: Control[]): yup.ObjectSchema< Record< string, any > > => (
+  yup.object().shape(
+    cs.reduce(
+      (a, c) => {
+        switch(c.type) {
+          case 'boolean': {
+            const schema = yup.boolean();
+            const maybeRequired = c.required ? schema.required() : schema;
+
+            return { ...a, [ c.id ]: maybeRequired };
+          }
+          default: return a;
+        }
+      },
+      {},
+    ),
+  )
+);

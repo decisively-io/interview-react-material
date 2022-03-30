@@ -3,7 +3,7 @@
 import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ReactDom from 'react-dom';
-import { Step, setCurrentInStep, getCurrentStep } from '../types';
+import { Step, setCurrentInStep, getCurrentStep, Screen } from '../types';
 import { Parts } from '..';
 
 if(module.hot) {
@@ -104,6 +104,20 @@ const App = () => {
     },
     steps,
   );
+  const [screen] = React.useState< Screen >({
+    id: 'screen1',
+    title: 'Screen 1',
+    controls: [
+      {
+        type: 'boolean',
+        attribute: 'attributeBool',
+        id: 'bool1',
+        label: 'Bool 1',
+        required: true,
+        default: true,
+      },
+    ],
+  });
   const onClick = React.useCallback< Parts.Menu.IProps[ 'onClick' ] >(
     id => dispatch({ type: 'click', payload: id }),
     [dispatch],
@@ -116,9 +130,12 @@ const App = () => {
 
   return (
     <Parts.Frame._
-      contentJSX={
-        <Parts.Content._ step={currentStep} />
-      }
+      contentJSX={(
+        <Parts.Content._ stepAndScreen={
+          currentStep === null ? null : { step: currentStep, screen }
+        }
+        />
+      )}
       menuJSX={(
         <Parts.Menu._
           stages={stages}
