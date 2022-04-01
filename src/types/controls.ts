@@ -1,8 +1,7 @@
 /* eslint-disable camelcase,import/no-extraneous-dependencies */
 import produce from 'immer';
-import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-
+import { format } from 'date-fns';
 
 /**
  * A control to collect a true or false response from a user. Usually rendered as a checkbox.
@@ -43,6 +42,11 @@ export interface ICurrency {
   /** Maximum number allowed - if not set assume no restriction */
   max?: number;
 }
+
+export const getCurrencySymbol = (c: ICurrency): string => (
+  c.symbol || '$'
+);
+
 /**
  * Allow a user to enter a date. This should send an ISO date string back to the server ('YYYY-MM-DD').
  * Do not send a time component back.
@@ -66,6 +70,7 @@ export interface IDate {
   /** Can the user input a data in the past? */
   allow_past?: boolean,
 }
+export const DATE_FORMAT = 'yyyy-MM-dd';
 
 /**
  * Allow a user to enter a time. This should send an ISO time string back to the server ('HH:mm:ss').
@@ -96,6 +101,8 @@ export interface ITime {
   seconds_increment?: number;
 }
 
+export const TIME_FORMAT_24 = 'HH:mm:ss';
+export const TIME_FORMAT_12 = 'h:mm:ss a';
 
 /**
  * Allow a user to enter a date and time in one control. This should send an ISO date time string back to the server ('YYYY-MM-DD HH:mm:ssZ').
@@ -133,6 +140,9 @@ export interface IDateTime {
   allow_past?: boolean,
 }
 
+export const DATE_TIME_FORMAT_24 = `${ DATE_FORMAT } ${ TIME_FORMAT_24 }`;
+export const DATE_TIME_FORMAT_12 = `${ DATE_FORMAT } ${ TIME_FORMAT_12 }`;
+
 /**
  * Allow a user to select from a predefined list of options (eg: a dropdown or a radio button).
  * ```text
@@ -161,7 +171,7 @@ export interface IOptions {
   as?: 'radio' | 'menu';
   label?: string;
   required?: boolean;
-  default: number;
+  default?: string;
   /** uuid */
   attribute: string;
   options: Array<{ label: string, value: string }>;
@@ -303,18 +313,39 @@ export interface IControlsValue {
 
 
 export const deriveDefaultControlsValue = (cs: Control[]): IControlsValue => (
-  cs.reduce(
+  cs.reduce< IControlsValue >(
     (a, c) => produce(a, draft => {
       /* eslint-disable no-param-reassign */
       switch(c.type) {
         case 'boolean':
-          draft[ c.id ] = c.default;
+          draft[ c.id ] = c.default || false;
           break;
+
+        case 'currency':
+          draft[ c.id ] = c.default === undefined ? '' : `${ c.default }${ getCurrencySymbol(c) }`;
+          break;
+
+        case 'date':
+          draft[ c.id ] = c.default || format(new Date(), DATE_FORMAT);
+          break;
+
+        case 'time':
+          draft[ c.id ] = c.default || '00:00:00';
+          break;
+
+        case 'datetime':
+          draft[ c.id ] = c.default || format(new Date(), DATE_TIME_FORMAT_24);
+          break;
+
+        case 'options':
+          draft[ c.id ] = c.default || null;
+          break;
+
         default:
       }
       /* eslint-enable no-param-reassign */
     }),
-    {} as IControlsValue,
+    {},
   )
 );
 
@@ -324,10 +355,82 @@ export const generateValidator = (cs: Control[]): yup.ObjectSchema< Record< stri
       (a, c) => {
         switch(c.type) {
           case 'boolean': {
-            const schema = yup.boolean();
-            const maybeRequired = c.required ? schema.required() : schema;
+            const { required, id } = c;
 
-            return { ...a, [ c.id ]: maybeRequired };
+            const schema = yup.boolean();
+            const maybeRequired = required ? schema.required() : schema;
+
+            return { ...a, [ id ]: maybeRequired };
+          }
+          case 'currency': {
+            const { max, min, required, id } = c;
+            const C = getCurrencySymbol(c);
+            const regexp = new RegExp(`^-?\\d+(\\.\\d*)?\\${ C }$`);
+
+            const schema = yup.string()
+              .test(
+                'isCurrency',
+                `Invalid currency format. E.g. 1.23${ C }`,
+                v => v !== undefined && v.match(regexp) !== null,
+              );
+
+            const withRequired = required === undefined ? schema : schema.required();
+
+            const afterMax = max === undefined ? withRequired : withRequired.test(
+              'withMax',
+              `Should be lower than ${ max }${ C }`,
+              v => v !== undefined && parseInt(v, 10) < max,
+            );
+
+            const afterMin = min === undefined ? afterMax : afterMax.test(
+              'withMin',
+              `Should be bigger than ${ min }${ C }`,
+              v => v !== undefined && parseInt(v, 10) > min,
+            );
+
+            return { ...a, [ id ]: afterMin };
+          }
+          case 'time': {
+            const { max, min, required, id } = c;
+
+            const schema = yup.string();
+
+            const withRequired = required === undefined ? schema : schema.required();
+
+            const afterMax = max === undefined ? withRequired : withRequired.test(
+              'withMax',
+              `Should be before ${ max }`,
+              v => v !== undefined && v < max,
+            );
+
+            const afterMin = min === undefined ? afterMax : afterMax.test(
+              'withMin',
+              `Should be after ${ min }`,
+              v => v !== undefined && v > min,
+            );
+
+            return { ...a, [ id ]: afterMin };
+          }
+          case 'datetime': {
+            const { required, id, time_max, time_min } = c;
+
+            const schema = yup.string();
+
+            const withRequired = required === undefined ? schema : schema.required();
+
+            const afterMax = time_max === undefined ? withRequired : withRequired.test(
+              'withMax',
+              `Time should be before ${ time_max }`,
+              v => v !== undefined && format(new Date(v), TIME_FORMAT_24) < time_max,
+            );
+
+            const afterMin = time_min === undefined ? afterMax : afterMax.test(
+              'withMin',
+              `Time should be after ${ time_min }`,
+              v => v !== undefined && format(new Date(v), TIME_FORMAT_24) > time_min,
+            );
+
+            return { ...a, [ id ]: afterMin };
           }
           default: return a;
         }

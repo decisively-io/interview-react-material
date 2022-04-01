@@ -13,11 +13,14 @@ import * as Controls from './Controls';
 
 
 export const classes = {
-  '>form': {
-    _: 'form',
+  '>formWrap': {
+    _: 'formWrap',
 
-    '>h': 'heading',
-    '>desc': 'desc',
+    '>form': {
+      _: 'form',
+      '>h': 'heading',
+      '>desc': 'desc',
+    },
   },
   '>btns': {
     _: 'btns',
@@ -26,6 +29,7 @@ export const classes = {
     '>next': 'next',
   },
 };
+const formClss = classes[ '>formWrap' ][ '>form' ];
 
 
 const Wrap = styled.div`
@@ -39,19 +43,25 @@ const Wrap = styled.div`
     font-style: normal;
   }
 
-  >.${ classes[ '>form' ]._ } {
+  >.${ classes[ '>formWrap' ]._ } {
     flex-grow: 1;
-    padding: 1.5rem 2rem;
-    max-width: 43.75rem;
-    margin: 0 auto;
+    overflow: auto;
 
-    .${ classes[ '>form' ][ '>h' ] } {
-      font-weight: 700;
-      font-size: 20px;
-      line-height: 1.2;
-      margin-bottom: 1.5rem;
+    >.${ formClss._ } {
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      max-width: 43.75rem;
+
+      .${ formClss[ '>h' ] } {
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+      }
     }
   }
+
+
 
   >.${ classes[ '>btns' ]._ } {
     padding: 1rem 2rem;
@@ -89,16 +99,18 @@ export const _: React.FC< IProps > = React.memo(
 
     return (
       <Wrap className={className}>
-        <div className={classes[ '>form' ]._}>
-          <Typography variant='h4' className={classes[ '>form' ][ '>h' ]}>
-            {step.title}
-          </Typography>
+        <div className={classes[ '>formWrap' ]._}>
+          <div className={formClss._}>
+            <Typography variant='h4' className={formClss[ '>h' ]}>
+              {step.title}
+            </Typography>
 
-          <Typography variant='body1'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in ultricies purus. Sed eu viverra risus, et cursus tortor. Proin sagittis arcu at mi mattis malesuada. Ut malesuada vitae felis sit amet lacinia. Pellentesque sagittis elementum vestibulum. Fusce ac lectus ut odio convallis varius quis nec risus.
-          </Typography>
+            <Typography className={formClss[ '>desc' ]} variant='body1'>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in ultricies purus. Sed eu viverra risus, et cursus tortor. Proin sagittis arcu at mi mattis malesuada. Ut malesuada vitae felis sit amet lacinia. Pellentesque sagittis elementum vestibulum. Fusce ac lectus ut odio convallis varius quis nec risus.
+            </Typography>
 
-          <Controls._ controls={screen.controls} />
+            <Controls._ controls={screen.controls} />
+          </div>
         </div>
         <div className={classes[ '>btns' ]._}>
           <Button size='medium' className={classes[ '>btns' ][ '>back' ]}>

@@ -1,45 +1,39 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { IBoolean } from '../../types/controls';
+import { ICurrency } from '../../types/controls';
 
 
 export interface IProps {
-  c: IBoolean;
+  c: ICurrency;
 }
 
 
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
-  const {
-    id,
-    label,
-    required,
-  } = c;
+  const { id, label, required } = c;
 
   return (
     <Controller
       control={control}
       name={id}
-      render={({ field: { onChange, value } }) => (
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl fullWidth margin='normal'>
-          <FormControlLabel
-            control={(
-              <Checkbox
-                onChange={onChange}
-                checked={value}
-                required={required}
-              />
-            )}
+          <TextField
+            onChange={onChange}
             label={label}
+            value={value}
+            variant='outlined'
+            error={error !== undefined}
+            helperText={error?.message}
+            required={required}
           />
         </FormControl>
       )}
     />
   );
 });
-_.displayName = `${ DISPLAY_NAME_PREFIX }/Boolean`;
+_.displayName = `${ DISPLAY_NAME_PREFIX }/Currency`;
