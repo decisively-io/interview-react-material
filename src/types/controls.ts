@@ -210,9 +210,9 @@ export interface IFile {
  */
 export interface IImage {
   id: string;
-  type: 'image',
+  type: 'image';
   /** The base64 date URI of the image */
-  data: string
+  data: string;
 }
 
 /**
@@ -245,10 +245,10 @@ export interface INumberOfInstances {
 export interface IText {
   /** unique id of the control */
   id: string;
-  type: 'text',
+  type: 'text';
   label?: string;
   required?: boolean;
-  default?: number;
+  default?: string;
   /** uuid */
   attribute: string;
   /** The maximum length of the string */
@@ -338,7 +338,22 @@ export const deriveDefaultControlsValue = (cs: Control[]): IControlsValue => (
           break;
 
         case 'options':
-          draft[ c.id ] = c.default || null;
+          draft[ c.id ] = c.default === undefined ? null : c.default;
+          break;
+
+        case 'number_of_instances':
+          draft[ c.id ] = c.default === undefined
+            ? c.required === undefined
+              ? 0
+              : 1
+            : c.default;
+          break;
+
+        case 'text':
+          draft[ c.id ] = c.default || '';
+          break;
+
+        case entity:
           break;
 
         default:
@@ -358,7 +373,7 @@ export const generateValidator = (cs: Control[]): yup.ObjectSchema< Record< stri
             const { required, id } = c;
 
             const schema = yup.boolean();
-            const maybeRequired = required ? schema.required() : schema;
+            const maybeRequired: typeof schema = required ? schema.required() : schema;
 
             return { ...a, [ id ]: maybeRequired };
           }
@@ -374,15 +389,15 @@ export const generateValidator = (cs: Control[]): yup.ObjectSchema< Record< stri
                 v => v !== undefined && v.match(regexp) !== null,
               );
 
-            const withRequired = required === undefined ? schema : schema.required();
+            const withRequired: typeof schema = required ? schema : schema.required();
 
-            const afterMax = max === undefined ? withRequired : withRequired.test(
+            const afterMax: typeof withRequired = max === undefined ? withRequired : withRequired.test(
               'withMax',
               `Should be lower than ${ max }${ C }`,
               v => v !== undefined && parseInt(v, 10) < max,
             );
 
-            const afterMin = min === undefined ? afterMax : afterMax.test(
+            const afterMin: typeof afterMax = min === undefined ? afterMax : afterMax.test(
               'withMin',
               `Should be bigger than ${ min }${ C }`,
               v => v !== undefined && parseInt(v, 10) > min,
@@ -395,15 +410,15 @@ export const generateValidator = (cs: Control[]): yup.ObjectSchema< Record< stri
 
             const schema = yup.string();
 
-            const withRequired = required === undefined ? schema : schema.required();
+            const withRequired: typeof schema = required ? schema : schema.required();
 
-            const afterMax = max === undefined ? withRequired : withRequired.test(
+            const afterMax: typeof withRequired = max === undefined ? withRequired : withRequired.test(
               'withMax',
               `Should be before ${ max }`,
               v => v !== undefined && v < max,
             );
 
-            const afterMin = min === undefined ? afterMax : afterMax.test(
+            const afterMin: typeof afterMax = min === undefined ? afterMax : afterMax.test(
               'withMin',
               `Should be after ${ min }`,
               v => v !== undefined && v > min,
@@ -416,21 +431,55 @@ export const generateValidator = (cs: Control[]): yup.ObjectSchema< Record< stri
 
             const schema = yup.string();
 
-            const withRequired = required === undefined ? schema : schema.required();
+            const withRequired: typeof schema = required ? schema : schema.required();
 
-            const afterMax = time_max === undefined ? withRequired : withRequired.test(
+            const afterMax: typeof withRequired = time_max === undefined ? withRequired : withRequired.test(
               'withMax',
               `Time should be before ${ time_max }`,
               v => v !== undefined && format(new Date(v), TIME_FORMAT_24) < time_max,
             );
 
-            const afterMin = time_min === undefined ? afterMax : afterMax.test(
+            const afterMin: typeof afterMax = time_min === undefined ? afterMax : afterMax.test(
               'withMin',
               `Time should be after ${ time_min }`,
               v => v !== undefined && format(new Date(v), TIME_FORMAT_24) > time_min,
             );
 
             return { ...a, [ id ]: afterMin };
+          }
+          case 'number_of_instances': {
+            const { required, id, max, min } = c;
+
+            const schema = yup.number();
+
+            const withRequired: typeof schema = required ? schema.required() : schema;
+
+            const withMax: typeof withRequired = max === undefined
+              ? withRequired
+              : withRequired.max(max, `must be less than or equal to ${ max }`);
+
+            const normalizedMin = min === undefined
+              ? required ? 1 : 0
+              : min;
+
+            const withMin: typeof withMax = withMax.min(
+              normalizedMin,
+              `must be greater than or equal to ${ normalizedMin }`,
+            );
+
+            return { ...a, [ id ]: withMin };
+          }
+          case 'text': {
+            const { required, id, max } = c;
+
+            const schema = yup.string();
+            const maybeRequired: typeof schema = required ? schema.required() : schema;
+
+            const withMax: typeof maybeRequired = max === undefined
+              ? maybeRequired
+              : maybeRequired.max(max, `This must be at most ${ max } characters`);
+
+            return { ...a, [ id ]: withMax };
           }
           default: return a;
         }
