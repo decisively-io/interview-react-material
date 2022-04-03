@@ -188,7 +188,7 @@ const App = () => {
         id: 'numberOfInstances1',
         required: true,
         max: 10,
-        min: 4,
+        min: 1,
         label: 'Number of instances 1',
       },
       {
@@ -207,6 +207,13 @@ const App = () => {
             id: 'boolean2',
             attribute: 'booleanAttribute2',
             label: 'Boolean 2',
+            default: true,
+          },
+          {
+            type: 'datetime',
+            id: 'datetime2',
+            attribute: 'datetimeAttribute2',
+            date_min: '2023-01-01',
           },
         ],
       },

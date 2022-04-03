@@ -70,4 +70,6 @@
 - Time/DateTime seconds_increment kinda not achievable
 - options: has no required as props,
   (does null mean absent)
--
+- required entity, how does that work?
+- submit entity, array duplicates its values
+- entity horizontal, not sure how

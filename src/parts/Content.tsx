@@ -1,15 +1,17 @@
-/* eslint-disable react/jsx-pascal-case */
-// eslint-disable-next-line import/no-extraneous-dependencies
+
+/* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Button from '@material-ui/core/Button';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import styled from 'styled-components';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Typography from '@material-ui/core/Typography';
-import { DISPLAY_NAME_PREFIX } from '../constants';
-import { Step, Screen } from '../types';
+import { useForm, FormProvider } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import * as Controls from './Controls';
+import { Step, Screen } from '../types';
+import { DISPLAY_NAME_PREFIX } from '../constants';
+import { generateValidator, deriveDefaultControlsValue, IControlsValue } from '../types/controls';
 
 
 export const classes = {
@@ -32,7 +34,7 @@ export const classes = {
 const formClss = classes[ '>formWrap' ][ '>form' ];
 
 
-const Wrap = styled.div`
+const Wrap = styled.form`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -85,43 +87,70 @@ const Wrap = styled.div`
 `;
 
 
-export interface IProps {
+export interface IRootProps {
   className?: string;
-  stepAndScreen: null | { step: Step; screen: Screen };
+  stepAndScreen: { step: Step; screen: Screen };
 }
 
+const CONTENT_DISPLAY_NAME = `${ DISPLAY_NAME_PREFIX }/Content`;
+
+export const __Root: React.FC< IRootProps > = React.memo(p => {
+  const { className, stepAndScreen: { step, screen } } = p;
+  const { controls } = screen;
+
+  const defaultValues = deriveDefaultControlsValue(controls);
+  const resolver = yupResolver(generateValidator(controls));
+
+  const methods = useForm({ resolver, defaultValues });
+  const onSubmit = React.useCallback((data: IControlsValue) => {
+    console.log(data);
+  }, []);
+
+
+  return (
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <FormProvider {...methods}>
+        <Wrap onSubmit={methods.handleSubmit(onSubmit)} className={className}>
+          <div className={classes[ '>formWrap' ]._}>
+            <div className={formClss._}>
+              <Typography variant='h4' className={formClss[ '>h' ]}>
+                {step.title}
+              </Typography>
+
+              <Typography className={formClss[ '>desc' ]} variant='body1'>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in ultricies purus. Sed eu viverra risus, et cursus tortor. Proin sagittis arcu at mi mattis malesuada. Ut malesuada vitae felis sit amet lacinia. Pellentesque sagittis elementum vestibulum. Fusce ac lectus ut odio convallis varius quis nec risus.
+              </Typography>
+
+
+              <Controls._ controls={screen.controls} />
+            </div>
+          </div>
+          <div className={classes[ '>btns' ]._}>
+            <Button size='medium' className={classes[ '>btns' ][ '>back' ]}>
+              <Typography>Back</Typography>
+            </Button>
+            <Button size='medium' type='submit' className={classes[ '>btns' ][ '>next' ]}>
+              <Typography>Next</Typography>
+            </Button>
+          </div>
+        </Wrap>
+      </FormProvider>
+    </MuiPickersUtilsProvider>
+  );
+});
+__Root.displayName = `${ CONTENT_DISPLAY_NAME }/__Root`;
+
+
+export interface IProps {
+  className?: string;
+  stepAndScreen: IRootProps[ 'stepAndScreen' ] | null;
+}
 
 export const _: React.FC< IProps > = React.memo(
   ({ className, stepAndScreen }) => {
     if(stepAndScreen === null) return null;
 
-    const { step, screen } = stepAndScreen;
-
-    return (
-      <Wrap className={className}>
-        <div className={classes[ '>formWrap' ]._}>
-          <div className={formClss._}>
-            <Typography variant='h4' className={formClss[ '>h' ]}>
-              {step.title}
-            </Typography>
-
-            <Typography className={formClss[ '>desc' ]} variant='body1'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in ultricies purus. Sed eu viverra risus, et cursus tortor. Proin sagittis arcu at mi mattis malesuada. Ut malesuada vitae felis sit amet lacinia. Pellentesque sagittis elementum vestibulum. Fusce ac lectus ut odio convallis varius quis nec risus.
-            </Typography>
-
-            <Controls._ controls={screen.controls} />
-          </div>
-        </div>
-        <div className={classes[ '>btns' ]._}>
-          <Button size='medium' className={classes[ '>btns' ][ '>back' ]}>
-            <Typography>Back</Typography>
-          </Button>
-          <Button size='medium' className={classes[ '>btns' ][ '>next' ]}>
-            <Typography>Next</Typography>
-          </Button>
-        </div>
-      </Wrap>
-    );
+    return <__Root {...{ className, stepAndScreen }} />;
   },
 );
-_.displayName = `${ DISPLAY_NAME_PREFIX }/Content`;
+_.displayName = CONTENT_DISPLAY_NAME;
