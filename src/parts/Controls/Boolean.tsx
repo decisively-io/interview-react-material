@@ -31,8 +31,9 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
             control={(
               <Checkbox
                 onChange={onChange}
-                checked={value}
+                checked={value || false}
                 required={required}
+                indeterminate={value === undefined}
               />
             )}
             label={label}

@@ -18,12 +18,12 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
   const {
     id,
-    format: timeFormat,
+    amPmFormat,
     minutes_increment,
     required,
     label,
   } = c;
-  const uiTimeFormat = timeFormat === '12'
+  const uiTimeFormat = amPmFormat
     ? TIME_FORMAT_12
     : TIME_FORMAT_24;
 
@@ -42,7 +42,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
             format={uiTimeFormat}
             required={required}
             inputVariant='outlined'
-            ampm={timeFormat === '12'}
+            ampm={amPmFormat}
             minutesStep={minutes_increment}
           />
         </FormControl>

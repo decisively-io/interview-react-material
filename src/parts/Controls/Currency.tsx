@@ -22,15 +22,31 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
       name={id}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl fullWidth margin='normal'>
-          <TextField
-            onChange={onChange}
-            label={label}
-            value={value}
-            variant='outlined'
-            error={error !== undefined}
-            helperText={error?.message}
-            required={required}
-          />
+          {
+            value === undefined
+              ? (
+                <TextField
+                  onChange={onChange}
+                  label={label}
+                  value=''
+                  variant='outlined'
+                  error={error !== undefined}
+                  helperText={error?.message}
+                  required={required}
+                />
+              )
+              : (
+                <TextField
+                  onChange={onChange}
+                  label={label}
+                  value={value}
+                  variant='outlined'
+                  error={error !== undefined}
+                  helperText={error?.message}
+                  required={required}
+                />
+              )
+          }
         </FormControl>
       )}
     />

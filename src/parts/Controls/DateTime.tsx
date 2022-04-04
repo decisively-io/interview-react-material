@@ -20,11 +20,11 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
     date_min,
     minutes_increment,
     label,
-    format: timeFormat,
+    amPmFormat,
     required,
     id,
   } = c;
-  const uiTimeFormat = timeFormat === '12'
+  const uiTimeFormat = amPmFormat
     ? DATE_TIME_FORMAT_12
     : DATE_TIME_FORMAT_24;
 
@@ -43,7 +43,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
             format={uiTimeFormat}
             required={required}
             inputVariant='outlined'
-            ampm={timeFormat === '12'}
+            ampm={amPmFormat}
             minutesStep={minutes_increment}
             maxDate={date_max && new Date(date_max)}
             minDate={date_min && new Date(date_min)}

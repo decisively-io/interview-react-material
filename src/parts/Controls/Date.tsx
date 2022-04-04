@@ -12,6 +12,24 @@ export interface IProps {
   c: IDate;
 }
 
+type DatePickerParams = Pick<
+  Parameters< typeof DatePicker >[ 0 ],
+  | 'label'
+  | 'error'
+  | 'helperText'
+  | 'value'
+  | 'onChange'
+  | 'format'
+  | 'maxDate'
+  | 'minDate'
+  | 'required'
+  | 'inputVariant'
+>;
+const renderWithFallback = (arg: DatePickerParams) => (
+  arg.value === undefined
+    ? <DatePicker {...arg} value={null} />
+    : <DatePicker {...arg} />
+);
 
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
@@ -30,18 +48,20 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
       name={id}
       render={({ field: { value, onChange }, fieldState: { error } }) => (
         <FormControl fullWidth margin='normal'>
-          <DatePicker
-            label={label}
-            error={error !== undefined}
-            helperText={error?.message}
-            value={new Date(value)}
-            onChange={d => d && onChange(format(d, DATE_FORMAT))}
-            format={DATE_FORMAT}
-            maxDate={max && new Date(max)}
-            minDate={min && new Date(min)}
-            required={required}
-            inputVariant='outlined'
-          />
+          {
+            renderWithFallback({
+              label,
+              error: error !== undefined,
+              helperText: error?.message,
+              value: value && new Date(value),
+              onChange: d => d && onChange(format(d, DATE_FORMAT)),
+              format: DATE_FORMAT,
+              maxDate: max && new Date(max),
+              minDate: min && new Date(min),
+              required,
+              inputVariant: 'outlined',
+            })
+          }
         </FormControl>
       )}
     />

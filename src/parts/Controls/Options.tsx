@@ -26,7 +26,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
   const {
     label,
     id,
-    as: asType,
+    asRadio,
     options,
     allow_other,
   } = c;
@@ -40,7 +40,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
       render={({ field: { value, onChange } }) => (
         <FormControl fullWidth margin='normal'>
           {
-            asType === 'radio'
+            asRadio
               ? (
                 <>
                   <FormLabel component='legend'>{label}</FormLabel>
