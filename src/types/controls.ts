@@ -8,27 +8,31 @@ import {
   ICurrency,
   IEntity,
   IFile,
-  DATE_FORMAT,
-  DATE_TIME_FORMAT_24,
   TIME_FORMAT_24,
-  IDate,
   IOptions,
   ITypography,
   IImage,
   Control,
+  TIME_FORMAT_12,
+  DATE_FORMAT,
+  IDateTime,
 } from '@decisively-io/types-interview';
 
 
 export * from '@decisively-io/types-interview/controls';
 
 
-export const getCurrencySymbol = (c: ICurrency): string => (
-  c.symbol || '$'
-);
-
 export const formatCurrency = (c: ICurrency, value: number): string => (
   new Intl.NumberFormat(c.locale || 'en-AU', { style: 'currency', currency: c.symbol || 'AUD' })
     .format(value)
+);
+
+export const deriveDateFromTimeComponent = (t: string): Date => (
+  new Date(`1970-01-01T${ t }`)
+);
+
+export const resolveNowInDate = (d?: string): string | undefined => (
+  d === 'now' ? format(new Date(), DATE_FORMAT) : d
 );
 
 
@@ -37,22 +41,36 @@ function getDefaultControlValue(
 ): IControlsValue[ keyof IControlsValue ] {
   switch(c.type) {
     case 'boolean':
-      return c.default;
+      return c.value === undefined
+        ? c.default
+        : c.value;
 
     case 'currency':
-      return c.default && formatCurrency(c, c.default);
+      const maybeValueToFormat = c.value === undefined
+        ? c.default
+        : c.value;
+
+      return maybeValueToFormat && formatCurrency(c, maybeValueToFormat);
 
     case 'date':
-      return c.default;
+      return c.value === undefined
+        ? c.default
+        : c.value;
 
     case 'time':
-      return c.default || '00:00:00';
+      return c.value === undefined
+        ? c.default
+        : c.value;
 
     case 'datetime':
-      return c.default || format(new Date(), DATE_TIME_FORMAT_24);
+      return c.value === undefined
+        ? c.default
+        : c.value;
 
     case 'options':
-      return c.default === undefined ? null : c.default;
+      return c.value === undefined
+        ? c.default
+        : c.value;
 
     case 'number_of_instances':
       return c.default === undefined
@@ -62,7 +80,9 @@ function getDefaultControlValue(
         : c.default;
 
     case 'text':
-      return c.default || '';
+      return c.value === undefined
+        ? c.default
+        : c.value;
 
     default:
   }
@@ -102,20 +122,21 @@ export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
   );
 }
 
+// eslint-disable-next-line complexity
 function generateValidatorForControl(
-  c: Exclude< Control, IEntity | ITypography | IImage | IFile | IDate | IOptions >,
+  c: Exclude< Control, IEntity | ITypography | IImage | IFile | IOptions >,
 ): yup.AnySchema {
   switch(c.type) {
     case 'boolean': {
       const { required } = c;
 
-      const schema = yup.boolean();
+      const schema = yup.boolean().nullable();
       const maybeRequired: typeof schema = required ? schema.required() : schema;
 
       return maybeRequired;
     }
     case 'currency': {
-      return yup.string();
+      return yup.string().nullable();
 
       // const { max, min, required } = c;
       // const C = getCurrencySymbol(c);
@@ -144,54 +165,117 @@ function generateValidatorForControl(
 
       // return afterMin;
     }
-    case 'time': {
+    case 'date': {
       const { max, min, required } = c;
 
-      const schema = yup.string();
+      const nowLessMax = resolveNowInDate(max);
+      const nowLessMin = resolveNowInDate(min);
 
-      const withRequired: typeof schema = required ? schema : schema.required();
+
+      const schema = yup.string().nullable();
+
+      const withRequired: typeof schema = required === undefined ? schema : schema.test(
+        'withRequired',
+        'Please fill out this field',
+        v => v !== undefined && v !== null,
+      );
+
+      const afterMax: typeof withRequired = nowLessMax === undefined ? withRequired : withRequired.test(
+        'withMax',
+        `Should be before ${ nowLessMax }`,
+        v => v !== undefined && v !== null && v < nowLessMax,
+      );
+
+      const afterMin: typeof afterMax = nowLessMin === undefined ? afterMax : afterMax.test(
+        'withMin',
+        `Should be after ${ nowLessMin }`,
+        v => v !== undefined && v !== null && v > nowLessMin,
+      );
+
+      return afterMin;
+    }
+    case 'time': {
+      const { max, min, required, amPmFormat } = c;
+
+      const maxForUi = max &&
+        format(deriveDateFromTimeComponent(max), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
+      const minForUi = min &&
+        format(deriveDateFromTimeComponent(min), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
+
+
+      const schema = yup.string().nullable();
+
+      const withRequired: typeof schema = required === undefined ? schema : schema.test(
+        'withRequired',
+        'Please fill out this field',
+        v => v !== undefined && v !== null,
+      );
 
       const afterMax: typeof withRequired = max === undefined ? withRequired : withRequired.test(
         'withMax',
-        `Should be before ${ max }`,
-        v => v !== undefined && v < max,
+        `Should be before ${ maxForUi }`,
+        v => v !== undefined && v !== null && v < max,
       );
 
       const afterMin: typeof afterMax = min === undefined ? afterMax : afterMax.test(
         'withMin',
-        `Should be after ${ min }`,
-        v => v !== undefined && v > min,
+        `Should be after ${ minForUi }`,
+        v => v !== undefined && v !== null && v > min,
       );
 
       return afterMin;
     }
     case 'datetime': {
-      const { required, time_max, time_min } = c;
+      const { required, time_max, time_min, date_max, date_min, amPmFormat } = c;
 
-      const schema = yup.string();
+      const nowLessDateMax = resolveNowInDate(date_max);
+      const nowLessDateMin = resolveNowInDate(date_min);
 
-      const withRequired: typeof schema = required ? schema : schema.required();
+      const maxTimeForUi = time_max &&
+        format(deriveDateFromTimeComponent(time_max), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
+      const minTimeForUi = time_min &&
+        format(deriveDateFromTimeComponent(time_min), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
 
-      const afterMax: typeof withRequired = time_max === undefined ? withRequired : withRequired.test(
-        'withMax',
-        `Time should be before ${ time_max }`,
-        v => v !== undefined && format(new Date(v), TIME_FORMAT_24) < time_max,
+      const schema = yup.string().nullable();
+
+      const withRequired: typeof schema = required === undefined ? schema : schema.test(
+        'withRequired',
+        'Please fill out this field',
+        v => v !== undefined && v !== null,
       );
 
-      const afterMin: typeof afterMax = time_min === undefined ? afterMax : afterMax.test(
-        'withMin',
-        `Time should be after ${ time_min }`,
-        v => v !== undefined && format(new Date(v), TIME_FORMAT_24) > time_min,
+      const withDateMax: typeof withRequired = nowLessDateMax === undefined ? withRequired : withRequired.test(
+        'withDateMax',
+        `Date should be before ${ nowLessDateMax }`,
+        v => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) < nowLessDateMax,
       );
 
-      return afterMin;
+      const withDateMin: typeof withDateMax = nowLessDateMin === undefined ? withDateMax : withDateMax.test(
+        'withDateMin',
+        `Date should be after ${ nowLessDateMin }`,
+        v => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) > nowLessDateMin,
+      );
+
+      const withTimeMax: typeof withDateMin = time_max === undefined ? withDateMin : withDateMin.test(
+        'withTimeMax',
+        `Time should be before ${ maxTimeForUi }`,
+        v => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) < time_max,
+      );
+
+      const withTimeMin: typeof withTimeMax = time_min === undefined ? withTimeMax : withTimeMax.test(
+        'withTimeMin',
+        `Time should be after ${ minTimeForUi }`,
+        v => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) > time_min,
+      );
+
+      return withTimeMin;
     }
     case 'number_of_instances': {
       const { required, max, min } = c;
 
       const schema = yup.number();
 
-      const withRequired: typeof schema = required ? schema.required() : schema;
+      const withRequired: typeof schema = required === undefined ? schema : schema.required();
 
       const withMax: typeof withRequired = max === undefined
         ? withRequired
@@ -211,8 +295,12 @@ function generateValidatorForControl(
     case 'text': {
       const { required, max } = c;
 
-      const schema = yup.string();
-      const maybeRequired: typeof schema = required ? schema.required() : schema;
+      const schema = yup.string().nullable();
+      const maybeRequired: typeof schema = required === undefined ? schema : schema.test(
+        'withRequired',
+        'Please fill out this field',
+        v => v !== undefined && v !== null && v !== '',
+      );
 
       const withMax: typeof maybeRequired = max === undefined
         ? maybeRequired
@@ -235,6 +323,7 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
         case 'datetime':
         case 'number_of_instances':
         case 'text':
+        case 'date':
           return { ...a, [ c.id ]: generateValidatorForControl(c) };
 
         case 'entity':
@@ -262,5 +351,5 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
     {},
   );
 
-  return yup.object().shape(shape);
+  return yup.object().shape(shape).required();
 }

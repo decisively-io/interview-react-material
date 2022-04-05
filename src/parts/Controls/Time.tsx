@@ -13,6 +13,12 @@ export interface IProps {
   c: ITime;
 }
 
+export const secondLessViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
+  'hours', 'minutes',
+];
+export const allViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
+  'hours', 'minutes', 'seconds',
+];
 
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
@@ -22,6 +28,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
     minutes_increment,
     required,
     label,
+    allowSeconds,
   } = c;
   const uiTimeFormat = amPmFormat
     ? TIME_FORMAT_12
@@ -31,22 +38,30 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
     <Controller
       control={control}
       name={id}
-      render={({ field: { value, onChange }, fieldState: { error } }) => (
-        <FormControl fullWidth margin='normal'>
-          <TimePicker
-            label={label}
-            error={error !== undefined}
-            helperText={error?.message}
-            value={new Date(`1970-01-01T${ value }`)}
-            onChange={d => d && onChange(format(d, TIME_FORMAT_24))}
-            format={uiTimeFormat}
-            required={required}
-            inputVariant='outlined'
-            ampm={amPmFormat}
-            minutesStep={minutes_increment}
-          />
-        </FormControl>
-      )}
+      render={({ field: { value, onChange }, fieldState: { error } }) => {
+        const typedValue = value as ITime[ 'value' ];
+        const compValue = typeof typedValue === 'string'
+          ? new Date(`1970-01-01T${ value }`)
+          : null;
+
+        return (
+          <FormControl fullWidth margin='normal'>
+            <TimePicker
+              label={label}
+              error={error !== undefined}
+              helperText={error?.message}
+              value={compValue}
+              onChange={d => d && onChange(format(d, TIME_FORMAT_24))}
+              format={uiTimeFormat}
+              required={required}
+              inputVariant='outlined'
+              ampm={Boolean(amPmFormat)}
+              minutesStep={minutes_increment}
+              views={allowSeconds ? allViews : secondLessViews}
+            />
+          </FormControl>
+        );
+      }}
     />
   );
 });

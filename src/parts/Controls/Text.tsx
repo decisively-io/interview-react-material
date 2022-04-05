@@ -12,27 +12,47 @@ export interface IProps {
 }
 
 
+type IParam = Pick<
+  React.ComponentProps< typeof TextField >,
+  | 'onChange'
+  | 'label'
+  | 'value'
+  | 'variant'
+  | 'error'
+  | 'helperText'
+>;
+const withFallback = (arg: IParam) => (
+  typeof arg.value === 'string'
+    ? <TextField {...arg} />
+    : <TextField {...arg} value={undefined} />
+);
+
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
-  const { id, label, required } = c;
+  const { id, label } = c;
 
   return (
     <Controller
       control={control}
       name={id}
-      render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <FormControl fullWidth margin='normal'>
-          <TextField
-            onChange={onChange}
-            label={label}
-            value={value}
-            variant='outlined'
-            error={error !== undefined}
-            helperText={error?.message}
-            required={required}
-          />
-        </FormControl>
-      )}
+      render={({ field: { onChange, value }, fieldState: { error } }) => {
+        const typedValue = value as IText[ 'value' ];
+
+        return (
+          <FormControl fullWidth margin='normal'>
+            {
+              withFallback({
+                onChange,
+                label,
+                value: typedValue,
+                variant: 'outlined',
+                error: error !== undefined,
+                helperText: error?.message,
+              })
+            }
+          </FormControl>
+        );
+      }}
     />
   );
 });

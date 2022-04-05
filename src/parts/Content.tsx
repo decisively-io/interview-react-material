@@ -110,7 +110,10 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <FormProvider {...methods}>
-        <Wrap onSubmit={methods.handleSubmit(onSubmit)} className={className}>
+        <Wrap
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className={className}
+        >
           <div className={classes[ '>formWrap' ]._}>
             <div className={formClss._}>
               <Typography variant='h4' className={formClss[ '>h' ]}>

@@ -12,7 +12,7 @@ import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IOptions } from '../../types/controls';
 
 
-const filter = createFilterOptions<{ label: string; value: string }>();
+const filter = createFilterOptions< IOptions[ 'options' ][ 0 ] >();
 
 
 export interface IProps {
@@ -46,13 +46,13 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
                   <FormLabel component='legend'>{label}</FormLabel>
                   <RadioGroup value={value} onChange={e => onChange(e.target.value)}>
                     { options.map(it => (
-                      <FormControlLabel key={it.value} value={it.value} control={RadioControl} label={it.label} />
+                      <FormControlLabel key={String(it.value)} value={it.value} control={RadioControl} label={it.label} />
                     )) }
                   </RadioGroup>
                 </>
               )
               : (
-                <Autocomplete<{ label: string; value: string }, false, false, true>
+                <Autocomplete< IOptions[ 'options' ][ 0 ], false, false, true>
                   value={
                     value
                       ? (options.find(it => it.value === value) || { value, label: value })

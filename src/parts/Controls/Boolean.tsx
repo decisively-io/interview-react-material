@@ -25,21 +25,25 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
     <Controller
       control={control}
       name={id}
-      render={({ field: { onChange, value } }) => (
-        <FormControl fullWidth margin='normal'>
-          <FormControlLabel
-            control={(
-              <Checkbox
-                onChange={onChange}
-                checked={value || false}
-                required={required}
-                indeterminate={value === undefined}
-              />
-            )}
-            label={label}
-          />
-        </FormControl>
-      )}
+      render={({ field: { onChange, value } }) => {
+        const typedValue = value as IBoolean[ 'value' ];
+
+        return (
+          <FormControl fullWidth margin='normal'>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  onChange={onChange}
+                  checked={typeof typedValue === 'boolean' ? typedValue : undefined}
+                  required={required}
+                  indeterminate={typeof typedValue !== 'boolean'}
+                />
+              )}
+              label={label}
+            />
+          </FormControl>
+        );
+      }}
     />
   );
 });
