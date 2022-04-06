@@ -1,7 +1,6 @@
-/* eslint-disable camelcase,import/no-extraneous-dependencies */
+/* eslint-disable camelcase,import/no-extraneous-dependencies,react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import Radio from '@material-ui/core/Radio';
@@ -10,6 +9,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IOptions } from '../../types/controls';
+import * as ErrorComp from './__error';
+import * as FormControl from './__formControl';
 
 
 const filter = createFilterOptions< IOptions[ 'options' ][ 0 ] >();
@@ -30,69 +31,111 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
     options,
     allow_other,
   } = c;
-  const selectId = `${ id }-input`;
+
+
+  const radioOptionsJSX = React.useMemo(
+    () => options.map(
+      it => (
+        <FormControlLabel
+          key={String(it.value)}
+          value={it.value}
+          control={RadioControl}
+          label={it.label}
+        />
+      ),
+    ),
+    [options],
+  );
+
+  const isBool = React.useMemo(
+    () => options.length === 2 &&
+      options.some(it => it.value === false) &&
+      options.some(it => it.value === true),
+    [options],
+  );
 
 
   return (
     <Controller
       control={control}
       name={id}
-      render={({ field: { value, onChange } }) => (
-        <FormControl fullWidth margin='normal'>
-          {
-            asRadio
-              ? (
-                <>
-                  <FormLabel component='legend'>{label}</FormLabel>
-                  <RadioGroup value={value} onChange={e => onChange(e.target.value)}>
-                    { options.map(it => (
-                      <FormControlLabel key={String(it.value)} value={it.value} control={RadioControl} label={it.label} />
-                    )) }
-                  </RadioGroup>
-                </>
-              )
-              : (
-                <Autocomplete< IOptions[ 'options' ][ 0 ], false, false, true>
-                  value={
-                    value
-                      ? (options.find(it => it.value === value) || { value, label: value })
-                      : null
-                  }
-                  onChange={(_, newValue) => onChange(
-                    newValue === null
-                      ? null
-                      : (typeof newValue === 'string'
-                        ? newValue
-                        : newValue.value
-                      ),
-                  )}
-                  filterOptions={(options, params) => {
-                    const filtered = filter(options, params);
+      render={({ field: { value, onChange }, fieldState: { error } }) => {
+        const typedValue = value as IOptions[ 'value' ];
+        const errorJSX = <ErrorComp._>{error?.message || ' '}</ErrorComp._>;
 
-                    // Suggest the creation of a new value
-                    if (allow_other && params.inputValue !== '') {
-                      filtered.push({
-                        label: `Add "${ params.inputValue }"`,
-                        value: params.inputValue,
-                      });
-                    }
+        const setValueRadio: NonNullable< React.ComponentProps< typeof RadioGroup >[ 'onChange' ] > = (
+          ({ currentTarget: { value } }) => {
+            const nextValue = isBool ? (value === 'true') : value;
 
-                    return filtered;
-                  }}
-                  selectOnFocus
-                  clearOnBlur
-                  handleHomeEndKeys
-                  id={selectId}
-                  options={options}
-                  getOptionLabel={option => option.label}
-                  renderOption={option => option.label}
-                  freeSolo
-                  renderInput={params => <TextField {...params} label={label} variant='outlined' />}
-                />
-              )
+            onChange(nextValue);
           }
-        </FormControl>
-      )}
+        );
+
+        return (
+          <FormControl._ fullWidth margin='normal'>
+            {
+              asRadio
+                ? (
+                  <>
+                    <FormLabel error={Boolean(error)} component='legend'>{label}</FormLabel>
+                    <RadioGroup
+                      value={(typedValue === undefined || typedValue === null) ? null : typedValue}
+                      onChange={setValueRadio}
+                    >
+                      {radioOptionsJSX}
+                    </RadioGroup>
+
+                    { errorJSX }
+                  </>
+                )
+                : (
+                  <>
+                    <Autocomplete< IOptions[ 'options' ][ 0 ], false, false, true>
+                      value={
+                        typedValue
+                          ? (
+                            options.find(it => it.value === typedValue) ||
+                              { value: typedValue, label: String(typedValue) }
+                          )
+                          : null
+                      }
+                      onChange={(_, newValue) => onChange(
+                        newValue === null
+                          ? null
+                          : (typeof newValue === 'string'
+                            ? newValue
+                            : newValue.value
+                          ),
+                      )}
+                      filterOptions={(options, params) => {
+                        const filtered = filter(options, params);
+
+                        // Suggest the creation of a new value
+                        if (allow_other && params.inputValue !== '') {
+                          filtered.push({
+                            label: `Add "${ params.inputValue }"`,
+                            value: params.inputValue,
+                          });
+                        }
+
+                        return filtered;
+                      }}
+                      selectOnFocus
+                      clearOnBlur
+                      handleHomeEndKeys
+                      options={options}
+                      getOptionLabel={option => option.label}
+                      renderOption={option => option.label}
+                      freeSolo
+                      renderInput={params => <TextField {...params} label={label} variant='outlined' />}
+                    />
+                    {errorJSX}
+                  </>
+                )
+            }
+          </FormControl._>
+        );
+      }}
     />
   );
 });

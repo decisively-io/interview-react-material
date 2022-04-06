@@ -9,13 +9,11 @@ import {
   IEntity,
   IFile,
   TIME_FORMAT_24,
-  IOptions,
   ITypography,
   IImage,
   Control,
   TIME_FORMAT_12,
   DATE_FORMAT,
-  IDateTime,
 } from '@decisively-io/types-interview';
 
 
@@ -27,6 +25,17 @@ export const formatCurrency = (c: ICurrency, value: number): string => (
     .format(value)
 );
 
+export function parseCurrency(n: string, c: ICurrency): number {
+  const locale = c.locale || 'en-AU';
+  const thousandSeparator = Intl.NumberFormat(locale).format(11111).replace(/\p{Number}/gu, '');
+  const decimalSeparator = Intl.NumberFormat(locale).format(1.1).replace(/\p{Number}/gu, '');
+
+  return parseFloat(n
+    .replace(new RegExp(`\\${ thousandSeparator }`, 'g'), '')
+    .replace(new RegExp(`\\${ decimalSeparator }`), '.'),
+  );
+}
+
 export const deriveDateFromTimeComponent = (t: string): Date => (
   new Date(`1970-01-01T${ t }`)
 );
@@ -34,6 +43,8 @@ export const deriveDateFromTimeComponent = (t: string): Date => (
 export const resolveNowInDate = (d?: string): string | undefined => (
   d === 'now' ? format(new Date(), DATE_FORMAT) : d
 );
+
+export const requiredErrStr = 'Please fill out this field';
 
 
 function getDefaultControlValue(
@@ -73,11 +84,12 @@ function getDefaultControlValue(
         : c.value;
 
     case 'number_of_instances':
-      return c.default === undefined
-        ? c.required === undefined
-          ? 0
-          : 1
-        : c.default;
+      return (() => {
+        if(c.value !== undefined) return c.value;
+        if(c.default !== undefined) return c.default;
+
+        return c.required === undefined ? 0 : 1;
+      })();
 
     case 'text':
       return c.value === undefined
@@ -124,7 +136,7 @@ export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
 
 // eslint-disable-next-line complexity
 function generateValidatorForControl(
-  c: Exclude< Control, IEntity | ITypography | IImage | IFile | IOptions >,
+  c: Exclude< Control, IEntity | ITypography | IImage | IFile >,
 ): yup.AnySchema {
   switch(c.type) {
     case 'boolean': {
@@ -136,34 +148,28 @@ function generateValidatorForControl(
       return maybeRequired;
     }
     case 'currency': {
-      return yup.string().nullable();
+      const { max, min, required } = c;
 
-      // const { max, min, required } = c;
-      // const C = getCurrencySymbol(c);
-      // const regexp = new RegExp(`^-?\\d+(\\.\\d*)?\\${ C }$`);
+      const schema = yup.number().typeError('Please specify a valid number. E.g. 5.50').nullable();
+      const withRequired: typeof schema = required ? schema : schema.test(
+        'withRequired',
+        requiredErrStr,
+        v => v !== undefined && v !== null,
+      );
 
-      // const schema = yup.string()
-      //   .test(
-      //     'isCurrency',
-      //     `Invalid currency format. E.g. 1.23${ C }`,
-      //     v => v !== undefined && v.match(regexp) !== null,
-      //   );
+      const afterMax: typeof withRequired = max === undefined ? withRequired : withRequired.test(
+        'withMax',
+        `Should be lower or equal to ${ formatCurrency(c, max) }`,
+        v => v !== undefined && v !== null && v <= max,
+      );
 
-      // const withRequired: typeof schema = required ? schema : schema.required();
+      const afterMin: typeof afterMax = min === undefined ? afterMax : afterMax.test(
+        'withMin',
+        `Should be bigger or equal to ${ formatCurrency(c, min) }`,
+        v => v !== undefined && v !== null && v >= min,
+      );
 
-      // const afterMax: typeof withRequired = max === undefined ? withRequired : withRequired.test(
-      //   'withMax',
-      //   `Should be lower than ${ max }${ C }`,
-      //   v => v !== undefined && parseInt(v, 10) < max,
-      // );
-
-      // const afterMin: typeof afterMax = min === undefined ? afterMax : afterMax.test(
-      //   'withMin',
-      //   `Should be bigger than ${ min }${ C }`,
-      //   v => v !== undefined && parseInt(v, 10) > min,
-      // );
-
-      // return afterMin;
+      return afterMin;
     }
     case 'date': {
       const { max, min, required } = c;
@@ -176,20 +182,20 @@ function generateValidatorForControl(
 
       const withRequired: typeof schema = required === undefined ? schema : schema.test(
         'withRequired',
-        'Please fill out this field',
+        requiredErrStr,
         v => v !== undefined && v !== null,
       );
 
       const afterMax: typeof withRequired = nowLessMax === undefined ? withRequired : withRequired.test(
         'withMax',
-        `Should be before ${ nowLessMax }`,
-        v => v !== undefined && v !== null && v < nowLessMax,
+        `Should be before or equal to ${ nowLessMax }`,
+        v => v !== undefined && v !== null && v <= nowLessMax,
       );
 
       const afterMin: typeof afterMax = nowLessMin === undefined ? afterMax : afterMax.test(
         'withMin',
-        `Should be after ${ nowLessMin }`,
-        v => v !== undefined && v !== null && v > nowLessMin,
+        `Should be after or equal to ${ nowLessMin }`,
+        v => v !== undefined && v !== null && v >= nowLessMin,
       );
 
       return afterMin;
@@ -207,20 +213,20 @@ function generateValidatorForControl(
 
       const withRequired: typeof schema = required === undefined ? schema : schema.test(
         'withRequired',
-        'Please fill out this field',
+        requiredErrStr,
         v => v !== undefined && v !== null,
       );
 
       const afterMax: typeof withRequired = max === undefined ? withRequired : withRequired.test(
         'withMax',
-        `Should be before ${ maxForUi }`,
-        v => v !== undefined && v !== null && v < max,
+        `Should be before or equal to ${ maxForUi }`,
+        v => v !== undefined && v !== null && v <= max,
       );
 
       const afterMin: typeof afterMax = min === undefined ? afterMax : afterMax.test(
         'withMin',
-        `Should be after ${ minForUi }`,
-        v => v !== undefined && v !== null && v > min,
+        `Should be after or equal to ${ minForUi }`,
+        v => v !== undefined && v !== null && v >= min,
       );
 
       return afterMin;
@@ -240,32 +246,32 @@ function generateValidatorForControl(
 
       const withRequired: typeof schema = required === undefined ? schema : schema.test(
         'withRequired',
-        'Please fill out this field',
+        requiredErrStr,
         v => v !== undefined && v !== null,
       );
 
       const withDateMax: typeof withRequired = nowLessDateMax === undefined ? withRequired : withRequired.test(
         'withDateMax',
-        `Date should be before ${ nowLessDateMax }`,
-        v => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) < nowLessDateMax,
+        `Date should be before or equal to ${ nowLessDateMax }`,
+        v => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) <= nowLessDateMax,
       );
 
       const withDateMin: typeof withDateMax = nowLessDateMin === undefined ? withDateMax : withDateMax.test(
         'withDateMin',
-        `Date should be after ${ nowLessDateMin }`,
-        v => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) > nowLessDateMin,
+        `Date should be after or equal to ${ nowLessDateMin }`,
+        v => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) >= nowLessDateMin,
       );
 
       const withTimeMax: typeof withDateMin = time_max === undefined ? withDateMin : withDateMin.test(
         'withTimeMax',
-        `Time should be before ${ maxTimeForUi }`,
-        v => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) < time_max,
+        `Time should be before or equal to ${ maxTimeForUi }`,
+        v => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) <= time_max,
       );
 
       const withTimeMin: typeof withTimeMax = time_min === undefined ? withTimeMax : withTimeMax.test(
         'withTimeMin',
-        `Time should be after ${ minTimeForUi }`,
-        v => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) > time_min,
+        `Time should be after or equal to ${ minTimeForUi }`,
+        v => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) >= time_min,
       );
 
       return withTimeMin;
@@ -273,9 +279,13 @@ function generateValidatorForControl(
     case 'number_of_instances': {
       const { required, max, min } = c;
 
-      const schema = yup.number();
+      const schema = yup.number().typeError('Please specify a valid number. E.g. 5').nullable();
 
-      const withRequired: typeof schema = required === undefined ? schema : schema.required();
+      const withRequired: typeof schema = required === undefined ? schema : schema.test(
+        'withRequired',
+        requiredErrStr,
+        v => v !== undefined && v !== null,
+      );
 
       const withMax: typeof withRequired = max === undefined
         ? withRequired
@@ -298,7 +308,7 @@ function generateValidatorForControl(
       const schema = yup.string().nullable();
       const maybeRequired: typeof schema = required === undefined ? schema : schema.test(
         'withRequired',
-        'Please fill out this field',
+        requiredErrStr,
         v => v !== undefined && v !== null && v !== '',
       );
 
@@ -307,6 +317,25 @@ function generateValidatorForControl(
         : maybeRequired.max(max, `This must be at most ${ max } characters`);
 
       return withMax;
+    }
+    case 'options': {
+      const { required } = c;
+
+      const schema = yup.mixed().nullable();
+
+      const maybeRequired: typeof schema = required === undefined ? schema : schema.test(
+        'withRequired',
+        requiredErrStr,
+        v => v !== undefined && v !== null && v !== '',
+      );
+
+      const withType: typeof maybeRequired = maybeRequired.test(
+        'isStringOrNumberOrNullOrUndefined',
+        'This value should be either string or boolean',
+        v => typeof v === 'string' || typeof v === 'boolean' || v === null || v === undefined,
+      );
+
+      return withType;
     }
     default: return yup.string();
   }
@@ -324,6 +353,7 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
         case 'number_of_instances':
         case 'text':
         case 'date':
+        case 'options':
           return { ...a, [ c.id ]: generateValidatorForControl(c) };
 
         case 'entity':

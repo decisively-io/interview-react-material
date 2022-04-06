@@ -1,7 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
+import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IEntity } from '../../types/controls';
 import type { RenderControl } from './__renderControl';
@@ -20,10 +20,10 @@ export const _: React.FC< IProps > = React.memo(({ c, RenderControl }) => {
   ), [template, id]);
 
   return (
-    <FormControl fullWidth margin='normal'>
+    <FormControl._>
       <Typography>{label}</Typography>
       { mappedControls.map(it => <RenderControl key={it.id} c={it} />) }
-    </FormControl>
+    </FormControl._>
   );
 });
 _.displayName = `${ DISPLAY_NAME_PREFIX }/Typography`;

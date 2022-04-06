@@ -1,9 +1,9 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import FormControl from '@material-ui/core/FormControl';
 import { DatePicker } from '@material-ui/pickers';
 import { format } from 'date-fns';
+import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IDate, DATE_FORMAT, resolveNowInDate } from '../../types/controls';
 
@@ -35,7 +35,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
         const typedValue = value as IDate[ 'value' ];
 
         return (
-          <FormControl fullWidth margin='normal'>
+          <FormControl._>
             <DatePicker {...{
               label,
               error: error !== undefined,
@@ -49,7 +49,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
               inputVariant: 'outlined',
             }}
             />
-          </FormControl>
+          </FormControl._>
         );
       }}
     />

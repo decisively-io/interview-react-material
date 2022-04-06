@@ -23,7 +23,7 @@
   "homepage": "https://github.com/decisively-io/interview-react-material#readme",
   "devDependencies": {
     "@date-io/date-fns": "^1.3.13",
-    "@decisively-io/types-interview": "0.1.8-20jbc1k.5",
+    "@decisively-io/types-interview": "0.1.8-20jbc1k.6",
     "@hookform/resolvers": "^2.8.8",
     "@material-ui/core": "^4.12.3",
     "@material-ui/lab": "^4.0.0-alpha.60",

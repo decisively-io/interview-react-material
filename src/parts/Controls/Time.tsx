@@ -1,10 +1,9 @@
-/* eslint-disable camelcase */
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case, camelcase */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import FormControl from '@material-ui/core/FormControl';
 import { TimePicker } from '@material-ui/pickers';
 import { format } from 'date-fns';
+import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { ITime, TIME_FORMAT_12, TIME_FORMAT_24 } from '../../types/controls';
 
@@ -45,7 +44,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
           : null;
 
         return (
-          <FormControl fullWidth margin='normal'>
+          <FormControl._>
             <TimePicker
               label={label}
               error={error !== undefined}
@@ -59,7 +58,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
               minutesStep={minutes_increment}
               views={allowSeconds ? allViews : secondLessViews}
             />
-          </FormControl>
+          </FormControl._>
         );
       }}
     />

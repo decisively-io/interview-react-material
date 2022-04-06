@@ -1,6 +1,6 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
-import FormControl from '@material-ui/core/FormControl';
+import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IImage } from '../../types/controls';
 
@@ -14,9 +14,9 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { data } = c;
 
   return (
-    <FormControl fullWidth margin='normal'>
+    <FormControl._>
       <img src={data} alt='' width='100px' />
-    </FormControl>
+    </FormControl._>
   );
 });
 _.displayName = `${ DISPLAY_NAME_PREFIX }/Image`;

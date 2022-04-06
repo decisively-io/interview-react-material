@@ -1,8 +1,8 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
+import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IText } from '../../types/controls';
 
@@ -24,7 +24,7 @@ type IParam = Pick<
 const withFallback = (arg: IParam) => (
   typeof arg.value === 'string'
     ? <TextField {...arg} />
-    : <TextField {...arg} value={undefined} />
+    : <TextField {...arg} value='' />
 );
 
 export const _: React.FC< IProps > = React.memo(({ c }) => {
@@ -39,7 +39,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
         const typedValue = value as IText[ 'value' ];
 
         return (
-          <FormControl fullWidth margin='normal'>
+          <FormControl._>
             {
               withFallback({
                 onChange,
@@ -50,7 +50,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
                 helperText: error?.message,
               })
             }
-          </FormControl>
+          </FormControl._>
         );
       }}
     />

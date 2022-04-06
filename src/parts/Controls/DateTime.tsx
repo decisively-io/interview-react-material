@@ -1,9 +1,9 @@
-/* eslint-disable camelcase,import/no-extraneous-dependencies */
+/* eslint-disable camelcase, import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import FormControl from '@material-ui/core/FormControl';
 import { DateTimePicker } from '@material-ui/pickers';
 import { format } from 'date-fns';
+import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IDateTime, DATE_TIME_FORMAT_24, DATE_TIME_FORMAT_12, resolveNowInDate } from '../../types/controls';
 
@@ -43,7 +43,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
         const typedValue = value as IDateTime[ 'value' ];
 
         return (
-          <FormControl fullWidth margin='normal'>
+          <FormControl._>
             <DateTimePicker
               label={label}
               error={error !== undefined}
@@ -58,7 +58,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
               maxDate={maxDate}
               minDate={minDate}
             />
-          </FormControl>
+          </FormControl._>
         );
       }}
     />

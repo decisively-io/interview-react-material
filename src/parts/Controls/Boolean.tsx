@@ -1,9 +1,9 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
+import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IBoolean } from '../../types/controls';
 
@@ -29,7 +29,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
         const typedValue = value as IBoolean[ 'value' ];
 
         return (
-          <FormControl fullWidth margin='normal'>
+          <FormControl._>
             <FormControlLabel
               control={(
                 <Checkbox
@@ -41,7 +41,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
               )}
               label={label}
             />
-          </FormControl>
+          </FormControl._>
         );
       }}
     />
