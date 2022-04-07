@@ -5,7 +5,7 @@ import { TimePicker } from '@material-ui/pickers';
 import { format } from 'date-fns';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { ITime, TIME_FORMAT_12, TIME_FORMAT_24 } from '../../types/controls';
+import { deriveLabel, ITime, TIME_FORMAT_12, TIME_FORMAT_24 } from '../../types/controls';
 
 
 export interface IProps {
@@ -22,11 +22,9 @@ export const allViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
   const {
-    id,
+    attribute,
     amPmFormat,
     minutes_increment,
-    required,
-    label,
     allowSeconds,
   } = c;
   const uiTimeFormat = amPmFormat
@@ -36,7 +34,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
   return (
     <Controller
       control={control}
-      name={id}
+      name={attribute}
       render={({ field: { value, onChange }, fieldState: { error } }) => {
         const typedValue = value as ITime[ 'value' ];
         const compValue = typeof typedValue === 'string'
@@ -46,13 +44,12 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
         return (
           <FormControl._>
             <TimePicker
-              label={label}
+              label={deriveLabel(c)}
               error={error !== undefined}
-              helperText={error?.message}
+              helperText={error?.message || ' '}
               value={compValue}
               onChange={d => d && onChange(format(d, TIME_FORMAT_24))}
               format={uiTimeFormat}
-              required={required}
               inputVariant='outlined'
               ampm={Boolean(amPmFormat)}
               minutesStep={minutes_increment}

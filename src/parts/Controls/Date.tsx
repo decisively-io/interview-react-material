@@ -5,7 +5,7 @@ import { DatePicker } from '@material-ui/pickers';
 import { format } from 'date-fns';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { IDate, DATE_FORMAT, resolveNowInDate } from '../../types/controls';
+import { IDate, DATE_FORMAT, resolveNowInDate, deriveLabel } from '../../types/controls';
 
 
 export interface IProps {
@@ -16,11 +16,9 @@ export interface IProps {
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
   const {
-    id,
-    label,
+    attribute,
     max,
     min,
-    required,
   } = c;
 
   const resolvedMax = resolveNowInDate(max);
@@ -30,22 +28,21 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
   return (
     <Controller
       control={control}
-      name={id}
+      name={attribute}
       render={({ field: { value, onChange }, fieldState: { error } }) => {
         const typedValue = value as IDate[ 'value' ];
 
         return (
           <FormControl._>
             <DatePicker {...{
-              label,
+              label: deriveLabel(c),
               error: error !== undefined,
-              helperText: error?.message,
+              helperText: error?.message || ' ',
               value: typeof typedValue === 'string' ? new Date(typedValue) : null,
               onChange: d => d && onChange(format(d, DATE_FORMAT)),
               format: DATE_FORMAT,
               maxDate: resolvedMax && new Date(resolvedMax),
               minDate: resolvedMin && new Date(resolvedMin),
-              required,
               inputVariant: 'outlined',
             }}
             />

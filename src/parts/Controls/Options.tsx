@@ -8,7 +8,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { IOptions } from '../../types/controls';
+import { deriveLabel, IOptions } from '../../types/controls';
 import * as ErrorComp from './__error';
 import * as FormControl from './__formControl';
 
@@ -25,8 +25,7 @@ const RadioControl = <Radio />;
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
   const {
-    label,
-    id,
+    attribute,
     asRadio,
     options,
     allow_other,
@@ -54,14 +53,15 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
     [options],
   );
 
+  const Label = deriveLabel(c);
+
 
   return (
     <Controller
       control={control}
-      name={id}
+      name={attribute}
       render={({ field: { value, onChange }, fieldState: { error } }) => {
         const typedValue = value as IOptions[ 'value' ];
-        const errorJSX = <ErrorComp._>{error?.message || ' '}</ErrorComp._>;
 
         const setValueRadio: NonNullable< React.ComponentProps< typeof RadioGroup >[ 'onChange' ] > = (
           ({ currentTarget: { value } }) => {
@@ -77,41 +77,42 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
               asRadio
                 ? (
                   <>
-                    <FormLabel error={Boolean(error)} component='legend'>{label}</FormLabel>
+                    <FormLabel error={Boolean(error)} component='legend'>{Label}</FormLabel>
                     <RadioGroup
                       value={(typedValue === undefined || typedValue === null) ? null : typedValue}
                       onChange={setValueRadio}
                     >
                       {radioOptionsJSX}
                     </RadioGroup>
-
-                    { errorJSX }
+                    <ErrorComp._>{error?.message || ' '}</ErrorComp._>
                   </>
                 )
                 : (
                   <>
                     <Autocomplete< IOptions[ 'options' ][ 0 ], false, false, true>
                       value={
-                        typedValue
-                          ? (
+                        (typedValue === null || typedValue === undefined)
+                          ? null
+                          : (
                             options.find(it => it.value === typedValue) ||
                               { value: typedValue, label: String(typedValue) }
                           )
-                          : null
                       }
-                      onChange={(_, newValue) => onChange(
-                        newValue === null
-                          ? null
-                          : (typeof newValue === 'string'
-                            ? newValue
-                            : newValue.value
-                          ),
-                      )}
+                      onChange={(_, newValue) => {
+                        if(newValue === null) {
+                          onChange(null);
+                          return;
+                        }
+
+                        if(typeof newValue === 'string') return;
+
+                        onChange(newValue.value);
+                      }}
                       filterOptions={(options, params) => {
                         const filtered = filter(options, params);
 
                         // Suggest the creation of a new value
-                        if (allow_other && params.inputValue !== '') {
+                        if (allow_other && !isBool && params.inputValue !== '') {
                           filtered.push({
                             label: `Add "${ params.inputValue }"`,
                             value: params.inputValue,
@@ -127,9 +128,16 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
                       getOptionLabel={option => option.label}
                       renderOption={option => option.label}
                       freeSolo
-                      renderInput={params => <TextField {...params} label={label} variant='outlined' />}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          label={Label}
+                          error={Boolean(error)}
+                          helperText={error?.message || ' '}
+                          variant='outlined'
+                        />
+                      )}
                     />
-                    {errorJSX}
                   </>
                 )
             }

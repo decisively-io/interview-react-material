@@ -3,7 +3,7 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { IEntity } from '../../types/controls';
+import { deriveLabel, IEntity } from '../../types/controls';
 import type { RenderControl } from './__renderControl';
 
 
@@ -14,14 +14,14 @@ export interface IProps {
 
 
 export const _: React.FC< IProps > = React.memo(({ c, RenderControl }) => {
-  const { id, label, template } = c;
+  const { id, template } = c;
   const mappedControls: typeof template = React.useMemo(() => (
     template.map((it, i) => ({ ...it, id: `${ id }.${ i }` }))
   ), [template, id]);
 
   return (
     <FormControl._>
-      <Typography>{label}</Typography>
+      <Typography>{deriveLabel(c)}</Typography>
       { mappedControls.map(it => <RenderControl key={it.id} c={it} />) }
     </FormControl._>
   );

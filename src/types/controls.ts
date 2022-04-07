@@ -5,7 +5,6 @@ import { format } from 'date-fns';
 
 import {
   IControlsValue,
-  ICurrency,
   IEntity,
   IFile,
   TIME_FORMAT_24,
@@ -17,24 +16,25 @@ import {
 } from '@decisively-io/types-interview';
 
 
-export * from '@decisively-io/types-interview/controls';
+export * from '@decisively-io/types-interview/dist/controls';
 
+export const deriveLabel = (c: Control): string | undefined => {
+  switch(c.type) {
+    case 'boolean':
+    case 'currency':
+    case 'date':
+    case 'datetime':
+    case 'options':
+    case 'text':
+    case 'time':
+      return `${ c.label }${ c.required ? ' *' : '' }`;
+    case 'entity':
+    case 'number_of_instances':
+      return c.label;
+    default: return undefined;
+  }
+};
 
-export const formatCurrency = (c: ICurrency, value: number): string => (
-  new Intl.NumberFormat(c.locale || 'en-AU', { style: 'currency', currency: c.symbol || 'AUD' })
-    .format(value)
-);
-
-export function parseCurrency(n: string, c: ICurrency): number {
-  const locale = c.locale || 'en-AU';
-  const thousandSeparator = Intl.NumberFormat(locale).format(11111).replace(/\p{Number}/gu, '');
-  const decimalSeparator = Intl.NumberFormat(locale).format(1.1).replace(/\p{Number}/gu, '');
-
-  return parseFloat(n
-    .replace(new RegExp(`\\${ thousandSeparator }`, 'g'), '')
-    .replace(new RegExp(`\\${ decimalSeparator }`), '.'),
-  );
-}
 
 export const deriveDateFromTimeComponent = (t: string): Date => (
   new Date(`1970-01-01T${ t }`)
@@ -57,11 +57,9 @@ function getDefaultControlValue(
         : c.value;
 
     case 'currency':
-      const maybeValueToFormat = c.value === undefined
+      return c.value === undefined
         ? c.default
         : c.value;
-
-      return maybeValueToFormat && formatCurrency(c, maybeValueToFormat);
 
     case 'date':
       return c.value === undefined
@@ -88,7 +86,7 @@ function getDefaultControlValue(
         if(c.value !== undefined) return c.value;
         if(c.default !== undefined) return c.default;
 
-        return c.required === undefined ? 0 : 1;
+        return c.min;
       })();
 
     case 'text':
@@ -111,9 +109,11 @@ export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
         case 'time':
         case 'datetime':
         case 'options':
-        case 'number_of_instances':
         case 'text':
-          draft[ c.id ] = getDefaultControlValue(c);
+          draft[ c.attribute ] = getDefaultControlValue(c);
+          break;
+        case 'number_of_instances':
+          draft[ c.entity ] = getDefaultControlValue(c);
           break;
 
         case 'entity':
@@ -143,7 +143,11 @@ function generateValidatorForControl(
       const { required } = c;
 
       const schema = yup.boolean().nullable();
-      const maybeRequired: typeof schema = required ? schema.required() : schema;
+      const maybeRequired: typeof schema = required === undefined ? schema : schema.test(
+        'withRequired',
+        'This has to be checked',
+        v => v === true,
+      );
 
       return maybeRequired;
     }
@@ -151,7 +155,7 @@ function generateValidatorForControl(
       const { max, min, required } = c;
 
       const schema = yup.number().typeError('Please specify a valid number. E.g. 5.50').nullable();
-      const withRequired: typeof schema = required ? schema : schema.test(
+      const withRequired: typeof schema = required === undefined ? schema : schema.test(
         'withRequired',
         requiredErrStr,
         v => v !== undefined && v !== null,
@@ -159,13 +163,13 @@ function generateValidatorForControl(
 
       const afterMax: typeof withRequired = max === undefined ? withRequired : withRequired.test(
         'withMax',
-        `Should be lower or equal to ${ formatCurrency(c, max) }`,
+        `Should be lower or equal to ${ max }`,
         v => v !== undefined && v !== null && v <= max,
       );
 
       const afterMin: typeof afterMax = min === undefined ? afterMax : afterMax.test(
         'withMin',
-        `Should be bigger or equal to ${ formatCurrency(c, min) }`,
+        `Should be bigger or equal to ${ min }`,
         v => v !== undefined && v !== null && v >= min,
       );
 
@@ -277,11 +281,13 @@ function generateValidatorForControl(
       return withTimeMin;
     }
     case 'number_of_instances': {
-      const { required, max, min } = c;
+      const { max, min } = c;
 
-      const schema = yup.number().typeError('Please specify a valid number. E.g. 5').nullable();
+      const schema = yup.number()
+        .typeError('Please specify a valid positive integer. E.g. 5')
+        .nullable();
 
-      const withRequired: typeof schema = required === undefined ? schema : schema.test(
+      const withRequired: typeof schema = schema.test(
         'withRequired',
         requiredErrStr,
         v => v !== undefined && v !== null,
@@ -291,13 +297,10 @@ function generateValidatorForControl(
         ? withRequired
         : withRequired.max(max, `must be less than or equal to ${ max }`);
 
-      const normalizedMin = min === undefined
-        ? required ? 1 : 0
-        : min;
 
       const withMin: typeof withMax = withMax.min(
-        normalizedMin,
-        `must be greater than or equal to ${ normalizedMin }`,
+        min,
+        `must be greater than or equal to ${ min }`,
       );
 
       return withMin;
@@ -350,11 +353,12 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
         case 'currency':
         case 'time':
         case 'datetime':
-        case 'number_of_instances':
         case 'text':
         case 'date':
         case 'options':
-          return { ...a, [ c.id ]: generateValidatorForControl(c) };
+          return { ...a, [ c.attribute ]: generateValidatorForControl(c) };
+        case 'number_of_instances':
+          return { ...a, [ c.entity ]: generateValidatorForControl(c) };
 
         case 'entity':
           return {

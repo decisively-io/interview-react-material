@@ -4,7 +4,7 @@ import { useFormContext, Controller } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { INumberOfInstances } from '../../types/controls';
+import { deriveLabel, INumberOfInstances } from '../../types/controls';
 
 
 export interface IProps {
@@ -12,7 +12,10 @@ export interface IProps {
 }
 
 
-type IArg = { value: INumberOfInstances[ 'value' ] } & Pick<
+type Value = number | null | undefined;
+
+
+type IArg = { value: Value } & Pick<
   React.ComponentProps< typeof TextField >,
   | 'onChange'
   | 'label'
@@ -30,26 +33,25 @@ const withFallback = (arg: IArg) => (
 
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
-  const { id, label, required } = c;
+  const { entity } = c;
 
   return (
     <Controller
       control={control}
-      name={id}
+      name={entity}
       render={({ field: { onChange, value }, fieldState: { error } }) => {
-        const typedValue = value as INumberOfInstances[ 'value' ];
+        const typedValue = value as Value;
 
         return (
           <FormControl._>
             {
               withFallback({
                 onChange,
-                label,
+                label: deriveLabel(c),
                 value: typedValue,
                 variant: 'outlined',
                 error: error !== undefined,
-                helperText: error?.message,
-                required,
+                helperText: error?.message || ' ',
               })
             }
           </FormControl._>

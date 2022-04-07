@@ -2,9 +2,10 @@
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { formatCurrency, ICurrency, parseCurrency } from '../../types/controls';
+import { deriveLabel, ICurrency } from '../../types/controls';
 
 
 export interface IProps {
@@ -18,46 +19,44 @@ type IArg = { value: ICurrency[ 'value' ]; c: ICurrency; } & Pick<
   | 'variant'
   | 'error'
   | 'helperText'
-  | 'required'
+  | 'InputProps'
 >;
 const withFallback = (arg: IArg) => (
   (arg.value === null || arg.value === undefined)
     ? <TextField {...arg} value='' />
-    : <TextField {...arg} value={formatCurrency(arg.c, arg.value)} />
+    : <TextField {...arg} value={arg.value} />
 );
 
 
 export const _: React.FC< IProps > = React.memo(({ c }) => {
-  const { control, setValue } = useFormContext();
-  const { id, label, required } = c;
+  const { control } = useFormContext();
+  const { attribute, symbol } = c;
+
+
+  const InputProps = React.useMemo(() => (
+    { startAdornment: <InputAdornment position='start'>{symbol || '$'}</InputAdornment> }
+  ), [symbol]);
+
 
   return (
     <Controller
       control={control}
-      name={id}
-      render={({ field: { value }, fieldState: { error } }) => {
+      name={attribute}
+      render={({ field: { value, onChange }, fieldState: { error } }) => {
         const typedValue = value as ICurrency[ 'value' ];
-        const onChangeHandler: IArg[ 'onChange' ] = e => {
-          console.log(e);
-          // const parsed = parseCurrency(e.currentTarget.value, c);
-          // const numbered = Number(parsed);
-          // if(Number.isNaN(numbered)) return;
-
-          // onChange(e);
-        };
 
         return (
           <FormControl._ fullWidth margin='normal'>
             {
               withFallback({
-                onChange: onChangeHandler,
-                label,
+                onChange,
+                label: deriveLabel(c),
                 value: typedValue,
                 variant: 'outlined',
                 error: error !== undefined,
-                helperText: error?.message,
-                required,
+                helperText: error?.message || ' ',
                 c,
+                InputProps,
               })
             }
           </FormControl._>

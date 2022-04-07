@@ -5,8 +5,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { IBoolean } from '../../types/controls';
-
+import { deriveLabel, IBoolean } from '../../types/controls';
+import * as ErrorComp from './__error';
 
 export interface IProps {
   c: IBoolean;
@@ -15,17 +15,13 @@ export interface IProps {
 
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
-  const {
-    id,
-    label,
-    required,
-  } = c;
+  const { attribute } = c;
 
   return (
     <Controller
       control={control}
-      name={id}
-      render={({ field: { onChange, value } }) => {
+      name={attribute}
+      render={({ field: { onChange, value }, fieldState: { error } }) => {
         const typedValue = value as IBoolean[ 'value' ];
 
         return (
@@ -34,13 +30,13 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
               control={(
                 <Checkbox
                   onChange={onChange}
-                  checked={typeof typedValue === 'boolean' ? typedValue : undefined}
-                  required={required}
+                  checked={typedValue || false}
                   indeterminate={typeof typedValue !== 'boolean'}
                 />
               )}
-              label={label}
+              label={deriveLabel(c)}
             />
+            <ErrorComp._>{error?.message || ' '}</ErrorComp._>
           </FormControl._>
         );
       }}

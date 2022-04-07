@@ -4,7 +4,7 @@ import { useFormContext, Controller } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { IText } from '../../types/controls';
+import { deriveLabel, IText } from '../../types/controls';
 
 
 export interface IProps {
@@ -29,12 +29,12 @@ const withFallback = (arg: IParam) => (
 
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
-  const { id, label } = c;
+  const { attribute } = c;
 
   return (
     <Controller
       control={control}
-      name={id}
+      name={attribute}
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         const typedValue = value as IText[ 'value' ];
 
@@ -43,11 +43,11 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
             {
               withFallback({
                 onChange,
-                label,
+                label: deriveLabel(c),
                 value: typedValue,
                 variant: 'outlined',
                 error: error !== undefined,
-                helperText: error?.message,
+                helperText: error?.message || ' ',
               })
             }
           </FormControl._>
