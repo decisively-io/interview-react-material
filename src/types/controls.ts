@@ -96,10 +96,10 @@ function getDefaultControlValue(
 
     case 'number_of_instances':
       return (() => {
-        if(c.value !== undefined) return c.value;
-        if(c.default !== undefined) return c.default;
+        if(c.value !== undefined && c.value !== null) return c.value.length;
+        if(c.default !== undefined) return c.default.length;
 
-        return c.min;
+        return c.min ?? 0;
       })();
 
     case 'text':
@@ -330,7 +330,7 @@ function generateValidatorForControl(
 
 
       const withMin: typeof withMax = withMax.min(
-        min,
+        min ?? 0,
         `must be greater than or equal to ${ min }`,
       );
 
