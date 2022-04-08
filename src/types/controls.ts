@@ -18,6 +18,7 @@ import {
 
 export * from '@decisively-io/types-interview/dist/controls';
 
+
 export const deriveLabel = (c: Control): string | undefined => {
   switch(c.type) {
     case 'boolean':
@@ -98,6 +99,33 @@ function getDefaultControlValue(
   }
 }
 
+
+export const deriveEntityChildId = (entity: string, indx: number, childAttr: string): string => (
+  `${ entity }.${ indx }.${ childAttr }`
+);
+
+export const deriveEntityDefaultsForRow = (
+  v: IControlsValue,
+  entity: string,
+  indx: number,
+  template: IEntity[ 'template' ],
+): typeof v => produce(v, draft => {
+  template.forEach(c => {
+    if(c.type === 'file' || c.type === 'image' || c.type === 'typography') {
+      return;
+    }
+
+    const cId = c.type === 'number_of_instances'
+      ? c.entity
+      : c.attribute;
+
+    const idForDraft = deriveEntityChildId(entity, indx, cId);
+    // eslint-disable-next-line no-param-reassign
+    draft[ idForDraft ] = getDefaultControlValue(c);
+  });
+});
+
+
 export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
   return cs.reduce< IControlsValue >(
     (a, c) => produce(a, draft => {
@@ -117,13 +145,14 @@ export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
           break;
 
         case 'entity':
-          c.template.forEach((it, i) => {
-            if(it.type === 'file' || it.type === 'typography' || it.type === 'image') {
-              return;
-            }
+          if(c.value) {
+            c.value.forEach((row, i) => {
+              deriveEntityDefaultsForRow(
+                draft, c.entity, i, row,
+              );
+            });
+          }
 
-            draft[ `${ c.id }.${ i }` ] = getDefaultControlValue(it);
-          });
           break;
 
         default:
@@ -360,25 +389,25 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
         case 'number_of_instances':
           return { ...a, [ c.entity ]: generateValidatorForControl(c) };
 
-        case 'entity':
-          return {
-            ...a,
-            ...c.template.reduce< Record< string, yup.AnySchema > >((a, it, i) => {
-              switch(it.type) {
-                case 'file':
-                case 'image':
-                case 'typography':
-                case 'date':
-                case 'options':
-                  return a;
-                default:
-                  return {
-                    ...a,
-                    [ `${ [c.id] }.${ i }` ]: generateValidatorForControl(it),
-                  };
-              }
-            }, {}),
-          };
+        // case 'entity':
+        //   return {
+        //     ...a,
+        //     ...c.template.reduce< Record< string, yup.AnySchema > >((a, it, i) => {
+        //       switch(it.type) {
+        //         case 'file':
+        //         case 'image':
+        //         case 'typography':
+        //         case 'date':
+        //         case 'options':
+        //           return a;
+        //         default:
+        //           return {
+        //             ...a,
+        //             [ `${ [c.id] }.${ i }` ]: generateValidatorForControl(it),
+        //           };
+        //       }
+        //     }, {}),
+        //   };
         default: return a;
       }
     },
