@@ -2,6 +2,8 @@
 import produce from 'immer';
 import * as yup from 'yup';
 import { format } from 'date-fns';
+import { v4 as uuid } from 'uuid';
+
 
 import {
   IControlsValue,
@@ -19,6 +21,15 @@ import {
 export * from '@decisively-io/types-interview/dist/controls';
 
 
+export const VALUE_ROWS_CONST = 'valueRows';
+
+
+export interface IEntityData {
+  rowIds: string[];
+  [ VALUE_ROWS_CONST ]: NonNullable< IEntity[ 'value' ] >;
+}
+
+
 export const deriveLabel = (c: Control): string | undefined => {
   switch(c.type) {
     case 'boolean':
@@ -28,7 +39,7 @@ export const deriveLabel = (c: Control): string | undefined => {
     case 'options':
     case 'text':
     case 'time':
-      return `${ c.label }${ c.required ? ' *' : '' }`;
+      return c.label && `${ c.label }${ c.required ? ' *' : '' }`;
     case 'entity':
     case 'number_of_instances':
       return c.label;
@@ -100,30 +111,21 @@ function getDefaultControlValue(
 }
 
 
-export const deriveEntityChildId = (entity: string, indx: number, childAttr: string): string => (
-  `${ entity }.${ indx }.${ childAttr }`
+export const deriveEntityChildId = (entity: string, indx: number, childIndx: number): string => (
+  `${ entity }.${ VALUE_ROWS_CONST }.${ indx }.${ childIndx }`
 );
 
-export const deriveEntityDefaultsForRow = (
-  v: IControlsValue,
-  entity: string,
-  indx: number,
-  template: IEntity[ 'template' ],
-): typeof v => produce(v, draft => {
-  template.forEach(c => {
-    if(c.type === 'file' || c.type === 'image' || c.type === 'typography') {
-      return;
-    }
+export const deriveEntityDefaultsForRow = (template: IEntity[ 'template' ]): IEntityData[ 'valueRows' ][ 0 ] => (
+  template.map(
+    c => {
+      if(c.type === 'file' || c.type === 'image' || c.type === 'typography') {
+        return undefined;
+      }
 
-    const cId = c.type === 'number_of_instances'
-      ? c.entity
-      : c.attribute;
-
-    const idForDraft = deriveEntityChildId(entity, indx, cId);
-    // eslint-disable-next-line no-param-reassign
-    draft[ idForDraft ] = getDefaultControlValue(c);
-  });
-});
+      return getDefaultControlValue(c);
+    },
+  )
+);
 
 
 export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
@@ -145,14 +147,13 @@ export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
           break;
 
         case 'entity':
-          if(c.value) {
-            c.value.forEach((row, i) => {
-              deriveEntityDefaultsForRow(
-                draft, c.entity, i, row,
-              );
-            });
-          }
+          const values = c.value || [];
+          const data: IEntityData = {
+            rowIds: values.map(() => uuid()),
+            valueRows: values,
+          };
 
+          draft[ c.entity ] = data;
           break;
 
         default:
@@ -373,6 +374,33 @@ function generateValidatorForControl(
   }
 }
 
+export const getEntityValueIndx = (path: string): number => {
+  const [maybeBracketedIndx] = path.match(/\[\d+\]$/)!;
+
+  return Number(maybeBracketedIndx!.slice(1, -1));
+};
+
+
+function maybeGetErrMessage(path: string, template: IEntity[ 'template' ], value: any): string | false {
+  const i = getEntityValueIndx(path);
+  const c = template[ i ];
+  if(c.type === 'file' || c.type === 'typography' || c.type === 'image') {
+    return false;
+  }
+
+  const validator = generateValidatorForControl(c);
+
+  try {
+    validator.validateSync(value);
+  } catch(e) {
+    if(e instanceof Error) {
+      return e.message;
+    }
+  }
+
+  return false;
+}
+
 export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
   const shape = cs.reduce(
     // eslint-disable-next-line complexity
@@ -389,25 +417,31 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
         case 'number_of_instances':
           return { ...a, [ c.entity ]: generateValidatorForControl(c) };
 
-        // case 'entity':
-        //   return {
-        //     ...a,
-        //     ...c.template.reduce< Record< string, yup.AnySchema > >((a, it, i) => {
-        //       switch(it.type) {
-        //         case 'file':
-        //         case 'image':
-        //         case 'typography':
-        //         case 'date':
-        //         case 'options':
-        //           return a;
-        //         default:
-        //           return {
-        //             ...a,
-        //             [ `${ [c.id] }.${ i }` ]: generateValidatorForControl(it),
-        //           };
-        //       }
-        //     }, {}),
-        //   };
+        case 'entity':
+          const { template } = c;
+
+          return {
+            ...a,
+            [ c.entity ]: yup.object({
+              [ VALUE_ROWS_CONST ]: yup.array(
+                yup.array(
+                  yup.mixed().test(
+                    'arrTest',
+                    ({ path, value }) => {
+                      const rez = maybeGetErrMessage(path, template, value);
+                      if(rez === false) return null;
+
+                      return rez;
+                    },
+                    (value, { path }) => {
+                      const rez = maybeGetErrMessage(path, template, value);
+                      return rez === false;
+                    },
+                  ),
+                ),
+              ),
+            }),
+          };
         default: return a;
       }
     },

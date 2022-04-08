@@ -173,25 +173,28 @@ export const testScreen: Screen = {
       style: 'h3',
       text: 'Hello',
     },
-    // {
-    //   type: 'entity',
-    //   id: 'entity1',
-    //   label: 'Entity 1',
-    //   template: [
-    //     {
-    //       type: 'boolean',
-    //       id: 'boolean2',
-    //       attribute: 'booleanAttribute2',
-    //       label: 'Boolean 2',
-    //       default: true,
-    //     },
-    //     {
-    //       type: 'datetime',
-    //       id: 'datetime2',
-    //       attribute: 'datetimeAttribute2',
-    //       date_min: '2023-01-01',
-    //     },
-    //   ],
-    // },
+    {
+      type: 'entity',
+      id: 'entity1-UUID',
+      label: 'Entity 1',
+      template: [
+        {
+          type: 'boolean',
+          id: 'boolean2',
+          attribute: 'booleanAttribute2',
+          label: 'Boolean 2',
+          // default: true,
+          required: true,
+        },
+        {
+          type: 'datetime',
+          id: 'datetime2',
+          attribute: 'datetimeAttribute2',
+          date_min: '2023-01-01',
+          label: 'DateTime 2',
+        },
+      ],
+      entity: 'entity1',
+    },
   ],
 };

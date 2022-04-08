@@ -1,15 +1,16 @@
-/* eslint-disable react/jsx-pascal-case */
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable react/jsx-pascal-case,import/no-extraneous-dependencies */
 import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import ReactDom from 'react-dom';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 import { Step, setCurrentInStep, getCurrentStep, Screen } from '../types';
 import { Parts } from '..';
 import { defaultStage, steps, testScreen } from './data';
 
+
 if(module.hot) {
   module.hot.accept();
 }
+
 
 const APP_DIV_ID = 'app';
 const rootDiv = (() => {
@@ -30,6 +31,16 @@ const rootDiv = (() => {
   );
   return document.getElementById(APP_DIV_ID)!;
 })();
+
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#70F058',
+    },
+  },
+});
+
 
 const App = () => {
   React.useEffect(() => Parts.Font.add(document), []);
@@ -57,22 +68,24 @@ const App = () => {
   );
 
   return (
-    <Parts.Frame._
-      contentJSX={(
-        <Parts.Content._ stepAndScreen={
-          currentStep === null ? null : { step: currentStep, screen }
-        }
-        />
-      )}
-      menuJSX={(
-        <Parts.Menu._
-          stages={stages}
-          onClick={onClick}
-          estimate='8 min'
-          progress={25}
-        />
-      )}
-    />
+    <ThemeProvider theme={theme}>
+      <Parts.Frame._
+        contentJSX={(
+          <Parts.Content._ stepAndScreen={
+            currentStep === null ? null : { step: currentStep, screen }
+          }
+          />
+        )}
+        menuJSX={(
+          <Parts.Menu._
+            stages={stages}
+            onClick={onClick}
+            estimate='8 min'
+            progress={25}
+          />
+        )}
+      />
+    </ThemeProvider>
   );
 };
 

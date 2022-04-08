@@ -77,12 +77,12 @@ const Wrap = styled.form`
       text-transform: initial;
     }
 
-    >.${ classes[ '>btns' ][ '>back' ] }, >.${ classes[ '>btns' ][ '>next' ] } {
+    /* >.${ classes[ '>btns' ][ '>back' ] }, >.${ classes[ '>btns' ][ '>next' ] } {
       border-radius: 0.5rem;
-    }
+    } */
 
-    >.${ classes[ '>btns' ][ '>back' ] } { border: 1px solid #0A0A0A; }
-    >.${ classes[ '>btns' ][ '>next' ] } { background-color: #70F058; }
+    /* >.${ classes[ '>btns' ][ '>back' ] } { border: 1px solid #0A0A0A; } */
+    /* >.${ classes[ '>btns' ][ '>next' ] } { background-color: #70F058; } */
   }
 `;
 
@@ -129,10 +129,20 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
             </div>
           </div>
           <div className={classes[ '>btns' ]._}>
-            <Button size='medium' className={classes[ '>btns' ][ '>back' ]}>
+            <Button
+              size='medium'
+              variant='outlined'
+              className={classes[ '>btns' ][ '>back' ]}
+            >
               <Typography>Back</Typography>
             </Button>
-            <Button size='medium' type='submit' className={classes[ '>btns' ][ '>next' ]}>
+            <Button
+              size='medium'
+              type='submit'
+              variant='contained'
+              color='primary'
+              className={classes[ '>btns' ][ '>next' ]}
+            >
               <Typography>Next</Typography>
             </Button>
           </div>
