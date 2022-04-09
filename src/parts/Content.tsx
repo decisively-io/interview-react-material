@@ -8,8 +8,8 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { Step, Screen } from '@decisively-io/types-interview';
 import * as Controls from './Controls';
-import { Step, Screen } from '../types';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 import { generateValidator, deriveDefaultControlsValue, IControlsValue } from '../types/controls';
 
@@ -76,13 +76,6 @@ const Wrap = styled.form`
       font-weight: 600;
       text-transform: initial;
     }
-
-    /* >.${ classes[ '>btns' ][ '>back' ] }, >.${ classes[ '>btns' ][ '>next' ] } {
-      border-radius: 0.5rem;
-    } */
-
-    /* >.${ classes[ '>btns' ][ '>back' ] } { border: 1px solid #0A0A0A; } */
-    /* >.${ classes[ '>btns' ][ '>next' ] } { background-color: #70F058; } */
   }
 `;
 
@@ -90,21 +83,39 @@ const Wrap = styled.form`
 export interface IRootProps {
   className?: string;
   stepAndScreen: { step: Step; screen: Screen };
+  next: (data: any) => unknown;
+  back: (data: any) => unknown;
 }
+
 
 const CONTENT_DISPLAY_NAME = `${ DISPLAY_NAME_PREFIX }/Content`;
 
+
 export const __Root: React.FC< IRootProps > = React.memo(p => {
-  const { className, stepAndScreen: { step, screen } } = p;
+  const {
+    className,
+    stepAndScreen: { step, screen },
+    next,
+    back,
+  } = p;
   const { controls } = screen;
 
   const defaultValues = deriveDefaultControlsValue(controls);
   const resolver = yupResolver(generateValidator(controls));
 
   const methods = useForm({ resolver, defaultValues });
+
+  const { getValues } = methods;
+
   const onSubmit = React.useCallback((data: IControlsValue) => {
-    console.log(data);
-  }, []);
+    next(data);
+  }, [next]);
+
+  const onBack = React.useCallback(() => {
+    const values = getValues();
+
+    back(values);
+  }, [getValues, back]);
 
 
   return (
@@ -132,6 +143,7 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
             <Button
               size='medium'
               variant='outlined'
+              onClick={onBack}
               className={classes[ '>btns' ][ '>back' ]}
             >
               <Typography>Back</Typography>
@@ -154,16 +166,15 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
 __Root.displayName = `${ CONTENT_DISPLAY_NAME }/__Root`;
 
 
-export interface IProps {
-  className?: string;
+export interface IProps extends Pick< IRootProps, 'className' | 'back' | 'next' > {
   stepAndScreen: IRootProps[ 'stepAndScreen' ] | null;
 }
 
 export const _: React.FC< IProps > = React.memo(
-  ({ className, stepAndScreen }) => {
+  ({ stepAndScreen, ...p }) => {
     if(stepAndScreen === null) return null;
 
-    return <__Root {...{ className, stepAndScreen }} />;
+    return <__Root {...{ stepAndScreen, ...p }} />;
   },
 );
 _.displayName = CONTENT_DISPLAY_NAME;

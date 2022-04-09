@@ -10,7 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import cls from 'classnames';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
-import { Interview, containsCurrentStep } from '../types';
+import { Session, containsCurrentStep } from '@decisively-io/types-interview';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 
 
@@ -171,7 +171,7 @@ const RenderStage: React.FC< IRenderStageProps > = React.memo(
     const listCName = cls(classes[ '>list' ]._, getCnameForLevel(level + 1));
 
 
-    if(s.steps.length === 0) {
+    if(s.steps !== undefined && s.steps.length === 0) {
       return (
         <>
           <ListItem onClick={clickOnItem} button className={itemCName}>
@@ -194,7 +194,11 @@ const RenderStage: React.FC< IRenderStageProps > = React.memo(
         </ListItem>
         <Collapse in={open} timeout='auto' className={collapseCName}>
           <List className={listCName}>
-            { s.steps.map(it => <RenderStage key={it.id} s={it} level={level + 1} onClick={onClick} />) }
+            {
+              s.steps === undefined
+                ? null
+                : s.steps.map(it => <RenderStage key={it.id} s={it} level={level + 1} onClick={onClick} />)
+            }
           </List>
         </Collapse>
       </>
@@ -205,7 +209,7 @@ RenderStage.displayName = `${ displayName }/RenderStage`;
 
 
 export interface IProps {
-  stages: Interview[ 'stages' ];
+  stages: Session[ 'steps' ];
   onClick: IRenderStageProps[ 'onClick' ];
   className?: string;
   /** percent */

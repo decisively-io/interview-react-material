@@ -2,9 +2,8 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core';
-import { Step, setCurrentInStep, getCurrentStep, Screen } from '../types';
 import { Parts } from '..';
-import { defaultStage, steps, testScreen } from './data';
+import { session } from './data';
 
 
 if(module.hot) {
@@ -41,49 +40,18 @@ const theme = createTheme({
   },
 });
 
+const getSession = () => Promise.resolve(session);
 
 const App = () => {
   React.useEffect(() => Parts.Font.add(document), []);
 
-  const [stages, dispatch] = React.useReducer< React.Reducer< Step[], { type: 'click', payload: Step[ 'id' ] } > >(
-    (s, a) => {
-      switch(a.type) {
-        case 'click': return setCurrentInStep(
-          { ...defaultStage, steps: s }, a.payload,
-        ).steps;
-        default: return s;
-      }
-    },
-    steps,
-  );
-  const [screen] = React.useState< Screen >(testScreen);
-  const onClick = React.useCallback< Parts.Menu.IProps[ 'onClick' ] >(
-    id => dispatch({ type: 'click', payload: id }),
-    [dispatch],
-  );
-
-  const currentStep = React.useMemo(
-    () => getCurrentStep({ ...defaultStage, steps: stages }),
-    [stages],
-  );
 
   return (
     <ThemeProvider theme={theme}>
-      <Parts.Frame._
-        contentJSX={(
-          <Parts.Content._ stepAndScreen={
-            currentStep === null ? null : { step: currentStep, screen }
-          }
-          />
-        )}
-        menuJSX={(
-          <Parts.Menu._
-            stages={stages}
-            onClick={onClick}
-            estimate='8 min'
-            progress={25}
-          />
-        )}
+      <Parts.Root
+        getSession={getSession}
+        next={d => console.log('next', d)}
+        back={d => console.log('back', d)}
       />
     </ThemeProvider>
   );
