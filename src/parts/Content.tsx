@@ -83,8 +83,8 @@ const Wrap = styled.form`
 export interface IRootProps {
   className?: string;
   stepAndScreen: { step: Step; screen: Screen };
-  next: (data: any) => unknown;
-  back: (data: any) => unknown;
+  next: (data: IControlsValue) => unknown;
+  back: (data: IControlsValue) => unknown;
 }
 
 

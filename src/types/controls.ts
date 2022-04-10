@@ -15,6 +15,7 @@ import {
   Control,
   TIME_FORMAT_12,
   DATE_FORMAT,
+  Screen,
 } from '@decisively-io/types-interview';
 
 
@@ -449,4 +450,17 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
   );
 
   return yup.object().shape(shape).required();
+}
+
+export function normalizeControlsValue(v: IControlsValue, cs: Screen['controls']): typeof v {
+  return cs.reduce(
+    (a, c) => {
+      if(c.type === 'entity') {
+        return { ...a, [ c.entity ]: a[ c.entity ][ VALUE_ROWS_CONST ] };
+      }
+
+      return a;
+    },
+    v,
+  );
 }

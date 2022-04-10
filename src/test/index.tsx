@@ -40,7 +40,18 @@ const theme = createTheme({
   },
 });
 
-const getSession = () => Promise.resolve(session);
+const getSession: Parts.IProps[ 'getSession' ] = () => Promise.resolve(session);
+const next: Parts.IProps[ 'next' ] = (s, d) => {
+  console.log('next', d);
+
+  return Promise.resolve(s);
+};
+const back: Parts.IProps[ 'back' ] = (s, d) => {
+  console.log('back', d);
+
+  return Promise.resolve(s);
+};
+
 
 const App = () => {
   React.useEffect(() => Parts.Font.add(document), []);
@@ -50,8 +61,8 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Parts.Root
         getSession={getSession}
-        next={d => console.log('next', d)}
-        back={d => console.log('back', d)}
+        next={next}
+        back={back}
       />
     </ThemeProvider>
   );
