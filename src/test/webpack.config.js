@@ -29,7 +29,7 @@ const config = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
-    symlinks: false,
+    symlinks: true,
     cacheWithContext: false,
   },
   optimization: {

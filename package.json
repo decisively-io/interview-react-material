@@ -4,8 +4,8 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "ts": "tsc --watch --noEmit",
-    "transpileToDist": "rm -rf dist && tsc --noUnusedLocals --noUnusedParameters&& rm -rf ./dist/test",
+    "ts": "tsc --watch",
+    "transpileToDist": "rm -rf dist && tsc && rm -rf ./dist/test",
     "lint:check": "eslint --ext js,jsx,ts,tsx src",
     "lint:fix": "eslint --fix --ext js,jsx,ts,tsx src",
     "test": "webpack serve --config ./src/test/webpack.config.js"
@@ -23,7 +23,6 @@
   "homepage": "https://github.com/decisively-io/interview-react-material#readme",
   "devDependencies": {
     "@date-io/date-fns": "^1.3.13",
-    "@decisively-io/types-interview": "0.1.16",
     "@hookform/resolvers": "^2.8.8",
     "@material-ui/core": "^4.12.3",
     "@material-ui/lab": "^4.0.0-alpha.60",
@@ -61,5 +60,9 @@
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4",
     "yup": "^0.32.11"
+  },
+  "dependencies": {
+    "@decisively-io/interview-sdk": "^0.2.8",
+    "@decisively-io/types-interview": "^0.1.17"
   }
 }

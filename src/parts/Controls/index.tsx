@@ -12,7 +12,7 @@ export interface IProps {
 
 export const _: React.FC< IProps > = React.memo(({ controls }) => (
   <>
-    { controls.map(it => <RenderControl key={it.id} c={it} />) }
+    { controls.map((it, i) => <RenderControl key={it.id ?? `${ it.type }-${ i }`} c={it} />) }
   </>
 ));
 _.displayName = `${ DISPLAY_NAME_PREFIX }`;

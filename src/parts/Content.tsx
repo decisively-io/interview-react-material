@@ -53,12 +53,16 @@ const Wrap = styled.form`
       margin: 0 auto;
       padding: 1.5rem 2rem;
       max-width: 43.75rem;
+      display: flex;
+      flex-direction: column;
 
       .${ formClss[ '>h' ] } {
-        font-weight: 700;
-        font-size: 20px;
-        line-height: 1.2;
         margin-bottom: 1.5rem;
+      }
+
+      > * {
+        margin-top: 1rem;
+        margin-bottom: 0;
       }
     }
   }
@@ -117,7 +121,6 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
     back(values);
   }, [getValues, back]);
 
-
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <FormProvider {...methods}>
@@ -127,14 +130,9 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
         >
           <div className={classes[ '>formWrap' ]._}>
             <div className={formClss._}>
-              <Typography variant='h4' className={formClss[ '>h' ]}>
+              <Typography variant='h2' className={formClss[ '>h' ]}>
                 {step.title}
               </Typography>
-
-              <Typography className={formClss[ '>desc' ]} variant='body1'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in ultricies purus. Sed eu viverra risus, et cursus tortor. Proin sagittis arcu at mi mattis malesuada. Ut malesuada vitae felis sit amet lacinia. Pellentesque sagittis elementum vestibulum. Fusce ac lectus ut odio convallis varius quis nec risus.
-              </Typography>
-
 
               <Controls._ controls={screen.controls} />
             </div>
