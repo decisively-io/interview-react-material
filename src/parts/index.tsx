@@ -46,6 +46,7 @@ export interface IProps {
   getSession: () => Promise< Session >;
   next: (s: Session, d: IControlsValue) => Promise< typeof s >;
   back: (s: Session, d: IControlsValue) => Promise< typeof s >;
+  navigateTo: (s: Session, stepId: Session[ 'steps' ][ 0 ][ 'id' ]) => Promise< typeof s >;
 }
 
 export interface IState {
@@ -73,15 +74,13 @@ export class Root extends React.PureComponent< IProps, IState > {
   }
 
   __setCurrentStep = (stepId: Session[ 'steps' ][ 0 ][ 'id' ]): void => {
-    this.setState(state => ({
-      ...state,
-      session: {
-        ...state.session,
-        steps: setCurrentInStep(
-          { ...defaultStep, steps: state.session.steps }, stepId,
-        ).steps || [],
-      },
-    }));
+    const {
+      props: { navigateTo },
+      state: { session },
+    } = this;
+
+    navigateTo(session, stepId)
+      .then(s => this.setState({ session: s }));
   }
 
   __getSession = (): void => {
@@ -103,24 +102,32 @@ export class Root extends React.PureComponent< IProps, IState > {
   // ===================================================================================
 
 
-  __back: Content.IProps[ 'back' ] = data => {
+  __back: Content.IProps[ 'back' ] = (data, reset) => {
     const {
       props: { back },
       state: { session: s },
     } = this;
 
     back(s, normalizeControlsValue(data, s.screen.controls))
-      .then(s => this.___setSession(s));
+      .then(s => {
+        reset();
+
+        this.___setSession({ ...s });
+      });
   }
 
-  __next: Content.IProps[ 'next' ] = data => {
+  __next: Content.IProps[ 'next' ] = (data, reset) => {
     const {
       props: { next },
       state: { session: s },
     } = this;
 
     next(s, normalizeControlsValue(data, s.screen.controls))
-      .then(s => this.___setSession({ ...s }));
+      .then(s => {
+        reset();
+
+        this.___setSession({ ...s });
+      });
   }
 
 

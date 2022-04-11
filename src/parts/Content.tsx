@@ -87,8 +87,8 @@ const Wrap = styled.form`
 export interface IRootProps {
   className?: string;
   stepAndScreen: { step: Step; screen: Screen };
-  next: (data: IControlsValue) => unknown;
-  back: (data: IControlsValue) => unknown;
+  next: (data: IControlsValue, reset: () => unknown) => unknown;
+  back: (data: IControlsValue, reset: () => unknown) => unknown;
 }
 
 
@@ -109,17 +109,17 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
 
   const methods = useForm({ resolver, defaultValues });
 
-  const { getValues } = methods;
+  const { getValues, reset } = methods;
 
   const onSubmit = React.useCallback((data: IControlsValue) => {
-    next(data);
-  }, [next]);
+    next(data, reset);
+  }, [next, reset]);
 
   const onBack = React.useCallback(() => {
     const values = getValues();
 
-    back(values);
-  }, [getValues, back]);
+    back(values, reset);
+  }, [getValues, back, reset]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>

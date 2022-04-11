@@ -2,14 +2,16 @@
 import React, { useState, useCallback } from 'react';
 import ReactDom from 'react-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core';
-import { SessionInstance, transformResponse } from '@decisively-io/interview-sdk';
+import { SessionInstance, transformResponse, setCurrentInStep } from '@decisively-io/interview-sdk';
 import { AttributeData, ResponseData, Session } from '@decisively-io/types-interview';
 import { Parts } from '..';
 import { provider, motorVehicle, travelComp } from './interviews';
 
+
 if(module.hot) {
   module.hot.accept();
 }
+
 
 const APP_DIV_ID = 'app';
 const rootDiv = (() => {
@@ -69,17 +71,29 @@ const App = () => {
   //   return <p>loading</p>;
   // }
 
-  const onClick = async (id: string) => {
-    if(session) {
-      console.log('navigate', id);
-      const res = await session.navigate(id);
-      setSession(res);
-    }
+  const navigateTo: Parts.IProps[ 'navigateTo' ] = async (_, id) => {
+    // if(Math.random() > -1 && session !== undefined) {
+    //   const nextSession: typeof session = {
+    //     ...session,
+    //     steps: setCurrentInStep(
+    //       { ...Parts.defaultStep, steps: session.steps }, id,
+    //     ).steps || [],
+    //   };
 
-    return null;
+    //   setSession(nextSession);
+    //   return Promise.resolve(nextSession);
+    // }
+
+    if(!session) return _;
+
+    console.log('navigate', id);
+    const res = await session.navigate(id);
+    setSession(res);
+
+    return res;
   };
 
-  const next = async (s: Session, data: AttributeData) => {
+  const next: Parts.IProps[ 'next' ] = async (s, data) => {
     if(session) {
       const payload = transformResponse(session, data as ResponseData);
       console.log('next', s, data, payload);
@@ -92,7 +106,7 @@ const App = () => {
     return s;
   };
 
-  const back = async (s: Session, data: AttributeData) => {
+  const back: Parts.IProps[ 'back' ] = async (s, data) => {
     if(session) {
       const payload = transformResponse(session, data as ResponseData);
       const prevScreen = prev || undefined;
@@ -105,14 +119,13 @@ const App = () => {
     return s;
   };
 
-  console.log('session', session);
-
   return (
     <ThemeProvider theme={theme}>
       <Parts.Root
         getSession={getSession}
         next={next}
         back={back}
+        navigateTo={navigateTo}
       />
     </ThemeProvider>
   );
