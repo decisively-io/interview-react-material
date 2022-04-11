@@ -4,8 +4,8 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "ts": "tsc --watch --noEmit",
-    "transpileToDist": "rm -rf dist && tsc --noUnusedLocals --noUnusedParameters&& rm -rf ./dist/test",
+    "ts": "tsc --watch",
+    "transpileToDist": "rm -rf dist && tsc && rm -rf ./dist/test",
     "lint:check": "eslint --ext js,jsx,ts,tsx src",
     "lint:fix": "eslint --fix --ext js,jsx,ts,tsx src",
     "test": "webpack serve --config ./src/test/webpack.config.js"

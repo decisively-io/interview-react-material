@@ -1,15 +1,15 @@
 /* eslint-disable react/jsx-pascal-case,import/no-extraneous-dependencies */
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import ReactDom from 'react-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core';
+import { SessionInstance, transformResponse } from '@decisively-io/interview-sdk';
+import { AttributeData, ResponseData, Session } from '@decisively-io/types-interview';
 import { Parts } from '..';
-import { session } from './data';
-
+import { provider, motorVehicle, travelComp } from './interviews';
 
 if(module.hot) {
   module.hot.accept();
 }
-
 
 const APP_DIV_ID = 'app';
 const rootDiv = (() => {
@@ -31,7 +31,6 @@ const rootDiv = (() => {
   return document.getElementById(APP_DIV_ID)!;
 })();
 
-
 const theme = createTheme({
   palette: {
     primary: {
@@ -40,22 +39,73 @@ const theme = createTheme({
   },
 });
 
-const getSession: Parts.IProps[ 'getSession' ] = () => Promise.resolve(session);
-const next: Parts.IProps[ 'next' ] = (s, d) => {
-  console.log('next', d);
-
-  return Promise.resolve(s);
-};
-const back: Parts.IProps[ 'back' ] = (s, d) => {
-  console.log('back', d);
-
-  return Promise.resolve(s);
-};
-
+const stripSession = (s: SessionInstance): Session => ({
+  sessionId: s.sessionId,
+  status: s.status,
+  state: s.state,
+  screen: s.screen,
+  steps: s.steps,
+  context: s.context,
+  data: s.data,
+});
 
 const App = () => {
   React.useEffect(() => Parts.Font.add(document), []);
 
+  const [session, setSession] = useState<SessionInstance>();
+  const [prev, setPrev] = useState<string | null>(null);
+
+  const getSession = useCallback(async () => {
+    const { id, interview } = travelComp;
+    const res = await provider.create(id, { interview });
+    // provider.load(id, sessionAllVisited)
+    setSession(res);
+    return stripSession(res);
+  }, [setSession]);
+
+  // const state = useMemo(() => session && stripSession(session), [session]);
+
+  // if(!session) {
+  //   return <p>loading</p>;
+  // }
+
+  const onClick = async (id: string) => {
+    if(session) {
+      console.log('navigate', id);
+      const res = await session.navigate(id);
+      setSession(res);
+    }
+
+    return null;
+  };
+
+  const next = async (s: Session, data: AttributeData) => {
+    if(session) {
+      const payload = transformResponse(session, data as ResponseData);
+      console.log('next', s, data, payload);
+      const res = await session.submit(payload);
+      setPrev(session.screen.id);
+      setSession(res);
+      return stripSession(res);
+    }
+
+    return s;
+  };
+
+  const back = async (s: Session, data: AttributeData) => {
+    if(session) {
+      const payload = transformResponse(session, data as ResponseData);
+      const prevScreen = prev || undefined;
+      const res = await session.submit(payload, prevScreen);
+      setPrev(session.screen.id);
+      setSession(res);
+      return stripSession(res);
+    }
+
+    return s;
+  };
+
+  console.log('session', session);
 
   return (
     <ThemeProvider theme={theme}>

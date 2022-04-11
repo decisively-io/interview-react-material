@@ -1,11 +1,13 @@
 /* eslint-disable react/jsx-pascal-case,import/no-extraneous-dependencies,react/sort-comp */
 import React from 'react';
 import {
-  setCurrentInStep,
-  getCurrentStep,
   Session,
   IControlsValue,
 } from '@decisively-io/types-interview';
+import {
+  setCurrentInStep,
+  getCurrentStep,
+} from '@decisively-io/interview-sdk';
 import { normalizeControlsValue } from '../types';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 import * as Frame from './Frame';
@@ -41,7 +43,7 @@ export const defaultSession: Session = {
 
 
 export interface IProps {
-  getSession(): Promise< Session >;
+  getSession: () => Promise< Session >;
   next: (s: Session, d: IControlsValue) => Promise< typeof s >;
   back: (s: Session, d: IControlsValue) => Promise< typeof s >;
 }

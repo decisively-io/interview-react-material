@@ -10,7 +10,8 @@ import Avatar from '@material-ui/core/Avatar';
 import cls from 'classnames';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
-import { Session, containsCurrentStep } from '@decisively-io/types-interview';
+import { Session } from '@decisively-io/types-interview';
+import { containsCurrentStep } from '@decisively-io/interview-sdk';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 
 
@@ -193,13 +194,11 @@ const RenderStage: React.FC< IRenderStageProps > = React.memo(
           <ListItemText primary={s.title} className={textCName} />
         </ListItem>
         <Collapse in={open} timeout='auto' className={collapseCName}>
-          <List className={listCName}>
-            {
-              s.steps === undefined
-                ? null
-                : s.steps.map(it => <RenderStage key={it.id} s={it} level={level + 1} onClick={onClick} />)
-            }
-          </List>
+          { s.steps && (
+            <List className={listCName}>
+              { s.steps.map(it => <RenderStage key={it.id} s={it} level={level + 1} onClick={onClick} />) }
+            </List>
+          ) }
         </Collapse>
       </>
     );
@@ -231,7 +230,7 @@ export const _: React.FC< IProps > = React.memo(
       </List>
 
       <div className={classes[ '>progress' ]._}>
-        <BorderLinearProgress
+        <LinearProgress
           className={classes[ '>progress' ][ '>bar' ]}
           variant='determinate'
           value={progress}
