@@ -62,7 +62,7 @@
     "yup": "^0.32.11"
   },
   "dependencies": {
-    "@decisively-io/interview-sdk": "^0.2.7",
-    "@decisively-io/types-interview": "^0.1.16"
+    "@decisively-io/interview-sdk": "^0.2.8",
+    "@decisively-io/types-interview": "^0.1.17"
   }
 }

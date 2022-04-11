@@ -140,20 +140,20 @@
   dependencies:
     "@date-io/core" "^1.3.13"
 
-"@decisively-io/interview-sdk@^0.2.7":
-  version "0.2.7"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.2.7/eea140db9cc49d9639f5d545df86aa3c6e683d298e51861bf207be8a92dd79f2#6b7f88b1f3cd892025891bdbe6b50ca860e301da"
-  integrity sha512-7fv1f/wfRsZMcCOTg956yPzIcdUnvEOKT8tGjK2uQpOcuqkJ2trfHpLR4xZWAKyp/Nsi+aSlBKxykZQaqwjmWg==
+"@decisively-io/interview-sdk@^0.2.8":
+  version "0.2.8"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.2.8/406fa7bd02947bd7c349342463af3b8bebdc0585e54cfd5eba0589d763bdaa1e#f252b3eac8cc8e78826be72377ad4edb6fafbd5e"
+  integrity sha512-IX0S5eZxRZ7IAoTIORPwyZ+gzJ9g2nsd4Cup4goVDK5iT/QmZ1ZJwl/7FFqZAR1Dujmbbpol3X0atL/qclx8GQ==
   dependencies:
     axios "^0.26.1"
     immer "^9.0.12"
     rxjs "^7.5.5"
     uuid "^8.3.2"
 
-"@decisively-io/types-interview@^0.1.16":
-  version "0.1.16"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/types-interview/0.1.16/c553d39c80af14c4c2c31b002b8c42ec59ef53b2b2ff36021575e5afcf9fbde3#614d544243c9451b56cf291c0b70e70414147894"
-  integrity sha512-KinGCqorKplB5FDZ1AaoqCSWAkoSOVVw6vQLKD5mNvu1kRL1B1++NWt+pxfniid4fsiDcrbxZ2hJAdZiJrELxQ==
+"@decisively-io/types-interview@^0.1.17":
+  version "0.1.17"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/types-interview/0.1.17/f4c4ae4e62d907c8790d707d1370f41c145a22e5a3d4b3317bc41ed832520695#fc824b19771fd5cee1bfbaf83008c7799e5c630a"
+  integrity sha512-GxZoBc4zg6PD19d6z5gtvcOD2B0yJoDD4733W6G4ipgesSiPOEUE0wePjgSLAxDfmSMT8AWFY+pgAw7uwo1qyw==
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"
