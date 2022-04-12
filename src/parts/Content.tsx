@@ -100,6 +100,9 @@ export interface IRootProps {
   stepAndScreen: { step: Step; screen: Screen };
   next: (data: IControlsValue, reset: () => unknown) => unknown;
   back: false | ((data: IControlsValue, reset: () => unknown) => unknown);
+  backDisabled: boolean;
+  nextDisabled: boolean;
+  isSubmitting: boolean;
 }
 
 
@@ -112,6 +115,9 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
     stepAndScreen: { step, screen },
     next,
     back,
+    backDisabled,
+    nextDisabled,
+    isSubmitting,
   } = p;
   const { controls } = screen;
 
@@ -120,7 +126,7 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
 
   const methods = useForm({ resolver, defaultValues });
 
-  const { getValues, reset, formState } = methods;
+  const { getValues, reset } = methods;
 
   const onSubmit = React.useCallback((data: IControlsValue) => {
     console.log('form on submit', data);
@@ -134,7 +140,6 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
     }
   }, [getValues, back, reset]);
 
-  const submitting = formState.isSubmitting || formState.isSubmitted;
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -156,20 +161,20 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
             <Button
               size='medium'
               variant='outlined'
-              disabled={back === false}
+              disabled={back === false || backDisabled}
               onClick={onBack}
               className={classes[ '>btns' ][ '>back' ]}
             >
               <Typography>Back</Typography>
             </Button>
             <div className={submitClss._}>
-              {submitting && <CircularProgress size='2rem' />}
+              {isSubmitting && <CircularProgress size='2rem' />}
               <Button
                 size='medium'
                 type='submit'
                 variant='contained'
                 color='primary'
-                disabled={submitting || !formState.isValid}
+                disabled={nextDisabled}
                 className={submitClss[ '>next' ]}
               >
                 <Typography>Next</Typography>
@@ -184,7 +189,15 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
 __Root.displayName = `${ CONTENT_DISPLAY_NAME }/__Root`;
 
 
-export interface IProps extends Pick< IRootProps, 'className' | 'back' | 'next' > {
+export interface IProps extends Pick<
+  IRootProps,
+  | 'className'
+  | 'back'
+  | 'next'
+  | 'backDisabled'
+  | 'nextDisabled'
+  | 'isSubmitting'
+> {
   stepAndScreen: IRootProps[ 'stepAndScreen' ] | null;
 }
 

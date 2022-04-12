@@ -28,7 +28,7 @@ export const RenderControl: React.FC< IRenderControlProps > = React.memo(({ c })
     case 'number_of_instances': return <NumberOfInstances._ {...{ c }} />;
     case 'typography': return <Typography._ {...{ c }} />;
     case 'entity': return <Entity._ {...{ c, RenderControl }} />;
-    default: return null;
+    default: return <>{JSON.stringify(c)}</>;
   }
 });
 RenderControl.displayName = `${ DISPLAY_NAME_PREFIX }/__RenderControl`;

@@ -423,7 +423,7 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
           return { ...a, [ c.entity ]: generateValidatorForControl(c) };
 
         case 'entity':
-          const { template } = c;
+          const template: IEntity[ 'template' ] = c.template;
 
           return {
             ...a,
@@ -449,6 +449,20 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
             [ c.entity ]: yup.array(
               yup.object({
                 '@id': yup.string(),
+
+                ...template.reduce< Record< string, yup.AnySchema > >(
+                  (a, it) => {
+                    if(it.type === 'file' || it.type === 'image' || it.type === 'typography') {
+                      return a;
+                    }
+
+                    return {
+                      ...a,
+                      [ it.type === 'number_of_instances' ? it.entity : it.attribute ]: generateValidatorForControl(it),
+                    };
+                  },
+                  {},
+                ),
               }),
             ),
           };

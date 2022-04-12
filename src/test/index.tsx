@@ -6,6 +6,7 @@ import { SessionInstance, transformResponse, setCurrentInStep } from '@decisivel
 import { AttributeData, ResponseData, Session } from '@decisively-io/types-interview';
 import { Parts } from '..';
 import { provider, motorVehicle, travelComp } from './interviews';
+import { session as dataSession } from './data';
 
 
 if(module.hot) {
@@ -65,24 +66,8 @@ const App = () => {
     return stripSession(res);
   }, [setSession]);
 
-  // const state = useMemo(() => session && stripSession(session), [session]);
-
-  // if(!session) {
-  //   return <p>loading</p>;
-  // }
 
   const navigateTo: Parts.IProps[ 'navigateTo' ] = async (_, id) => {
-    // if(Math.random() > -1 && session !== undefined) {
-    //   const nextSession: typeof session = {
-    //     ...session,
-    //     steps: setCurrentInStep(
-    //       { ...Parts.defaultStep, steps: session.steps }, id,
-    //     ).steps || [],
-    //   };
-
-    //   setSession(nextSession);
-    //   return Promise.resolve(nextSession);
-    // }
 
     if(!session) return _;
 

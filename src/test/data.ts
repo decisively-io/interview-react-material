@@ -94,7 +94,7 @@ export const session: Session = {
         attribute: 'attributeText',
         id: 'text1',
         label: 'Text 1',
-        // required: true,
+        required: true,
         // max: 2,
         // value: null,
         // default: 'tet',

@@ -49,7 +49,12 @@ export interface IProps {
   navigateTo: (s: Session, stepId: Session[ 'steps' ][ 0 ][ 'id' ]) => Promise< typeof s >;
 }
 
-export interface IState {
+export interface IState extends Pick<
+  Content.IProps,
+  | 'backDisabled'
+  | 'nextDisabled'
+  | 'isSubmitting'
+> {
   session: Session;
 }
 
@@ -62,6 +67,9 @@ export class Root extends React.PureComponent< IProps, IState > {
 
     this.state = {
       session: defaultSession,
+      backDisabled: false,
+      isSubmitting: false,
+      nextDisabled: false,
     };
   }
 
@@ -108,11 +116,14 @@ export class Root extends React.PureComponent< IProps, IState > {
       state: { session: s },
     } = this;
 
+    this.setState({ backDisabled: true });
+
     back(s, normalizeControlsValue(data, s.screen.controls))
       .then(s => {
         reset();
         console.log('back success, setting new session data', s);
-        this.___setSession({ ...s });
+        this.___setSession(s);
+        this.setState({ backDisabled: false });
       });
   }
 
@@ -122,12 +133,15 @@ export class Root extends React.PureComponent< IProps, IState > {
       state: { session: s },
     } = this;
 
+    this.setState({ nextDisabled: true, isSubmitting: true });
+
     next(s, normalizeControlsValue(data, s.screen.controls))
       .then(s => {
         console.log('next success, resetting');
         reset();
         console.log('next success, setting new session data', s);
-        this.___setSession({ ...s });
+        this.___setSession(s);
+        this.setState({ nextDisabled: false, isSubmitting: false });
       });
   }
 
@@ -137,7 +151,12 @@ export class Root extends React.PureComponent< IProps, IState > {
 
   render(): JSX.Element {
     const {
-      state: { session },
+      state: {
+        session,
+        backDisabled,
+        isSubmitting,
+        nextDisabled,
+      },
       __setCurrentStep,
       __back,
       __next,
@@ -162,6 +181,9 @@ export class Root extends React.PureComponent< IProps, IState > {
             stepAndScreen={stepAndScreen}
             next={__next}
             back={stepIndex !== 0 && __back}
+            backDisabled={backDisabled}
+            isSubmitting={isSubmitting}
+            nextDisabled={nextDisabled}
           />
         )}
         menuJSX={(
