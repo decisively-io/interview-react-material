@@ -5,3 +5,5 @@ src
 .gitignore
 .npmignore
 tsconfig.json
+*.sh
+questions.md

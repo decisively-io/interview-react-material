@@ -116,17 +116,21 @@ export const deriveEntityChildId = (entity: string, indx: number, childIndx: num
   `${ entity }.${ VALUE_ROWS_CONST }.${ indx }.${ childIndx }`
 );
 
-export const deriveEntityDefaultsForRow = (template: IEntity[ 'template' ]): IEntityData[ 'valueRows' ][ 0 ] => (
-  template.map(
-    c => {
-      if(c.type === 'file' || c.type === 'image' || c.type === 'typography') {
-        return undefined;
-      }
+export interface IRenderControlProps {
+  c: Control;
+}
 
-      return getDefaultControlValue(c);
-    },
-  )
-);
+// export const deriveEntityDefaultsForRow = (template: IEntity[ 'template' ]): IEntityData[ 'valueRows' ][ 0 ] => (
+//   template.map(
+//     c => {
+//       if(c.type === 'file' || c.type === 'image' || c.type === 'typography') {
+//         return undefined;
+//       }
+
+//       return getDefaultControlValue(c);
+//     },
+//   )
+// );
 
 
 export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
@@ -149,12 +153,12 @@ export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
 
         case 'entity':
           const values = c.value || [];
-          const data: IEntityData = {
-            rowIds: values.map(() => uuid()),
-            valueRows: values,
-          };
+          // const data: IEntityData = {
+          //   rowIds: values.map(() => uuid()),
+          //   valueRows: values,
+          // };
 
-          draft[ c.entity ] = data;
+          draft[ c.entity ] = values;
           break;
 
         default:
@@ -423,25 +427,30 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
 
           return {
             ...a,
-            [ c.entity ]: yup.object({
-              [ VALUE_ROWS_CONST ]: yup.array(
-                yup.array(
-                  yup.mixed().test(
-                    'arrTest',
-                    ({ path, value }) => {
-                      const rez = maybeGetErrMessage(path, template, value);
-                      if(rez === false) return null;
+            // [ c.entity ]: yup.object({
+            //   [ VALUE_ROWS_CONST ]: yup.array(
+            //     yup.array(
+            //       yup.mixed().test(
+            //         'arrTest',
+            //         ({ path, value }) => {
+            //           const rez = maybeGetErrMessage(path, template, value);
+            //           if(rez === false) return null;
 
-                      return rez;
-                    },
-                    (value, { path }) => {
-                      const rez = maybeGetErrMessage(path, template, value);
-                      return rez === false;
-                    },
-                  ),
-                ),
-              ),
-            }),
+            //           return rez;
+            //         },
+            //         (value, { path }) => {
+            //           const rez = maybeGetErrMessage(path, template, value);
+            //           return rez === false;
+            //         },
+            //       ),
+            //     ),
+            //   ),
+            // }),
+            [ c.entity ]: yup.array(
+              yup.object({
+                '@id': yup.string(),
+              }),
+            ),
           };
         default: return a;
       }
@@ -455,9 +464,9 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
 export function normalizeControlsValue(v: IControlsValue, cs: Screen['controls']): typeof v {
   return cs.reduce(
     (a, c) => {
-      if(c.type === 'entity') {
-        return { ...a, [ c.entity ]: a[ c.entity ][ VALUE_ROWS_CONST ] };
-      }
+      // if(c.type === 'entity') {
+      //   return { ...a, [ c.entity ]: a[ c.entity ][ VALUE_ROWS_CONST ] };
+      // }
 
       return a;
     },

@@ -10,7 +10,9 @@ import Avatar from '@material-ui/core/Avatar';
 import cls from 'classnames';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
-import { Session } from '@decisively-io/types-interview';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import addSeconds from 'date-fns/addSeconds';
+import { Progress, Session } from '@decisively-io/types-interview';
 import { containsCurrentStep } from '@decisively-io/interview-sdk';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 
@@ -101,6 +103,15 @@ const Wrap = styled.div`
     }
   }
 
+  .${ clssItem._ }:hover {
+    .MuiTypography-root {
+      color: #0A0A0A;
+    }
+    .${ clssItem[ '>avatar' ]._ } {
+      border: 1px solid #0A0A0A;
+    }
+  }
+
 
   .${ clssItem[ '>avatar' ]._ } {
     margin-right: 1rem;
@@ -151,8 +162,13 @@ export interface IRenderStageProps {
 const RenderStage: React.FC< IRenderStageProps > = React.memo(
   ({ s, level = 0, index, onClick }) => {
     const clickOnItem = React.useCallback(
-      () => onClick(s.id),
-      [s.id, onClick],
+      () => {
+        // do nothing if current step
+        if(!s.current) {
+          onClick(s.id);
+        }
+      },
+      [s, onClick],
     );
 
     const cNameForLevel = getCnameForLevel(level);
@@ -183,9 +199,12 @@ const RenderStage: React.FC< IRenderStageProps > = React.memo(
       );
     }
 
+    const canNavigate = s.complete || s.visited || s.current;
+
     return (
       <>
         <ListItem
+          disabled={!canNavigate}
           button
           onClick={clickOnItem}
           className={itemCName}
@@ -211,14 +230,12 @@ export interface IProps {
   stages: Session[ 'steps' ];
   onClick: IRenderStageProps[ 'onClick' ];
   className?: string;
-  /** percent */
-  progress: number;
-  /** e.g. '8 min', '1 hour' */
-  estimate: string;
+  /** The interviews progress, percent complete and time remaining */
+  progress?: Progress;
 }
 
 export const _: React.FC< IProps > = React.memo(
-  ({ stages, className, onClick, estimate, progress }) => (
+  ({ stages, className, onClick, progress }) => (
     <Wrap className={className}>
       <List className={cls(classes[ '>list' ]._, getCnameForLevel(0))}>
         {
@@ -229,29 +246,26 @@ export const _: React.FC< IProps > = React.memo(
         }
       </List>
 
-      <div className={classes[ '>progress' ]._}>
-        <LinearProgress
-          className={classes[ '>progress' ][ '>bar' ]}
-          variant='determinate'
-          value={progress}
-        />
-
-        <div className={clssPrgrsInfo._}>
-          <Typography variant='caption' className={clssPrgrsInfo[ '>est' ]}>
-            Progress
-            {' '}
-            {progress}
-            %
-          </Typography>
-          <Typography variant='caption' className={clssPrgrsInfo[ '>summary' ]}>
-            - estimate
-            {' '}
-            {estimate}
-            {' '}
-            left
-          </Typography>
+      {progress && (
+        <div className={classes[ '>progress' ]._}>
+          <LinearProgress
+            className={classes[ '>progress' ][ '>bar' ]}
+            variant='determinate'
+            value={progress.percentage}
+          />
+          <div className={clssPrgrsInfo._}>
+            <Typography variant='caption' className={clssPrgrsInfo[ '>est' ]}>
+              {`Progress ${ progress.percentage.toFixed(0) }%`}
+            </Typography>
+            {progress.time > 0 && (
+              <Typography variant='caption' className={clssPrgrsInfo[ '>summary' ]}>
+                &nbsp;
+                {`- estimate ${ formatDistanceToNow(addSeconds(Date.now(), progress.time)) } left`}
+              </Typography>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </Wrap>
   ),
 );

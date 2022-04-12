@@ -111,7 +111,7 @@ export class Root extends React.PureComponent< IProps, IState > {
     back(s, normalizeControlsValue(data, s.screen.controls))
       .then(s => {
         reset();
-
+        console.log('back success, setting new session data', s);
         this.___setSession({ ...s });
       });
   }
@@ -124,8 +124,9 @@ export class Root extends React.PureComponent< IProps, IState > {
 
     next(s, normalizeControlsValue(data, s.screen.controls))
       .then(s => {
+        console.log('next success, resetting');
         reset();
-
+        console.log('next success, setting new session data', s);
         this.___setSession({ ...s });
       });
   }
@@ -143,9 +144,9 @@ export class Root extends React.PureComponent< IProps, IState > {
     } = this;
 
 
-    const { steps, screen } = session;
+    const { steps, screen, progress } = session;
     const currentStep = getCurrentStep({ ...defaultStep, steps });
-
+    const stepIndex = currentStep ? steps.findIndex(s => s.id === currentStep.id) : -1;
 
     const stepAndScreen = currentStep === null
       ? null
@@ -156,17 +157,18 @@ export class Root extends React.PureComponent< IProps, IState > {
       <Frame._
         contentJSX={(
           <Content._
+            // use screen id as key, as it will re-render if the screen changes
+            key={screen.id}
             stepAndScreen={stepAndScreen}
             next={__next}
-            back={__back}
+            back={stepIndex !== 0 && __back}
           />
         )}
         menuJSX={(
           <Menu._
             stages={steps}
+            progress={progress}
             onClick={__setCurrentStep}
-            estimate='8 min'
-            progress={25}
           />
         )}
       />

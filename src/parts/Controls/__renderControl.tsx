@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { Control } from '../../types/controls';
+import { IRenderControlProps } from '../../types/controls';
 import * as Boolean from './Boolean';
 import * as Currency from './Currency';
 import * as Date from './Date';
@@ -13,11 +13,6 @@ import * as Image from './Image';
 import * as NumberOfInstances from './NumberOfInstances';
 import * as Typography from './Typography';
 import * as Entity from './Entity';
-
-
-export interface IRenderControlProps {
-  c: Control;
-}
 
 
 export const RenderControl: React.FC< IRenderControlProps > = React.memo(({ c }) => {

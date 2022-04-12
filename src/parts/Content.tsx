@@ -9,6 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { Step, Screen } from '@decisively-io/types-interview';
+import { CircularProgress } from '@material-ui/core';
 import * as Controls from './Controls';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 import { generateValidator, deriveDefaultControlsValue, IControlsValue } from '../types/controls';
@@ -28,11 +29,14 @@ export const classes = {
     _: 'btns',
 
     '>back': 'back',
-    '>next': 'next',
+    '>submit': {
+      _: 'submit',
+      '>next': 'next',
+    },
   },
 };
 const formClss = classes[ '>formWrap' ][ '>form' ];
-
+const submitClss = classes[ '>btns' ][ '>submit' ];
 
 const Wrap = styled.form`
   height: 100%;
@@ -67,14 +71,21 @@ const Wrap = styled.form`
     }
   }
 
-
-
   >.${ classes[ '>btns' ]._ } {
     padding: 1rem 2rem;
     width: 100%;
     border-top: 1px solid #E5E5E5;
     display: flex;
     justify-content: space-between;
+
+    .${ submitClss._ } {
+      display: flex;
+      align-items: center;
+
+      .${ submitClss[ '>next' ] } {
+        margin-left: 1rem;
+      }
+    }
 
     .MuiTypography-root {
       font-weight: 600;
@@ -88,7 +99,7 @@ export interface IRootProps {
   className?: string;
   stepAndScreen: { step: Step; screen: Screen };
   next: (data: IControlsValue, reset: () => unknown) => unknown;
-  back: (data: IControlsValue, reset: () => unknown) => unknown;
+  back: false | ((data: IControlsValue, reset: () => unknown) => unknown);
 }
 
 
@@ -109,17 +120,21 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
 
   const methods = useForm({ resolver, defaultValues });
 
-  const { getValues, reset } = methods;
+  const { getValues, reset, formState } = methods;
 
   const onSubmit = React.useCallback((data: IControlsValue) => {
+    console.log('form on submit', data);
     next(data, reset);
   }, [next, reset]);
 
   const onBack = React.useCallback(() => {
     const values = getValues();
-
-    back(values, reset);
+    if(back) {
+      back(values, reset);
+    }
   }, [getValues, back, reset]);
+
+  const submitting = formState.isSubmitting || formState.isSubmitted;
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -130,7 +145,7 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
         >
           <div className={classes[ '>formWrap' ]._}>
             <div className={formClss._}>
-              <Typography variant='h2' className={formClss[ '>h' ]}>
+              <Typography variant='h4' className={formClss[ '>h' ]}>
                 {step.title}
               </Typography>
 
@@ -141,20 +156,25 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
             <Button
               size='medium'
               variant='outlined'
+              disabled={back === false}
               onClick={onBack}
               className={classes[ '>btns' ][ '>back' ]}
             >
               <Typography>Back</Typography>
             </Button>
-            <Button
-              size='medium'
-              type='submit'
-              variant='contained'
-              color='primary'
-              className={classes[ '>btns' ][ '>next' ]}
-            >
-              <Typography>Next</Typography>
-            </Button>
+            <div className={submitClss._}>
+              {submitting && <CircularProgress size='2rem' />}
+              <Button
+                size='medium'
+                type='submit'
+                variant='contained'
+                color='primary'
+                disabled={submitting || !formState.isValid}
+                className={submitClss[ '>next' ]}
+              >
+                <Typography>Next</Typography>
+              </Button>
+            </div>
           </div>
         </Wrap>
       </FormProvider>
