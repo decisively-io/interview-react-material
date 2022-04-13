@@ -10,6 +10,25 @@ export const session: Session = {
     title: 'Screen 1',
     controls: [
       {
+        type: 'typography',
+        id: 'typography1',
+        style: 'banner-green',
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
+        emoji: '&#129409;',
+      },
+      {
+        type: 'typography',
+        id: 'typography1',
+        style: 'banner-yellow',
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
+      },
+      {
+        type: 'typography',
+        id: 'typography1',
+        style: 'banner-red',
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
+      },
+      {
         type: 'boolean',
         attribute: 'attributeBool',
         id: 'bool1',
@@ -113,12 +132,6 @@ export const session: Session = {
         // max: 10,
         // default: 5,
         // value: null,
-      },
-      {
-        type: 'typography',
-        id: 'typography1',
-        style: 'h3',
-        text: 'Hello',
       },
       {
         type: 'entity',
