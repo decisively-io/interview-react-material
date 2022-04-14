@@ -98,11 +98,11 @@ const Wrap = styled.form`
 export interface IRootProps {
   className?: string;
   stepAndScreen: { step: Step; screen: Screen };
-  next: (data: IControlsValue, reset: () => unknown) => unknown;
-  back: false | ((data: IControlsValue, reset: () => unknown) => unknown);
-  backDisabled: boolean;
-  nextDisabled: boolean;
-  isSubmitting: boolean;
+  next?: (data: IControlsValue, reset: () => unknown) => unknown;
+  back?: ((data: IControlsValue, reset: () => unknown) => unknown);
+  backDisabled?: boolean;
+  nextDisabled?: boolean;
+  isSubmitting?: boolean;
 }
 
 
@@ -115,9 +115,9 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
     stepAndScreen: { step, screen },
     next,
     back,
-    backDisabled,
-    nextDisabled,
-    isSubmitting,
+    backDisabled = false,
+    nextDisabled = false,
+    isSubmitting = false,
   } = p;
   const { controls } = screen;
 
@@ -130,7 +130,9 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
 
   const onSubmit = React.useCallback((data: IControlsValue) => {
     console.log('form on submit', data);
-    next(data, reset);
+    if(next) {
+      next(data, reset);
+    }
   }, [next, reset]);
 
   const onBack = React.useCallback(() => {
@@ -140,7 +142,7 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
     }
   }, [getValues, back, reset]);
 
-
+  const pageTitle = screen.title || step.title || '';
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <FormProvider {...methods}>
@@ -151,36 +153,46 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
           <div className={classes[ '>formWrap' ]._}>
             <div className={formClss._}>
               <Typography variant='h4' className={formClss[ '>h' ]}>
-                {step.title}
+                {pageTitle}
               </Typography>
 
               <Controls._ controls={screen.controls} />
             </div>
           </div>
-          <div className={classes[ '>btns' ]._}>
-            <Button
-              size='medium'
-              variant='outlined'
-              disabled={back === false || backDisabled}
-              onClick={onBack}
-              className={classes[ '>btns' ][ '>back' ]}
-            >
-              <Typography>Back</Typography>
-            </Button>
-            <div className={submitClss._}>
-              {isSubmitting && <CircularProgress size='2rem' />}
-              <Button
-                size='medium'
-                type='submit'
-                variant='contained'
-                color='primary'
-                disabled={nextDisabled}
-                className={submitClss[ '>next' ]}
-              >
-                <Typography>Next</Typography>
-              </Button>
+          {(next || back) && (
+            <div className={classes[ '>btns' ]._}>
+              {
+                back && (
+                  <Button
+                    size='medium'
+                    variant='outlined'
+                    disabled={backDisabled}
+                    onClick={onBack}
+                    className={classes[ '>btns' ][ '>back' ]}
+                  >
+                    <Typography>Back</Typography>
+                  </Button>
+                )
+              }
+              {
+                next && (
+                  <div className={submitClss._}>
+                    {isSubmitting && <CircularProgress size='2rem' />}
+                    <Button
+                      size='medium'
+                      type='submit'
+                      variant='contained'
+                      color='primary'
+                      disabled={nextDisabled}
+                      className={submitClss[ '>next' ]}
+                    >
+                      <Typography>Next</Typography>
+                    </Button>
+                  </div>
+                )
+              }
             </div>
-          </div>
+          )}
         </Wrap>
       </FormProvider>
     </MuiPickersUtilsProvider>

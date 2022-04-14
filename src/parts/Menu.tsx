@@ -9,27 +9,20 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import cls from 'classnames';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { withStyles } from '@material-ui/core/styles';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import addSeconds from 'date-fns/addSeconds';
+import { formatDistanceToNow, addSeconds } from 'date-fns';
 import { Progress, Session } from '@decisively-io/types-interview';
 import { containsCurrentStep } from '@decisively-io/interview-sdk';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 
+const BorderLinearProgress = styled(LinearProgress)`
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: #E5E5E5;
 
-const BorderLinearProgress = withStyles(() => ({
-  root: {
-    height: '0.5rem',
-    borderRadius: '0.25rem',
-  },
-  colorPrimary: {
-    backgroundColor: '#E5E5E5',
-  },
-  bar: {
-    borderRadius: '0.25rem',
-    backgroundColor: '#0A0A0A',
-  },
-}))(LinearProgress);
+  > .MuiLinearProgress-bar {
+    border-radius: 0.2rem;
+  }
+`;
 
 const displayName = `${ DISPLAY_NAME_PREFIX }/Menu`;
 
@@ -46,6 +39,7 @@ export const classes = {
     '>item': {
       _: 'item',
 
+      '&.complete': 'complete',
       '&.active': 'active',
       '>avatar': {
         _: 'avatar',
@@ -85,16 +79,22 @@ const Wrap = styled.div`
 
   .MuiTypography-root {
     font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 1rem;
     line-height: 1.5;
     font-style: normal;
     color: #767676;
   }
 
+  .${ clssItem._ }.${ clssItem[ '&.complete' ] } {
+    opacity: 1;
+    .MuiTypography-root { font-weight: 600; }
+  }
+
   .${ clssItem._ }.${ clssItem[ '&.active' ] } {
     &>.${ clssItem[ '>avatar' ]._ } {
       background-color: #0A0A0A;
+      border: none;
       .MuiTypography-root { color: #ffffff; }
     }
 
@@ -154,13 +154,14 @@ const Wrap = styled.div`
 
 export interface IRenderStageProps {
   s: IProps[ 'stages' ][ 0 ],
+  status: Session[ 'status' ],
   level?: number;
   index?: number;
   onClick: (id: IProps[ 'stages' ][0][ 'id' ]) => unknown;
 }
 
 const RenderStage: React.FC< IRenderStageProps > = React.memo(
-  ({ s, level = 0, index, onClick }) => {
+  ({ s, status, level = 0, index, onClick }) => {
     const clickOnItem = React.useCallback(
       () => {
         // do nothing if current step
@@ -182,7 +183,7 @@ const RenderStage: React.FC< IRenderStageProps > = React.memo(
 
     const open = React.useMemo(() => containsCurrentStep(s), [s]);
 
-    const itemCName = cls(clssItem._, cNameForLevel, open && clssItem[ '&.active' ]);
+    const itemCName = cls(clssItem._, cNameForLevel, open && clssItem[ '&.active' ], s.complete && clssItem[ '&.complete' ]);
     const textCName = cls(clssItem[ '>text' ], cNameForLevel);
     const collapseCName = cls(classes[ '>list' ][ '>collapse' ], cNameForLevel);
     const listCName = cls(classes[ '>list' ]._, getCnameForLevel(level + 1));
@@ -200,11 +201,12 @@ const RenderStage: React.FC< IRenderStageProps > = React.memo(
     }
 
     const canNavigate = s.complete || s.visited || s.current;
-
+    const interviewComplete = status !== 'in-progress';
+    const disableNavigation = !canNavigate || (interviewComplete && !s.current);
     return (
       <>
         <ListItem
-          disabled={!canNavigate}
+          disabled={disableNavigation}
           button
           onClick={clickOnItem}
           className={itemCName}
@@ -215,7 +217,15 @@ const RenderStage: React.FC< IRenderStageProps > = React.memo(
         <Collapse in={open} timeout='auto' className={collapseCName}>
           { s.steps && (
             <List className={listCName}>
-              { s.steps.map(it => <RenderStage key={it.id} s={it} level={level + 1} onClick={onClick} />) }
+              { s.steps.map(it => (
+                <RenderStage
+                  key={it.id}
+                  s={it}
+                  status={status}
+                  level={level + 1}
+                  onClick={onClick}
+                />
+              )) }
             </List>
           ) }
         </Collapse>
@@ -227,6 +237,7 @@ RenderStage.displayName = `${ displayName }/RenderStage`;
 
 
 export interface IProps {
+  status: Session[ 'status' ];
   stages: Session[ 'steps' ];
   onClick: IRenderStageProps[ 'onClick' ];
   className?: string;
@@ -235,12 +246,12 @@ export interface IProps {
 }
 
 export const _: React.FC< IProps > = React.memo(
-  ({ stages, className, onClick, progress }) => (
+  ({ status, stages, className, onClick, progress }) => (
     <Wrap className={className}>
       <List className={cls(classes[ '>list' ]._, getCnameForLevel(0))}>
         {
           stages.reduce(
-            (a, it, i) => a.concat(<RenderStage key={it.id} s={it} index={i + 1} onClick={onClick} />),
+            (a, it, i) => a.concat(<RenderStage key={it.id} s={it} status={status} index={i + 1} onClick={onClick} />),
           [] as JSX.Element[],
           )
         }
@@ -248,19 +259,19 @@ export const _: React.FC< IProps > = React.memo(
 
       {progress && (
         <div className={classes[ '>progress' ]._}>
-          <LinearProgress
+          <BorderLinearProgress
             className={classes[ '>progress' ][ '>bar' ]}
             variant='determinate'
             value={progress.percentage}
           />
           <div className={clssPrgrsInfo._}>
             <Typography variant='caption' className={clssPrgrsInfo[ '>est' ]}>
-              {`Progress ${ progress.percentage.toFixed(0) }%`}
+              {progress.percentage === 100 ? 'Complete' : `Progress ${ progress.percentage.toFixed(0) }%`}
             </Typography>
             {progress.time > 0 && (
               <Typography variant='caption' className={clssPrgrsInfo[ '>summary' ]}>
                 &nbsp;
-                {`- estimate ${ formatDistanceToNow(addSeconds(Date.now(), progress.time)) } left`}
+                {`- ${ formatDistanceToNow(addSeconds(Date.now(), progress.time)) } left`}
               </Typography>
             )}
           </div>

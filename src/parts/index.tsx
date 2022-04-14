@@ -4,10 +4,7 @@ import {
   Session,
   IControlsValue,
 } from '@decisively-io/types-interview';
-import {
-  setCurrentInStep,
-  getCurrentStep,
-} from '@decisively-io/interview-sdk';
+import { getCurrentStep } from '@decisively-io/interview-sdk';
 import { normalizeControlsValue } from '../types';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 import * as Frame from './Frame';
@@ -163,7 +160,7 @@ export class Root extends React.PureComponent< IProps, IState > {
     } = this;
 
 
-    const { steps, screen, progress } = session;
+    const { steps, screen, progress, status } = session;
     const currentStep = getCurrentStep({ ...defaultStep, steps });
     const stepIndex = currentStep ? steps.findIndex(s => s.id === currentStep.id) : -1;
 
@@ -171,6 +168,27 @@ export class Root extends React.PureComponent< IProps, IState > {
       ? null
       : { step: currentStep, screen };
 
+    if(status !== 'in-progress') {
+      return (
+        <Frame._
+          contentJSX={(
+            <Content._
+              // use screen id as key, as it will re-render if the screen changes
+              key={screen.id}
+              stepAndScreen={stepAndScreen}
+            />
+          )}
+          menuJSX={(
+            <Menu._
+              status={status}
+              stages={steps}
+              progress={progress}
+              onClick={__setCurrentStep}
+            />
+          )}
+        />
+      );
+    }
 
     return (
       <Frame._
@@ -180,14 +198,15 @@ export class Root extends React.PureComponent< IProps, IState > {
             key={screen.id}
             stepAndScreen={stepAndScreen}
             next={__next}
-            back={stepIndex !== 0 && __back}
-            backDisabled={backDisabled}
+            back={__back}
+            backDisabled={backDisabled || stepIndex !== 0}
             isSubmitting={isSubmitting}
             nextDisabled={nextDisabled}
           />
         )}
         menuJSX={(
           <Menu._
+            status={status}
             stages={steps}
             progress={progress}
             onClick={__setCurrentStep}

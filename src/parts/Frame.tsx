@@ -30,7 +30,7 @@ const Wrap = styled.div`
 
 
 export interface IProps {
-  menuJSX: JSX.Element;
+  menuJSX?: JSX.Element;
   contentJSX: JSX.Element;
   className?: string;
 }
@@ -39,9 +39,11 @@ export interface IProps {
 export const _: React.FC< IProps > = React.memo(
   ({ contentJSX, menuJSX, className }) => (
     <Wrap className={className}>
-      <div className={classes[ '>menu' ]}>
-        { menuJSX }
-      </div>
+      {menuJSX && (
+        <div className={classes[ '>menu' ]}>
+          { menuJSX }
+        </div>
+      )}
       <div className={classes[ '>content' ]}>
         { contentJSX }
       </div>

@@ -127,7 +127,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
                       options={options}
                       getOptionLabel={option => option.label}
                       renderOption={option => option.label}
-                      freeSolo
+                      freeSolo={allow_other}
                       renderInput={params => (
                         <TextField
                           {...params}

@@ -27,9 +27,14 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
     minutes_increment,
     allowSeconds,
   } = c;
-  const uiTimeFormat = amPmFormat
+  let uiTimeFormat = amPmFormat
     ? TIME_FORMAT_12
     : TIME_FORMAT_24;
+
+  // strip seconds from display
+  if(!allowSeconds) {
+    uiTimeFormat = uiTimeFormat.replace(':ss', '');
+  }
 
   return (
     <Controller
