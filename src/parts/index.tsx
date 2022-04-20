@@ -199,7 +199,7 @@ export class Root extends React.PureComponent< IProps, IState > {
             stepAndScreen={stepAndScreen}
             next={__next}
             back={__back}
-            backDisabled={backDisabled || stepIndex !== 0}
+            backDisabled={backDisabled || stepIndex === 0}
             isSubmitting={isSubmitting}
             nextDisabled={nextDisabled}
           />
