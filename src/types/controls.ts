@@ -493,8 +493,6 @@ export function normalizeContolValue(c: NonNestedControl, v: any): typeof v {
 export function normalizeControlsValue(v: IControlsValue, cs: Screen['controls']): typeof v {
   return produce(v, draft => (cs.reduce(
     (a, c) => {
-      console.log('draft', draft);
-
       if(c.type === 'typography' || c.type === 'file' || c.type === 'image') {
         return a;
       }
