@@ -58,7 +58,12 @@ const App = () => {
   const [session, setSession] = useState<SessionInstance>();
   const [prev, setPrev] = useState<string | null>(null);
 
-  const getSession = useCallback(async () => {
+  const getSession: Parts.IProps[ 'getSession' ] = useCallback(async () => {
+    if(Math.random() > -1) {
+      setSession(dataSession as any);
+      return dataSession;
+    }
+
     const { id, interview } = travelComp;
     const res = await provider.create(id, { interview });
     // provider.load(id, sessionAllVisited)
@@ -79,6 +84,11 @@ const App = () => {
   };
 
   const next: Parts.IProps[ 'next' ] = async (s, data) => {
+    if(Math.random() > -1) {
+      console.log(data);
+      return s;
+    }
+
     if(session) {
       const payload = transformResponse(session, data as ResponseData);
       console.log('next', s, data, payload);

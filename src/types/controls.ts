@@ -16,6 +16,7 @@ import {
   TIME_FORMAT_12,
   DATE_FORMAT,
   Screen,
+  NonNestedControl,
 } from '@decisively-io/types-interview';
 
 
@@ -341,7 +342,7 @@ function generateValidatorForControl(
       return withMin;
     }
     case 'text': {
-      const { required, max } = c;
+      const { required, max, variation } = c;
 
       const schema = yup.string().nullable();
       const maybeRequired: typeof schema = required === undefined ? schema : schema.test(
@@ -350,11 +351,30 @@ function generateValidatorForControl(
         v => v !== undefined && v !== null && v !== '',
       );
 
-      const withMax: typeof maybeRequired = max === undefined
-        ? maybeRequired
-        : maybeRequired.max(max, `This must be at most ${ max } characters`);
+      const nextSchema = ((): typeof maybeRequired => {
+        if(variation !== undefined && variation.type === 'number') {
+          return maybeRequired.test(
+            'asNumber',
+            'Please input valid number',
+            v => {
+              if(typeof v !== 'string') return required === undefined;
+              if(v === '' && required === undefined) return true;
 
-      return withMax;
+              return Boolean(v.match(/^-?\d+(\.\d*)?$/));
+            },
+          );
+        }
+
+        const maybeWithEmail = variation !== undefined && variation.type === 'email'
+          ? maybeRequired.email('Please provide valid email')
+          : maybeRequired;
+
+        return max === undefined
+          ? maybeWithEmail
+          : maybeWithEmail.max(max, `This must be at most ${ max } characters`);
+      })();
+
+      return nextSchema;
     }
     case 'options': {
       const { required } = c;
@@ -427,25 +447,6 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
 
           return {
             ...a,
-            // [ c.entity ]: yup.object({
-            //   [ VALUE_ROWS_CONST ]: yup.array(
-            //     yup.array(
-            //       yup.mixed().test(
-            //         'arrTest',
-            //         ({ path, value }) => {
-            //           const rez = maybeGetErrMessage(path, template, value);
-            //           if(rez === false) return null;
-
-            //           return rez;
-            //         },
-            //         (value, { path }) => {
-            //           const rez = maybeGetErrMessage(path, template, value);
-            //           return rez === false;
-            //         },
-            //       ),
-            //     ),
-            //   ),
-            // }),
             [ c.entity ]: yup.array(
               yup.object({
                 '@id': yup.string(),
@@ -475,15 +476,61 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
   return yup.object().shape(shape).required();
 }
 
-export function normalizeControlsValue(v: IControlsValue, cs: Screen['controls']): typeof v {
-  return cs.reduce(
-    (a, c) => {
-      // if(c.type === 'entity') {
-      //   return { ...a, [ c.entity ]: a[ c.entity ][ VALUE_ROWS_CONST ] };
-      // }
+export function normalizeContolValue(c: NonNestedControl, v: any): typeof v {
+  if(c.type === 'text') {
+    const typedV = v as null | string | undefined;
 
+    return (typedV === null || typedV === undefined)
+      ? typedV
+      : (c.variation !== undefined && c.variation.type === 'number')
+        ? Number(typedV)
+        : typedV;
+  }
+
+  return v;
+}
+
+export function normalizeControlsValue(v: IControlsValue, cs: Screen['controls']): typeof v {
+  return produce(v, draft => (cs.reduce(
+    (a, c) => {
+      console.log('draft', draft);
+
+      if(c.type === 'typography' || c.type === 'file' || c.type === 'image') {
+        return a;
+      }
+
+      if(c.type === 'number_of_instances') {
+        // eslint-disable-next-line no-param-reassign
+        a[ c.entity ] = normalizeContolValue(c, a[ c.entity ]);
+        return a;
+      }
+
+      if(c.type === 'entity') {
+        const typedV = a[ c.entity ] as Array< IControlsValue >;
+        const { template } = c;
+
+        typedV.forEach(value => template.forEach(t => {
+          if(t.type === 'typography' || t.type === 'file' || t.type === 'image') {
+            return;
+          }
+
+          if(t.type === 'number_of_instances') {
+            // eslint-disable-next-line no-param-reassign
+            value[ t.entity ] = normalizeContolValue(t, value[ t.entity ]);
+            return;
+          }
+
+          // eslint-disable-next-line no-param-reassign
+          value[ t.attribute ] = normalizeContolValue(t, value[ t.attribute ]);
+        }));
+
+        return a;
+      }
+
+      // eslint-disable-next-line no-param-reassign
+      a[ c.attribute ] = normalizeContolValue(c, a[ c.attribute ]);
       return a;
     },
-    v,
-  );
+    draft,
+  )));
 }
