@@ -38,6 +38,10 @@ const Actions = styled(Grid)`
   height: 2.5rem;
 `;
 
+const Heading = styled(Typography)`
+  && { margin-bottom: 1rem; }
+`;
+
 export interface IProps {
   c: IEntity;
   RenderControl: React.FC<IRenderControlProps>;
@@ -85,7 +89,7 @@ export const _: React.FC<IProps> = React.memo(({ c, RenderControl }) => {
 
   return (
     <div>
-      <Typography variant='h5' style={{ marginBottom: '1rem' }}>{deriveLabel(c)}</Typography>
+      <Heading variant='h5'>{deriveLabel(c)}</Heading>
       <FieldGroup container direction='column'>
         {fields.map((field, index) => (
           <Grid container key={field.id} alignItems='flex-start' justifyContent='space-between'>
