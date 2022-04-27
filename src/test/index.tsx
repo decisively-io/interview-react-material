@@ -34,6 +34,8 @@ const rootDiv = (() => {
   return document.getElementById(APP_DIV_ID)!;
 })();
 
+Parts.Font.add(document);
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -56,8 +58,6 @@ const stripSession = (s: SessionInstance): Session => ({
 });
 
 const App = () => {
-  React.useEffect(() => Parts.Font.add(document), []);
-
   const [session, setSession] = useState<SessionInstance>();
   const [prev, setPrev] = useState<string | null>(null);
 
@@ -124,6 +124,11 @@ const App = () => {
         next={next}
         back={back}
         navigateTo={navigateTo}
+        controlComponents={{
+          Text() {
+            return <h5>Hello there</h5>;
+          },
+        }}
       />
     </ThemeProvider>
   );

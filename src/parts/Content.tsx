@@ -13,6 +13,7 @@ import { CircularProgress } from '@material-ui/core';
 import * as Controls from './Controls';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 import { generateValidator, deriveDefaultControlsValue, IControlsValue } from '../types/controls';
+import type { IRenderControlProps } from './Controls/__controlsTypes';
 
 
 export const classes = {
@@ -90,7 +91,7 @@ const Wrap = styled.form`
 `;
 
 
-export interface IRootProps {
+export interface IRootProps extends Pick< IRenderControlProps, 'controlComponents' > {
   className?: string;
   stepAndScreen: { step: Step; screen: Screen };
   next?: (data: IControlsValue, reset: () => unknown) => unknown;
@@ -113,6 +114,7 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
     backDisabled = false,
     nextDisabled = false,
     isSubmitting = false,
+    controlComponents,
   } = p;
   const { controls } = screen;
 
@@ -151,7 +153,7 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
                 {pageTitle}
               </Typography>
 
-              <Controls._ controls={screen.controls} />
+              <Controls._ controlComponents={controlComponents} controls={screen.controls} />
             </div>
           </div>
           {(next || back) && (
@@ -204,6 +206,7 @@ export interface IProps extends Pick<
   | 'backDisabled'
   | 'nextDisabled'
   | 'isSubmitting'
+  | 'controlComponents'
 > {
   stepAndScreen: IRootProps[ 'stepAndScreen' ] | null;
 }

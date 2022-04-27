@@ -3,7 +3,7 @@ import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 
-export const _ = React.memo< React.ComponentProps< typeof FormControl > >(
+export const _: React.FC< React.ComponentProps< typeof FormControl > > = React.memo(
   ({ children, ...p }) => (
     <FormControl fullWidth margin='normal' {...p}>
       { children }

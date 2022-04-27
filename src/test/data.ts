@@ -9,17 +9,17 @@ export const session: Session = {
     id: 'screen1',
     title: 'Screen 1',
     controls: [
-      // {
-      //   type: 'text',
-      //   attribute: 'attributeTextEmailOrNumber',
-      //   id: 'textEmailOrNumber',
-      //   label: 'Text EmailOrNumber',
-      //   variation: { type: 'email' },
-      //   required: true,
-      //   // max: 2,
-      //   // value: null,
-      //   // default: 'tet',
-      // },
+      {
+        type: 'text',
+        attribute: 'attributeTextEmailOrNumber',
+        id: 'textEmailOrNumber',
+        label: 'Text EmailOrNumber',
+        variation: { type: 'email' },
+        required: true,
+        // max: 2,
+        // value: null,
+        // default: 'tet',
+      },
       // {
       //   type: 'typography',
       //   id: 'typography1',

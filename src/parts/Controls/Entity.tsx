@@ -15,8 +15,9 @@ import {
   IEntity,
   NonNestedControl,
   Control,
-  IRenderControlProps,
 } from '../../types/controls';
+import type { IRenderControlProps } from './__controlsTypes';
+
 
 const FieldGroup = styled(Grid)`
   >:not(:last-child) {
@@ -42,22 +43,23 @@ const Heading = styled(Typography)`
   && { margin-bottom: 1rem; }
 `;
 
-export interface IProps {
+export interface IProps extends Pick< IRenderControlProps, 'controlComponents' > {
   c: IEntity;
-  RenderControl: React.FC<IRenderControlProps>;
+  RenderControl: React.FC< IRenderControlProps >;
 }
 
 type TemplateControl = NonNestedControl & { attribute: string };
 
-interface ISubControlProps {
+interface ISubControlProps extends Pick< IRenderControlProps, 'controlComponents' > {
   parent: IEntity;
   template: TemplateControl;
   entity: string;
   index: number;
-  component: React.FC<IRenderControlProps>;
+  component: React.FC< IRenderControlProps >;
 }
 
-const SubControl = ({ parent, template, entity, index, component: RenderControl }: ISubControlProps) => {
+
+const SubControl: React.FC< ISubControlProps > = ({ parent, template, entity, index, component: RenderControl, controlComponents }) => {
   const name = [entity, index, template.attribute].join('.');
   const control = {
     ...template,
@@ -65,7 +67,7 @@ const SubControl = ({ parent, template, entity, index, component: RenderControl 
     value: parent.value?.[ index ]?.[ template.attribute ],
   } as Control;
 
-  return <RenderControl c={control} />;
+  return <RenderControl c={control} controlComponents={controlComponents} />;
 };
 
 const DebugState = () => {
@@ -78,7 +80,7 @@ const DebugState = () => {
   return null;
 };
 
-export const _: React.FC<IProps> = React.memo(({ c, RenderControl }) => {
+export const _: React.FC<IProps> = React.memo(({ c, RenderControl, controlComponents }) => {
   const { entity, template } = c;
   const { control } = useFormContext();
 
@@ -105,6 +107,7 @@ export const _: React.FC<IProps> = React.memo(({ c, RenderControl }) => {
                       entity={entity}
                       index={index}
                       component={RenderControl}
+                      controlComponents={controlComponents}
                     />
                   );
                 }

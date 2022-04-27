@@ -116,10 +116,6 @@ export const deriveEntityChildId = (entity: string, indx: number, childIndx: num
   `${ entity }.${ VALUE_ROWS_CONST }.${ indx }.${ childIndx }`
 );
 
-export interface IRenderControlProps {
-  c: Control;
-}
-
 // export const deriveEntityDefaultsForRow = (template: IEntity[ 'template' ]): IEntityData[ 'valueRows' ][ 0 ] => (
 //   template.map(
 //     c => {

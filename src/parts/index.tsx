@@ -10,6 +10,7 @@ import { DISPLAY_NAME_PREFIX } from '../constants';
 import * as Frame from './Frame';
 import * as Menu from './Menu';
 import * as Content from './Content';
+import type { IRenderControlProps } from './Controls/__controlsTypes';
 
 
 export const defaultStep: Session[ 'steps' ][ 0 ] = {
@@ -39,7 +40,7 @@ export const defaultSession: Session = {
 };
 
 
-export interface IProps {
+export interface IProps extends Pick< IRenderControlProps, 'controlComponents' > {
   getSession: () => Promise< Session >;
   next: (s: Session, d: IControlsValue) => Promise< typeof s >;
   back: (s: Session, d: IControlsValue) => Promise< typeof s >;
@@ -154,6 +155,7 @@ export class Root extends React.PureComponent< IProps, IState > {
         isSubmitting,
         nextDisabled,
       },
+      props: { controlComponents },
       __setCurrentStep,
       __back,
       __next,
@@ -176,6 +178,7 @@ export class Root extends React.PureComponent< IProps, IState > {
               // use screen id as key, as it will re-render if the screen changes
               key={screen.id}
               stepAndScreen={stepAndScreen}
+              controlComponents={controlComponents}
             />
           )}
           menuJSX={(
@@ -202,6 +205,7 @@ export class Root extends React.PureComponent< IProps, IState > {
             backDisabled={backDisabled || stepIndex === 0}
             isSubmitting={isSubmitting}
             nextDisabled={nextDisabled}
+            controlComponents={controlComponents}
           />
         )}
         menuJSX={(

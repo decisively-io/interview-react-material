@@ -4,7 +4,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 
 
-export const _ = React.memo< React.ComponentProps< typeof FormHelperText > >(
+export const _: React.FC< React.ComponentProps< typeof FormHelperText > > = React.memo(
   ({ children, ...p }) => (
     <FormHelperText className='Mui-error MuiFormHelperText-contained' {...p}>
       {children}
