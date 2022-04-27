@@ -40,6 +40,9 @@ const theme = createTheme({
       main: '#70F058',
     },
   },
+  typography: {
+    fontFamily: '"Montserrat", sans-serif',
+  },
 });
 
 const stripSession = (s: SessionInstance): Session => ({

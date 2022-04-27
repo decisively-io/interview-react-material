@@ -2,7 +2,6 @@
 import produce from 'immer';
 import * as yup from 'yup';
 import { format } from 'date-fns';
-import { v4 as uuid } from 'uuid';
 
 
 import {

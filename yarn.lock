@@ -50,10 +50,10 @@
   dependencies:
     "@date-io/core" "^1.3.13"
 
-"@decisively-io/types-interview@^0.1.21":
-  version "0.1.21"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/types-interview/0.1.21/af81c415e7631317493759623409eb70ff15196ca6a99ce654211ed3eb6b8679#62bc704b210173b3674a6b9c56b115d12866b465"
-  integrity sha512-EGzgbyA76wJNgFEPmBIxabaT4JM0KYwLW1/JgxJQeR6eAeF3ihQP+VRfFo+ue3pvQv5ShDSnS07p7s211hEpXQ==
+"@decisively-io/types-interview@^0.1.22":
+  version "0.1.22"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/types-interview/0.1.22/4efd88031ff8ffaec059e8529011eda054f0779afa1a249ddf8d9333bfb0c2a9#88bd335da4f97fbd59aa6265bce6e47ba138ee4c"
+  integrity sha512-JIX31QkfwNBaVbClN/bwXSar3ZMVzcJ1Y2Y/H/s7IiRyNmuUmQ+k9WkGKWkr8n0mgiwrvqivwEym87mbVOOyzQ==
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"

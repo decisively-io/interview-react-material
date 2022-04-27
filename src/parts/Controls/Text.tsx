@@ -20,6 +20,9 @@ type IParam = Pick<
   | 'variant'
   | 'error'
   | 'helperText'
+  | 'multiline'
+  | 'maxRows'
+  | 'minRows'
 >;
 const withFallback = (arg: IParam) => (
   typeof arg.value === 'string'
@@ -29,7 +32,18 @@ const withFallback = (arg: IParam) => (
 
 export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { control } = useFormContext();
-  const { attribute } = c;
+  const { attribute, multi } = c;
+
+
+  const maybeWithMulti: Pick< IParam, 'multiline' | 'maxRows' | 'minRows' > = (
+    multi === undefined
+      ? {}
+      : {
+        multiline: true,
+        ...multi,
+      }
+  );
+
 
   return (
     <Controller
@@ -48,6 +62,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
                 variant: 'outlined',
                 error: error !== undefined,
                 helperText: error?.message || ' ',
+                ...maybeWithMulti,
               })
             }
           </FormControl._>

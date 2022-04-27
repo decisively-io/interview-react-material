@@ -78,11 +78,9 @@ const Wrap = styled.div`
   }
 
   .MuiTypography-root {
-    font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.5;
-    font-style: normal;
     color: #767676;
   }
 
@@ -103,7 +101,7 @@ const Wrap = styled.div`
     }
   }
 
-  .${ clssItem._ }:hover {
+  ${ `.${ clssItem._ }:hover` } {
     .MuiTypography-root {
       color: #0A0A0A;
     }

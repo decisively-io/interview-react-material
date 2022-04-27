@@ -44,11 +44,6 @@ const Wrap = styled.form`
   flex-direction: column;
   overflow: auto;
 
-  .MuiTypography-root {
-    font-family: 'Montserrat';
-    font-style: normal;
-  }
-
   >.${ classes[ '>formWrap' ]._ } {
     flex-grow: 1;
     overflow: auto;
