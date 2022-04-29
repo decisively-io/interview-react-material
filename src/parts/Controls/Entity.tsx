@@ -153,7 +153,7 @@ export const _: React.FC<IProps> = React.memo(({ c, RenderControl, controlCompon
               })}
             </Grid>
 
-            <Grid className={fieldGrpClss[ '>fieldActions' ]} item xs={2}>
+            <Grid className={fieldGrpClss[ '>fieldActions' ]} item container justifyContent='center' xs={2}>
               <IconButton onClick={() => remove(index)}><DeleteIcon /></IconButton>
             </Grid>
           </Grid>
