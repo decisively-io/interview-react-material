@@ -33,9 +33,10 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
   const { attribute, symbol } = c;
 
 
-  const InputProps = React.useMemo(() => (
-    { startAdornment: <InputAdornment position='start'>{symbol || '$'}</InputAdornment> }
-  ), [symbol]);
+  const InputProps = React.useMemo(
+    () => ({ startAdornment: <InputAdornment position='start'>{symbol || '$'}</InputAdornment> }),
+    [symbol],
+  );
 
 
   return (
@@ -46,7 +47,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
         const typedValue = value as ICurrency[ 'value' ];
 
         return (
-          <FormControl._ fullWidth margin='normal'>
+          <FormControl._>
             {
               withFallback({
                 onChange,

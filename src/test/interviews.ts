@@ -13,3 +13,8 @@ export const motorVehicle = {
     interview: '2',
   },
 };
+
+export const PWD = {
+  id: '715417E434AE41DF98AA76508152C7BE',
+  interview: '6',
+};

@@ -1,6 +1,6 @@
 {
   "name": "@decisively-io/interview-react-material",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
@@ -10,8 +10,7 @@
     "lint:fix": "eslint --fix --ext js,jsx,ts,tsx src",
     "test": "webpack serve --config ./src/test/webpack.config.js",
     "prepare": "install-peers",
-    "deploy": "yarn transpileToDist && yarn publish",
-    "pruneReactInTypes": "./pruneReactInTypes.sh"
+    "deploy": "yarn transpileToDist && yarn publish"
   },
   "repository": {
     "type": "git",

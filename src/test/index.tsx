@@ -5,7 +5,7 @@ import { createTheme, ThemeProvider } from '@material-ui/core';
 import { SessionInstance, transformResponse, setCurrentInStep } from '@decisively-io/interview-sdk';
 import { AttributeData, ResponseData, Session } from '@decisively-io/types-interview';
 import { Parts } from '..';
-import { provider, motorVehicle, travelComp } from './interviews';
+import { provider, motorVehicle, travelComp, PWD } from './interviews';
 import { session as dataSession } from './data';
 
 
@@ -67,7 +67,7 @@ const App = () => {
       return dataSession;
     }
 
-    const { id, interview } = travelComp;
+    const { id, interview } = PWD;
     const res = await provider.create(id, { interview });
     // provider.load(id, sessionAllVisited)
     setSession(res);
@@ -76,7 +76,6 @@ const App = () => {
 
 
   const navigateTo: Parts.IProps[ 'navigateTo' ] = async (_, id) => {
-
     if(!session) return _;
 
     console.log('navigate', id);
@@ -87,10 +86,10 @@ const App = () => {
   };
 
   const next: Parts.IProps[ 'next' ] = async (s, data) => {
-    if(Math.random() > -1) {
-      console.log(data);
-      return s;
-    }
+    // if(Math.random() > -1) {
+    //   console.log(data);
+    //   return s;
+    // }
 
     if(session) {
       const payload = transformResponse(session, data as ResponseData);
@@ -124,11 +123,11 @@ const App = () => {
         next={next}
         back={back}
         navigateTo={navigateTo}
-        controlComponents={{
-          Text() {
-            return <h5>Hello there</h5>;
-          },
-        }}
+        // controlComponents={{
+        //   Text() {
+        //     return <h5>Hello there</h5>;
+        //   },
+        // }}
       />
     </ThemeProvider>
   );

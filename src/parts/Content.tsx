@@ -23,7 +23,7 @@ export const classes = {
     '>form': {
       _: 'form',
       '>h': 'heading',
-      '>desc': 'desc',
+      '>controls': 'controls',
     },
   },
   '>btns': {
@@ -36,6 +36,7 @@ export const classes = {
     },
   },
 };
+
 const formClss = classes[ '>formWrap' ][ '>form' ];
 const submitClss = classes[ '>btns' ][ '>submit' ];
 
@@ -56,13 +57,8 @@ const Wrap = styled.form`
       display: flex;
       flex-direction: column;
 
-      .${ formClss[ '>h' ] } {
+      >.${ formClss[ '>h' ] } {
         margin-bottom: 1.5rem;
-      }
-
-      > * {
-        margin-top: 1rem;
-        margin-bottom: 0;
       }
     }
   }
@@ -74,11 +70,11 @@ const Wrap = styled.form`
     display: flex;
     justify-content: space-between;
 
-    .${ submitClss._ } {
+    >.${ submitClss._ } {
       display: flex;
       align-items: center;
 
-      .${ submitClss[ '>next' ] } {
+      >.${ submitClss[ '>next' ] } {
         margin-left: 1rem;
       }
     }
@@ -87,6 +83,12 @@ const Wrap = styled.form`
       font-weight: 600;
       text-transform: initial;
     }
+  }
+`;
+
+export const StyledControlsWrap = styled.div`
+  > *:not(:last-child) {
+    margin-bottom: 1rem;
   }
 `;
 
@@ -153,7 +155,9 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
                 {pageTitle}
               </Typography>
 
-              <Controls._ controlComponents={controlComponents} controls={screen.controls} />
+              <StyledControlsWrap className={formClss[ '>controls' ]}>
+                <Controls._ controlComponents={controlComponents} controls={screen.controls} />
+              </StyledControlsWrap>
             </div>
           </div>
           {(next || back) && (

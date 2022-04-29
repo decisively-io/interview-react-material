@@ -72,7 +72,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
         );
 
         return (
-          <FormControl._ fullWidth margin='normal'>
+          <FormControl._>
             {
               asRadio
                 ? (
