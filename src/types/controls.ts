@@ -55,6 +55,7 @@ export const deriveLabel = (c: Control): string | undefined => {
     case 'options':
     case 'text':
     case 'time':
+    case 'file':
       return __innerDeriveLabel(c.label, c.labelLength, c.required);
     case 'entity':
     case 'number_of_instances':
