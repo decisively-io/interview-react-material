@@ -31,6 +31,21 @@ export interface IEntityData {
 }
 
 
+// ===================================================================================
+
+const __innerDeriveLabel = (label?: string, labelLength?: number, required?: true) => {
+  if(label === undefined) return undefined;
+
+  const effectiveLength = labelLength === undefined ? undefined : (
+    required === undefined ? labelLength : (
+      labelLength <= 2 ? undefined : labelLength - 2
+    )
+  );
+  const slicedLabel = effectiveLength === undefined ? label : label.slice(0, effectiveLength);
+
+  return `${ slicedLabel }${ required ? ' *' : '' }`;
+};
+
 export const deriveLabel = (c: Control): string | undefined => {
   switch(c.type) {
     case 'boolean':
@@ -40,13 +55,15 @@ export const deriveLabel = (c: Control): string | undefined => {
     case 'options':
     case 'text':
     case 'time':
-      return c.label && `${ c.label }${ c.required ? ' *' : '' }`;
+      return __innerDeriveLabel(c.label, c.labelLength, c.required);
     case 'entity':
     case 'number_of_instances':
-      return c.label;
+      return __innerDeriveLabel(c.label, c.labelLength);
     default: return undefined;
   }
 };
+
+// ===================================================================================
 
 
 export const deriveDateFromTimeComponent = (t: string): Date => (

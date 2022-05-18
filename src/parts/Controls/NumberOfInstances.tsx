@@ -43,7 +43,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
         const typedValue = value as Value;
 
         return (
-          <FormControl._>
+          <FormControl._ title={c.label}>
             {
               withFallback({
                 onChange,

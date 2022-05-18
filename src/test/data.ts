@@ -13,9 +13,10 @@ export const session: Session = {
         type: 'text',
         attribute: 'attributeTextEmailOrNumber',
         id: 'textEmailOrNumber',
-        label: 'Text EmailOrNumber',
+        label: 'Text EmailOrNumber really long label because we need to see the overflow or zIndex overlaying',
         variation: { type: 'email' },
         required: true,
+        labelLength: 20,
         // max: 2,
         // value: null,
         // default: 'tet',
@@ -147,7 +148,7 @@ export const session: Session = {
       {
         type: 'entity',
         id: 'entity1-UUID',
-        label: 'Entity 1',
+        label: 'Entity 1 with a really-really-really long label so that it would surely overlow, right?',
         template: [
           {
             type: 'boolean',

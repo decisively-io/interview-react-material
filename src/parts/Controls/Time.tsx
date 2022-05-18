@@ -47,7 +47,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
           : null;
 
         return (
-          <FormControl._>
+          <FormControl._ title={c.label}>
             <TimePicker
               label={deriveLabel(c)}
               error={error !== undefined}

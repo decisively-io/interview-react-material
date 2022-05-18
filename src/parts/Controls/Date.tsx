@@ -33,7 +33,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
         const typedValue = value as IDate[ 'value' ];
 
         return (
-          <FormControl._>
+          <FormControl._ title={c.label}>
             <DatePicker {...{
               label: deriveLabel(c),
               error: error !== undefined,
