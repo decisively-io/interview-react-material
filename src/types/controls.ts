@@ -33,17 +33,29 @@ export interface IEntityData {
 
 // ===================================================================================
 
-const __innerDeriveLabel = (label?: string, labelLength?: number, required?: true) => {
+
+const __innerDeriveLabel = (label?: string, desiredLength?: number, required?: true) => {
   if(label === undefined) return undefined;
 
-  const effectiveLength = labelLength === undefined ? undefined : (
-    required === undefined ? labelLength : (
-      labelLength <= 2 ? undefined : labelLength - 2
-    )
-  );
-  const slicedLabel = effectiveLength === undefined ? label : label.slice(0, effectiveLength);
+  const labelWithRequired = label + (required ? ' *' : '');
 
-  return `${ slicedLabel }${ required ? ' *' : '' }`;
+  if(desiredLength === undefined || labelWithRequired.length <= desiredLength) {
+    return labelWithRequired;
+  }
+
+  /**
+   * so, we know that our labelWithRequired is too long\
+   * and we need to cut it, but persist the required suffix \
+   * star, if that is present\
+   * e.g. 'some really long label with required *' -> 'some really long lab…*'\
+   *      'some really long label' -> 'some really long lab…'\
+   *
+   * to do that we need to slice labelWithRequired either to \
+   * be of length (labelLength - 1) (if we just neeed to account\
+   * for ellipsis) or (labelLength - 2) (ellipsis + *)
+   */
+  const finalLength = desiredLength - (required ? 2 : 1);
+  return `${ labelWithRequired.slice(0, finalLength) }…${ required ? '*' : '' }`;
 };
 
 export const deriveLabel = (c: Control): string | undefined => {
