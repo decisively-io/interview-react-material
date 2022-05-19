@@ -204,13 +204,16 @@ function generateValidatorForControl(
       const { required } = c;
 
       const schema = yup.boolean().nullable();
-      const maybeRequired: typeof schema = required === undefined ? schema : schema.test(
-        'withRequired',
-        'This has to be checked',
-        v => v === true,
+      const maybeDefined: typeof schema = required === undefined ? schema : (
+        schema.defined('This must be checked or unchecked')
+        // schema.test(
+        //   'withDefined',
+        //   '',
+        //   v => typeof v === 'boolean',
+        // )
       );
 
-      return maybeRequired;
+      return maybeDefined;
     }
     case 'currency': {
       const { max, min, required } = c;
