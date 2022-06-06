@@ -132,10 +132,15 @@ function getDefaultControlValue(
         return c.min ?? 0;
       })();
 
-    case 'text':
-      return c.value === undefined
+    case 'text': {
+      const v = c.value === undefined
         ? c.default
         : c.value;
+
+      // additional stringification is here, because we might get
+      // number from server
+      return (v == null || v === undefined) ? v : String(v);
+    }
 
     default:
   }
