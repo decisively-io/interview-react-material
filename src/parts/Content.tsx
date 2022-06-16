@@ -95,7 +95,8 @@ export const StyledControlsWrap = styled.div`
 
 export interface IRootProps extends Pick< IRenderControlProps, 'controlComponents' > {
   className?: string;
-  stepAndScreen: { step: Step; screen: Screen };
+  step: Step | null;
+  screen: Screen;
   next?: (data: IControlsValue, reset: () => unknown) => unknown;
   back?: ((data: IControlsValue, reset: () => unknown) => unknown);
   backDisabled?: boolean;
@@ -107,10 +108,11 @@ export interface IRootProps extends Pick< IRenderControlProps, 'controlComponent
 const CONTENT_DISPLAY_NAME = `${ DISPLAY_NAME_PREFIX }/Content`;
 
 
-export const __Root: React.FC< IRootProps > = React.memo(p => {
+export const _: React.FC< IRootProps > = React.memo(p => {
   const {
     className,
-    stepAndScreen: { step, screen },
+    step,
+    screen,
     next,
     back,
     backDisabled = false,
@@ -118,7 +120,7 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
     isSubmitting = false,
     controlComponents,
   } = p;
-  const { controls } = screen;
+  const { controls } = screen ?? { controls: [] };
 
   const defaultValues = deriveDefaultControlsValue(controls);
   const resolver = yupResolver(generateValidator(controls));
@@ -141,7 +143,9 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
     }
   }, [getValues, back, reset]);
 
-  const pageTitle = screen.title || step.title || '';
+  if(!screen) return null;
+
+  const pageTitle = screen.title || step?.title || '';
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <FormProvider {...methods}>
@@ -199,7 +203,7 @@ export const __Root: React.FC< IRootProps > = React.memo(p => {
     </MuiPickersUtilsProvider>
   );
 });
-__Root.displayName = `${ CONTENT_DISPLAY_NAME }/__Root`;
+_.displayName = `${ CONTENT_DISPLAY_NAME }/__Root`;
 
 
 export interface IProps extends Pick<
@@ -207,19 +211,20 @@ export interface IProps extends Pick<
   | 'className'
   | 'back'
   | 'next'
+  | 'step'
   | 'backDisabled'
   | 'nextDisabled'
   | 'isSubmitting'
   | 'controlComponents'
 > {
-  stepAndScreen: IRootProps[ 'stepAndScreen' ] | null;
+  screen: IRootProps[ 'screen' ] | null;
 }
 
-export const _: React.FC< IProps > = React.memo(
-  ({ stepAndScreen, ...p }) => {
-    if(stepAndScreen === null) return null;
+// export const _: React.FC< IProps > = React.memo(
+//   props => {
+//     if(props.screen === null) return null;
 
-    return <__Root {...{ stepAndScreen, ...p }} />;
-  },
-);
-_.displayName = CONTENT_DISPLAY_NAME;
+//     return <__Root {...props} />;
+//   },
+// );
+// _.displayName = CONTENT_DISPLAY_NAME;

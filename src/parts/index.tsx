@@ -166,10 +166,6 @@ export class Root extends React.PureComponent< IProps, IState > {
     const currentStep = getCurrentStep({ ...defaultStep, steps });
     const stepIndex = currentStep ? steps.findIndex(s => s.id === currentStep.id) : -1;
 
-    const stepAndScreen = currentStep === null
-      ? null
-      : { step: currentStep, screen };
-
     if(status !== 'in-progress') {
       return (
         <Frame._
@@ -177,7 +173,8 @@ export class Root extends React.PureComponent< IProps, IState > {
             <Content._
               // use screen id as key, as it will re-render if the screen changes
               key={screen.id}
-              stepAndScreen={stepAndScreen}
+              step={currentStep}
+              screen={screen}
               controlComponents={controlComponents}
             />
           )}
@@ -199,7 +196,8 @@ export class Root extends React.PureComponent< IProps, IState > {
           <Content._
             // use screen id as key, as it will re-render if the screen changes
             key={screen.id}
-            stepAndScreen={stepAndScreen}
+            step={currentStep}
+            screen={screen}
             next={__next}
             back={__back}
             backDisabled={backDisabled || stepIndex === 0}
