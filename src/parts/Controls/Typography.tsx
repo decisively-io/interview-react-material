@@ -69,6 +69,11 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
     return <BannerComp {...{ style, text, emoji }} />;
   }
 
-  return <Typography variant={style}>{text}</Typography>;
+  return (
+    <Typography variant={style}>
+      <span className='emoji'>{emoji}</span>
+      <span className='text'>{text}</span>
+    </Typography>
+  );
 });
 _.displayName = DISPLAY_NAME;
