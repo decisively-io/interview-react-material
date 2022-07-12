@@ -71,7 +71,10 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
 
   return (
     <Typography variant={style}>
-      <span className='emoji'>{emoji}</span>
+      <span className='emoji'>
+        {emoji}
+        &nbsp;&nbsp;
+      </span>
       <span className='text'>{text}</span>
     </Typography>
   );
