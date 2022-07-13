@@ -537,7 +537,10 @@ export function normalizeControlsValue(v: IControlsValue, cs: Screen['controls']
       }
 
       if(c.type === 'entity') {
-        const typedV = a[ c.entity ] as Array< IControlsValue >;
+        const v = a[ c.entity ];
+        if(!v) return a;
+
+        const typedV = v as Array< IControlsValue >;
         const { template } = c;
 
         typedV.forEach(value => template.forEach(t => {
