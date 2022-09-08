@@ -206,6 +206,7 @@ export const session: Session = {
   steps: [
     {
       ...defaultStep,
+      visited: true,
       id: '1',
       title: 'Flight details',
       steps: [

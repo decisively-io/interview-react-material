@@ -4,7 +4,9 @@ import ReactDom from 'react-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core';
 import { SessionInstance, transformResponse, setCurrentInStep } from '@decisively-io/interview-sdk';
 import { AttributeData, ResponseData, Session } from '@decisively-io/types-interview';
-import { Parts } from '..';
+import * as Parts from '../parts';
+import * as FontNS from '../parts/__font';
+import * as TextControlNS from '../parts/Controls/Text';
 import { provider, motorVehicle, travelComp, PWD } from './interviews';
 import { session as dataSession } from './data';
 
@@ -34,7 +36,7 @@ const rootDiv = (() => {
   return document.getElementById(APP_DIV_ID)!;
 })();
 
-Parts.Font.add(document);
+FontNS.add(document);
 
 const theme = createTheme({
   palette: {
@@ -123,11 +125,14 @@ const App = () => {
         next={next}
         back={back}
         navigateTo={navigateTo}
-        // controlComponents={{
-        //   Text() {
-        //     return <h5>Hello there</h5>;
-        //   },
-        // }}
+        controlComponents={{
+          // Text() {
+          //   return <h5>Hello there</h5>;
+          // },
+          Text({ c }) {
+            return <TextControlNS._ {...{ c, textFieldProps: { size: 'small' } }} />;
+          },
+        }}
       />
     </ThemeProvider>
   );

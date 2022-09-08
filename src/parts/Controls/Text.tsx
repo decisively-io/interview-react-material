@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
+import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { deriveLabel, IText } from '../../types/controls';
@@ -9,28 +9,19 @@ import { deriveLabel, IText } from '../../types/controls';
 
 export interface IProps {
   c: IText;
+  textFieldProps?: TextFieldProps;
 }
 
 
-type IParam = Pick<
-  React.ComponentProps< typeof TextField >,
-  | 'onChange'
-  | 'label'
-  | 'value'
-  | 'variant'
-  | 'error'
-  | 'helperText'
-  | 'multiline'
-  | 'maxRows'
-  | 'minRows'
->;
+type IParam = TextFieldProps;
+
 const withFallback = (arg: IParam) => (
   typeof arg.value === 'string'
     ? <TextField {...arg} />
     : <TextField {...arg} value='' />
 );
 
-export const _: React.FC< IProps > = React.memo(({ c }) => {
+export const _: React.FC< IProps > = React.memo(({ c, textFieldProps }) => {
   const { control } = useFormContext();
   const { attribute, multi } = c;
 
@@ -63,6 +54,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
                 error: error !== undefined,
                 helperText: error?.message || ' ',
                 ...maybeWithMulti,
+                ...textFieldProps,
               })
             }
           </FormControl._>

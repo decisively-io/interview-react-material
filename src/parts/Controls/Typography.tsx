@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
+import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { ITypography } from '../../types/controls';
@@ -8,6 +8,7 @@ import { ITypography } from '../../types/controls';
 
 export interface IProps {
   c: ITypography;
+  typographyProps?: TypographyProps;
 }
 
 const DISPLAY_NAME = `${ DISPLAY_NAME_PREFIX }/Typography`;
@@ -61,7 +62,7 @@ const BannerComp: React.FC<{ text: string; style: BannerStyle; emoji?: ITypograp
 BannerComp.displayName = `${ DISPLAY_NAME }/BannerComp`;
 
 
-export const _: React.FC< IProps > = React.memo(({ c }) => {
+export const _: React.FC< IProps > = React.memo(({ c, typographyProps }) => {
   const { style, emoji } = c;
   const text = c.text ?? 'Error: missing value \'text\'';
 
@@ -70,7 +71,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
   }
 
   return (
-    <Typography variant={style}>
+    <Typography variant={style} {...typographyProps}>
       <span className='emoji'>
         {emoji}
         &nbsp;&nbsp;

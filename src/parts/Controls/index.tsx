@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { Control } from '../../types/controls';
+import type { Control } from '../../types/controls';
 import { RenderControl } from './__renderControl';
 import type { IRenderControlProps } from './__controlsTypes';
 

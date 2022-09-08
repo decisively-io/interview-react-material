@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case, camelcase */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { TimePicker } from '@material-ui/pickers';
+import { TimePicker, TimePickerProps } from '@material-ui/pickers';
 import { format } from 'date-fns';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
@@ -10,6 +10,7 @@ import { deriveLabel, ITime, TIME_FORMAT_12, TIME_FORMAT_24 } from '../../types/
 
 export interface IProps {
   c: ITime;
+  timePickerProps?: TimePickerProps;
 }
 
 export const secondLessViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
@@ -19,7 +20,7 @@ export const allViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
   'hours', 'minutes', 'seconds',
 ];
 
-export const _: React.FC< IProps > = React.memo(({ c }) => {
+export const _: React.FC< IProps > = React.memo(({ c, timePickerProps }) => {
   const { control } = useFormContext();
   const {
     attribute,
@@ -59,6 +60,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
               ampm={Boolean(amPmFormat)}
               minutesStep={minutes_increment}
               views={allowSeconds ? allViews : secondLessViews}
+              {...timePickerProps}
             />
           </FormControl._>
         );

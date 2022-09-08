@@ -1,8 +1,8 @@
 /* eslint-disable camelcase,import/no-extraneous-dependencies,react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+import Autocomplete, { createFilterOptions, AutocompleteProps } from '@material-ui/lab/Autocomplete';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -18,11 +18,13 @@ const filter = createFilterOptions< IOptions[ 'options' ][ 0 ] >();
 
 export interface IProps {
   c: IOptions;
+  autocompleteProps?: AutocompleteProps< IOptions[ 'options' ][ 0 ], false, false, true>;
+  autocompleteTextFieldProps?: TextFieldProps;
 }
 
 const RadioControl = <Radio />;
 
-export const _: React.FC< IProps > = React.memo(({ c }) => {
+export const _: React.FC< IProps > = React.memo(({ c, autocompleteProps, autocompleteTextFieldProps }) => {
   const { control } = useFormContext();
   const {
     attribute,
@@ -88,57 +90,57 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
                   </>
                 )
                 : (
-                  <>
-                    <Autocomplete< IOptions[ 'options' ][ 0 ], false, false, true>
-                      value={
-                        (typedValue === null || typedValue === undefined)
-                          ? null
-                          : (
-                            options.find(it => it.value === typedValue) ||
+                  <Autocomplete< IOptions[ 'options' ][ 0 ], false, false, true>
+                    value={
+                      (typedValue === null || typedValue === undefined)
+                        ? null
+                        : (
+                          options.find(it => it.value === typedValue) ||
                               { value: typedValue, label: String(typedValue) }
-                          )
+                        )
+                    }
+                    onChange={(_, newValue) => {
+                      if(newValue === null) {
+                        onChange(null);
+                        return;
                       }
-                      onChange={(_, newValue) => {
-                        if(newValue === null) {
-                          onChange(null);
-                          return;
-                        }
 
-                        if(typeof newValue === 'string') return;
+                      if(typeof newValue === 'string') return;
 
-                        onChange(newValue.value);
-                      }}
-                      filterOptions={(options, params) => {
-                        const filtered = filter(options, params);
+                      onChange(newValue.value);
+                    }}
+                    filterOptions={(options, params) => {
+                      const filtered = filter(options, params);
 
-                        // Suggest the creation of a new value
-                        if (allow_other && !isBool && params.inputValue !== '') {
-                          filtered.push({
-                            label: `Add "${ params.inputValue }"`,
-                            value: params.inputValue,
-                          });
-                        }
+                      // Suggest the creation of a new value
+                      if (allow_other && !isBool && params.inputValue !== '') {
+                        filtered.push({
+                          label: `Add "${ params.inputValue }"`,
+                          value: params.inputValue,
+                        });
+                      }
 
-                        return filtered;
-                      }}
-                      selectOnFocus
-                      clearOnBlur
-                      handleHomeEndKeys
-                      options={options}
-                      getOptionLabel={option => option.label}
-                      renderOption={option => option.label}
-                      freeSolo={allow_other}
-                      renderInput={params => (
-                        <TextField
-                          {...params}
-                          label={Label}
-                          error={Boolean(error)}
-                          helperText={error?.message || ' '}
-                          variant='outlined'
-                        />
-                      )}
-                    />
-                  </>
+                      return filtered;
+                    }}
+                    selectOnFocus
+                    clearOnBlur
+                    handleHomeEndKeys
+                    options={options}
+                    getOptionLabel={option => option.label}
+                    renderOption={option => option.label}
+                    freeSolo={allow_other}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        label={Label}
+                        error={Boolean(error)}
+                        helperText={error?.message || ' '}
+                        variant='outlined'
+                        {...autocompleteTextFieldProps}
+                      />
+                    )}
+                    {...autocompleteProps}
+                  />
                 )
             }
           </FormControl._>

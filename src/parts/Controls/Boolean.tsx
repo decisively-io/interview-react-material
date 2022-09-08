@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import FormControlLabel, { FormControlLabelProps } from '@material-ui/core/FormControlLabel';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { deriveLabel, IBoolean } from '../../types/controls';
@@ -10,10 +10,12 @@ import * as ErrorComp from './__error';
 
 export interface IProps {
   c: IBoolean;
+  checkboxProps?: CheckboxProps;
+  formControlLabelProps?: FormControlLabelProps;
 }
 
 
-export const _: React.FC< IProps > = React.memo(({ c }) => {
+export const _: React.FC< IProps > = React.memo(({ c, checkboxProps }) => {
   const { control } = useFormContext();
   const { attribute } = c;
 
@@ -32,6 +34,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
                   onChange={onChange}
                   checked={typedValue || false}
                   indeterminate={typeof typedValue !== 'boolean'}
+                  {...checkboxProps}
                 />
               )}
               label={deriveLabel(c)}

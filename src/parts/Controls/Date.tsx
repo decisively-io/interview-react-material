@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { DatePicker } from '@material-ui/pickers';
+import { DatePicker, DatePickerProps } from '@material-ui/pickers';
 import { format } from 'date-fns';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
@@ -10,10 +10,11 @@ import { IDate, DATE_FORMAT, resolveNowInDate, deriveLabel } from '../../types/c
 
 export interface IProps {
   c: IDate;
+  datePickerProps?: DatePickerProps;
 }
 
 
-export const _: React.FC< IProps > = React.memo(({ c }) => {
+export const _: React.FC< IProps > = React.memo(({ c, datePickerProps }) => {
   const { control } = useFormContext();
   const {
     attribute,
@@ -44,6 +45,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
               maxDate: resolvedMax && new Date(resolvedMax),
               minDate: resolvedMin && new Date(resolvedMin),
               inputVariant: 'outlined',
+              ...datePickerProps,
             }}
             />
           </FormControl._>

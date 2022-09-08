@@ -41,6 +41,7 @@ export const classes = {
 
       '&.complete': 'complete',
       '&.active': 'active',
+      '&.visited': 'visited',
       '>avatar': {
         _: 'avatar',
         '>T': 'typography',
@@ -181,7 +182,13 @@ const RenderStage: React.FC< IRenderStageProps > = React.memo(
 
     const open = React.useMemo(() => containsCurrentStep(s), [s]);
 
-    const itemCName = cls(clssItem._, cNameForLevel, open && clssItem[ '&.active' ], s.complete && clssItem[ '&.complete' ]);
+    const itemCName = cls(
+      clssItem._,
+      cNameForLevel,
+      open && clssItem[ '&.active' ],
+      s.complete && clssItem[ '&.complete' ],
+      s.visited && clssItem[ '&.visited' ],
+    );
     const textCName = cls(clssItem[ '>text' ], cNameForLevel);
     const collapseCName = cls(classes[ '>list' ][ '>collapse' ], cNameForLevel);
     const listCName = cls(classes[ '>list' ]._, getCnameForLevel(level + 1));

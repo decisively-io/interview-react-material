@@ -1,7 +1,7 @@
 /* eslint-disable camelcase, import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { DateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker, DateTimePickerProps } from '@material-ui/pickers';
 import { format } from 'date-fns';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
@@ -10,10 +10,11 @@ import { IDateTime, DATE_TIME_FORMAT_24, DATE_TIME_FORMAT_12, resolveNowInDate, 
 
 export interface IProps {
   c: IDateTime;
+  dateTimePickerProps?: DateTimePickerProps;
 }
 
 
-export const _: React.FC< IProps > = React.memo(({ c }) => {
+export const _: React.FC< IProps > = React.memo(({ c, dateTimePickerProps }) => {
   const { control } = useFormContext();
   const {
     date_max,
@@ -54,6 +55,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
               minutesStep={minutes_increment}
               maxDate={maxDate}
               minDate={minDate}
+              {...dateTimePickerProps}
             />
           </FormControl._>
         );

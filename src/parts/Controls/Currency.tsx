@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
+import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
@@ -10,17 +10,11 @@ import { deriveLabel, ICurrency } from '../../types/controls';
 
 export interface IProps {
   c: ICurrency;
+  textFieldProps?: Omit< TextFieldProps, 'value' >;
 }
 
-type IArg = { value: ICurrency[ 'value' ]; c: ICurrency; } & Pick<
-  React.ComponentProps< typeof TextField >,
-  | 'onChange'
-  | 'label'
-  | 'variant'
-  | 'error'
-  | 'helperText'
-  | 'InputProps'
->;
+type IArg = { value: ICurrency[ 'value' ]; c: ICurrency; } & NonNullable< IProps[ 'textFieldProps' ] >;
+
 const withFallback = (arg: IArg) => (
   (arg.value === null || arg.value === undefined)
     ? <TextField {...arg} value='' />
@@ -28,7 +22,7 @@ const withFallback = (arg: IArg) => (
 );
 
 
-export const _: React.FC< IProps > = React.memo(({ c }) => {
+export const _: React.FC< IProps > = React.memo(({ c, textFieldProps }) => {
   const { control } = useFormContext();
   const { attribute, symbol } = c;
 
@@ -58,6 +52,7 @@ export const _: React.FC< IProps > = React.memo(({ c }) => {
                 helperText: error?.message || ' ',
                 c,
                 InputProps,
+                ...textFieldProps,
               })
             }
           </FormControl._>
