@@ -10,7 +10,7 @@ import { IDateTime, DATE_TIME_FORMAT_24, DATE_TIME_FORMAT_12, resolveNowInDate, 
 
 export interface IProps {
   c: IDateTime;
-  dateTimePickerProps?: DateTimePickerProps;
+  dateTimePickerProps?: Partial< DateTimePickerProps >;
 }
 
 

@@ -10,7 +10,7 @@ import { IDate, DATE_FORMAT, resolveNowInDate, deriveLabel } from '../../types/c
 
 export interface IProps {
   c: IDate;
-  datePickerProps?: DatePickerProps;
+  datePickerProps?: Partial< DatePickerProps >;
 }
 
 

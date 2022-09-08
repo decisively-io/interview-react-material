@@ -10,7 +10,7 @@ import { deriveLabel, ITime, TIME_FORMAT_12, TIME_FORMAT_24 } from '../../types/
 
 export interface IProps {
   c: ITime;
-  timePickerProps?: TimePickerProps;
+  timePickerProps?: Partial< TimePickerProps >;
 }
 
 export const secondLessViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
