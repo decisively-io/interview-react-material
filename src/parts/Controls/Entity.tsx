@@ -14,6 +14,7 @@ import {
   IEntity,
   NonNestedControl,
   Control,
+  deriveDefaultControlsValue,
 } from '../../types/controls';
 import type { IRenderControlProps } from './__controlsTypes';
 
@@ -113,7 +114,10 @@ export const _: React.FC<IProps> = React.memo(({ c, RenderControl, controlCompon
     name: entity,
   });
 
-  const appendHanler = React.useCallback(() => append({ '@id': uuid() }), [append]);
+  const appendHanler = React.useCallback(() => append({
+    '@id': uuid(),
+    ...deriveDefaultControlsValue(template),
+  }), [append, template]);
 
   return (
     <Wrap className={className}>

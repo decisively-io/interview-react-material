@@ -159,6 +159,7 @@ export const session: Session = {
       {
         type: 'entity',
         id: 'entity1-UUID',
+        min: 1,
         label: 'Entity 1 with a really-really-really long label so that it would surely overlow, right?',
         template: [
           {
@@ -176,7 +177,7 @@ export const session: Session = {
             label: 'TextEmailOrNumber21 21',
             variation: { type: 'number' },
             required: true,
-            // default: true,
+            default: 'deflt',
           },
           {
             type: 'text',

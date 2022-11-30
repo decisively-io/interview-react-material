@@ -2,7 +2,7 @@
 import produce from 'immer';
 import * as yup from 'yup';
 import { format } from 'date-fns';
-
+import { v4 as uuid } from 'uuid';
 
 import {
   IControlsValue,
@@ -183,11 +183,18 @@ export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
           break;
 
         case 'entity':
-          const values = c.value || [];
-          // const data: IEntityData = {
-          //   rowIds: values.map(() => uuid()),
-          //   valueRows: values,
-          // };
+          const { min, value, template } = c;
+          const values: typeof value = (() => {
+            if(min === undefined) return value || [];
+
+            const amountOfItemsToAppend = Math.max(min - ((value && value.length) || 0), 0);
+            return ([] as NonNullable< typeof value >)
+              .concat(value || [])
+              .concat(new Array(amountOfItemsToAppend).fill(0).map(() => ({
+                '@id': uuid(),
+                ...deriveDefaultControlsValue(template),
+              })));
+          })();
 
           draft[ c.entity ] = values;
           break;
