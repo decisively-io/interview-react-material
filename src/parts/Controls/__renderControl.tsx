@@ -15,7 +15,7 @@ import * as TypographyNS from './Typography';
 import * as EntityNS from './Entity';
 
 
-export const RenderControl: React.FC< IRenderControlProps > = React.memo(({ c, controlComponents }) => {
+export const RenderControl: React.FC< IRenderControlProps > = React.memo(({ c, controlComponents, chOnScreenData }) => {
   const {
     Boolean = BooleanNS._,
     Currency = CurrencyNS._,
@@ -37,7 +37,7 @@ export const RenderControl: React.FC< IRenderControlProps > = React.memo(({ c, c
     case 'time': return <Time {...{ c }} />;
     case 'datetime': return <DateTime {...{ c }} />;
     case 'options': return <Options {...{ c }} />;
-    case 'text': return <Text {...{ c }} />;
+    case 'text': return <Text {...{ c }} chOnScreenData={chOnScreenData} />;
     case 'image': return <Image {...{ c }} />;
     case 'number_of_instances': return <NumberOfInstances {...{ c }} />;
     case 'typography': return <Typography {...{ c }} />;

@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Session,
   IControlsValue,
+  AttributeData,
 } from '@decisively-io/types-interview';
 import { getCurrentStep } from '@decisively-io/interview-sdk';
 import { normalizeControlsValue } from '../types';
@@ -45,6 +46,7 @@ export interface IProps extends Pick< IRenderControlProps, 'controlComponents' >
   next: (s: Session, d: IControlsValue) => Promise< typeof s >;
   back: (s: Session, d: IControlsValue) => Promise< typeof s >;
   navigateTo: (s: Session, stepId: Session[ 'steps' ][ 0 ][ 'id' ]) => Promise< typeof s >;
+  chOnScreenData?: (data: AttributeData) => void;
 }
 
 export interface IState extends Pick<
@@ -69,6 +71,7 @@ export class Root extends React.PureComponent< IProps, IState > {
       isSubmitting: false,
       nextDisabled: false,
     };
+
   }
 
 
@@ -92,7 +95,9 @@ export class Root extends React.PureComponent< IProps, IState > {
   __getSession = (): void => {
     const { getSession } = this.props;
 
-    getSession().then(s => this.___setSession(s));
+    getSession().then(s => {
+      this.___setSession(s);
+    });
   }
 
   componentDidMount(): void {
@@ -163,6 +168,7 @@ export class Root extends React.PureComponent< IProps, IState > {
 
 
     const { steps, screen, progress, status } = session;
+    const { chOnScreenData } = this.props;
     const currentStep = getCurrentStep({ ...defaultStep, steps });
     const stepIndex = currentStep ? steps.findIndex(s => s.id === currentStep.id) : -1;
 
@@ -204,6 +210,7 @@ export class Root extends React.PureComponent< IProps, IState > {
             isSubmitting={isSubmitting}
             nextDisabled={nextDisabled}
             controlComponents={controlComponents}
+            chOnScreenData={chOnScreenData}
           />
         )}
         menuJSX={(
