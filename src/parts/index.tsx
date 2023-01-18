@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Session,
   IControlsValue,
+  AttributeData,
 } from '@decisively-io/types-interview';
 import { getCurrentStep } from '@decisively-io/interview-sdk';
 import { normalizeControlsValue } from '../types';
@@ -45,6 +46,10 @@ export interface IProps extends Pick< IRenderControlProps, 'controlComponents' >
   next: (s: Session, d: IControlsValue) => Promise< typeof s >;
   back: (s: Session, d: IControlsValue) => Promise< typeof s >;
   navigateTo: (s: Session, stepId: Session[ 'steps' ][ 0 ][ 'id' ]) => Promise< typeof s >;
+  // callback to notify external component that data has been updated
+  chOnScreenData?: (data: AttributeData) => void;
+  // flag to indicate that the component is loading data from an external source
+  externalLoading?: boolean;
 }
 
 export interface IState extends Pick<
@@ -69,6 +74,7 @@ export class Root extends React.PureComponent< IProps, IState > {
       isSubmitting: false,
       nextDisabled: false,
     };
+
   }
 
 
@@ -92,7 +98,9 @@ export class Root extends React.PureComponent< IProps, IState > {
   __getSession = (): void => {
     const { getSession } = this.props;
 
-    getSession().then(s => this.___setSession(s));
+    getSession().then(s => {
+      this.___setSession(s);
+    });
   }
 
   componentDidMount(): void {
@@ -163,6 +171,7 @@ export class Root extends React.PureComponent< IProps, IState > {
 
 
     const { steps, screen, progress, status } = session;
+    const { chOnScreenData, externalLoading } = this.props;
     const currentStep = getCurrentStep({ ...defaultStep, steps });
     const stepIndex = currentStep ? steps.findIndex(s => s.id === currentStep.id) : -1;
 
@@ -191,6 +200,7 @@ export class Root extends React.PureComponent< IProps, IState > {
     }
 
     return (
+
       <Frame._
         contentJSX={(
           <Content._
@@ -200,10 +210,11 @@ export class Root extends React.PureComponent< IProps, IState > {
             screen={screen}
             next={__next}
             back={__back}
-            backDisabled={backDisabled || stepIndex === 0}
-            isSubmitting={isSubmitting}
-            nextDisabled={nextDisabled}
+            backDisabled={backDisabled || stepIndex === 0 || externalLoading}
+            isSubmitting={isSubmitting || externalLoading}
+            nextDisabled={nextDisabled || externalLoading}
             controlComponents={controlComponents}
+            chOnScreenData={chOnScreenData}
           />
         )}
         menuJSX={(

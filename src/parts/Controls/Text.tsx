@@ -2,6 +2,7 @@
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+import { AttributeData } from '@decisively-io/types-interview';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { deriveLabel, IText } from '../../types/controls';
@@ -10,6 +11,7 @@ import { deriveLabel, IText } from '../../types/controls';
 export interface IProps {
   c: IText;
   textFieldProps?: TextFieldProps;
+  chOnScreenData?: (data: AttributeData) => void;
 }
 
 
@@ -21,7 +23,7 @@ const withFallback = (arg: IParam) => (
     : <TextField {...arg} value='' />
 );
 
-export const _: React.FC< IProps > = React.memo(({ c, textFieldProps }) => {
+export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, chOnScreenData }) => {
   const { control } = useFormContext();
   const { attribute, multi } = c;
 
@@ -43,11 +45,19 @@ export const _: React.FC< IProps > = React.memo(({ c, textFieldProps }) => {
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         const typedValue = value as IText[ 'value' ];
 
+        const handleChange = (e: React.ChangeEvent< HTMLInputElement >) => {
+          if (chOnScreenData) {
+            chOnScreenData({ [ attribute ]: e.target.value });
+          }
+
+          onChange(e.target.value);
+        };
+
         return (
           <FormControl._ title={c.label}>
             {
               withFallback({
-                onChange,
+                onChange: handleChange,
                 label: deriveLabel(c),
                 value: typedValue,
                 variant: 'outlined',

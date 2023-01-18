@@ -8,7 +8,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { Step, Screen } from '@decisively-io/types-interview';
+import { Step, Screen, AttributeData } from '@decisively-io/types-interview';
 import { CircularProgress } from '@material-ui/core';
 import * as Controls from './Controls';
 import { DISPLAY_NAME_PREFIX } from '../constants';
@@ -94,6 +94,7 @@ export const StyledControlsWrap = styled.div`
 
 
 export interface IRootProps extends Pick< IRenderControlProps, 'controlComponents' > {
+
   className?: string;
   step: Step | null;
   screen: Screen;
@@ -102,6 +103,7 @@ export interface IRootProps extends Pick< IRenderControlProps, 'controlComponent
   backDisabled?: boolean;
   nextDisabled?: boolean;
   isSubmitting?: boolean;
+  chOnScreenData?: (data: AttributeData) => void;
 }
 
 
@@ -119,9 +121,9 @@ export const _: React.FC< IRootProps > = React.memo(p => {
     nextDisabled = false,
     isSubmitting = false,
     controlComponents,
+    chOnScreenData,
   } = p;
   const { controls } = screen ?? { controls: [] };
-
   const defaultValues = deriveDefaultControlsValue(controls);
   const resolver = yupResolver(generateValidator(controls));
 
@@ -130,6 +132,7 @@ export const _: React.FC< IRootProps > = React.memo(p => {
   const { getValues, reset } = methods;
 
   const onSubmit = React.useCallback((data: IControlsValue) => {
+    // eslint-disable-next-line no-console
     console.log('form on submit', data);
     if(next) {
       next(data, reset);
@@ -160,7 +163,11 @@ export const _: React.FC< IRootProps > = React.memo(p => {
               </Typography>
 
               <StyledControlsWrap className={formClss[ '>controls' ]}>
-                <Controls._ controlComponents={controlComponents} controls={screen.controls} />
+                <Controls._
+                  controlComponents={controlComponents}
+                  controls={screen.controls}
+                  chOnScreenData={chOnScreenData}
+                />
               </StyledControlsWrap>
             </div>
           </div>

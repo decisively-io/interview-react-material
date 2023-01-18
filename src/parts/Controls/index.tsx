@@ -6,12 +6,12 @@ import { RenderControl } from './__renderControl';
 import type { IRenderControlProps } from './__controlsTypes';
 
 
-export interface IProps extends Pick< IRenderControlProps, 'controlComponents' > {
+export interface IProps extends Pick<IRenderControlProps, 'controlComponents' | 'chOnScreenData' > {
   controls: Control[];
 }
 
 
-export const _: React.FC< IProps > = React.memo(({ controls, controlComponents }) => (
+export const _: React.FC<IProps> = React.memo(({ controls, controlComponents, chOnScreenData }) => (
   <>
     {
       controls.map(
@@ -20,6 +20,7 @@ export const _: React.FC< IProps > = React.memo(({ controls, controlComponents }
             key={it.id ?? `${ it.type }-${ i }`}
             c={it}
             controlComponents={controlComponents}
+            chOnScreenData={chOnScreenData}
           />
         ),
       )

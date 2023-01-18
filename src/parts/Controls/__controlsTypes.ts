@@ -1,4 +1,4 @@
-import type { Control } from '@decisively-io/types-interview';
+import type { AttributeData, Control } from '@decisively-io/types-interview';
 import type * as Boolean from './Boolean';
 import type * as Currency from './Currency';
 import type * as Date from './Date';
@@ -29,4 +29,5 @@ export interface IControlsHash {
 export interface IRenderControlProps {
   c: Control;
   controlComponents?: IControlsHash;
+  chOnScreenData?: (data: AttributeData) => void;
 }
