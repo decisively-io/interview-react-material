@@ -3,6 +3,7 @@ import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { AttributeData } from '@decisively-io/types-interview';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { deriveLabel, ICurrency } from '../../types/controls';
@@ -11,6 +12,7 @@ import { deriveLabel, ICurrency } from '../../types/controls';
 export interface IProps {
   c: ICurrency;
   textFieldProps?: Omit< TextFieldProps, 'value' >;
+  chOnScreenData?: (data: AttributeData) => void;
 }
 
 type IArg = { value: ICurrency[ 'value' ]; c: ICurrency; } & NonNullable< IProps[ 'textFieldProps' ] >;
@@ -22,7 +24,7 @@ const withFallback = (arg: IArg) => (
 );
 
 
-export const _: React.FC< IProps > = React.memo(({ c, textFieldProps }) => {
+export const _: React.FC<IProps> = React.memo(({ c, textFieldProps, chOnScreenData }) => {
   const { control } = useFormContext();
   const { attribute, symbol } = c;
 
@@ -40,11 +42,19 @@ export const _: React.FC< IProps > = React.memo(({ c, textFieldProps }) => {
       render={({ field: { value, onChange }, fieldState: { error } }) => {
         const typedValue = value as ICurrency[ 'value' ];
 
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          if (chOnScreenData) {
+            chOnScreenData({ [ attribute ]: e.target.value });
+          }
+
+          onChange(e.target.value);
+        };
+
         return (
           <FormControl._ title={c.label}>
             {
               withFallback({
-                onChange,
+                onChange: handleChange,
                 label: deriveLabel(c),
                 value: typedValue,
                 variant: 'outlined',

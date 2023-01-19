@@ -31,13 +31,13 @@ export const RenderControl: React.FC< IRenderControlProps > = React.memo(({ c, c
   } = controlComponents || {};
 
   switch(c.type) {
-    case 'boolean': return <Boolean {...{ c }} />;
-    case 'currency': return <Currency {...{ c }} />;
-    case 'date': return <Date {...{ c }} />;
-    case 'time': return <Time {...{ c }} />;
-    case 'datetime': return <DateTime {...{ c }} />;
-    case 'options': return <Options {...{ c }} />;
-    case 'text': return <Text {...{ c }} chOnScreenData={chOnScreenData} />;
+    case 'boolean': return <Boolean {...{ c, chOnScreenData }} />;
+    case 'currency': return <Currency {...{ c, chOnScreenData }} />;
+    case 'date': return <Date {...{ c, chOnScreenData }} />;
+    case 'time': return <Time {...{ c, chOnScreenData }} />;
+    case 'datetime': return <DateTime {...{ c, chOnScreenData }} />;
+    case 'options': return <Options {...{ c, chOnScreenData }} />;
+    case 'text': return <Text {...{ c, chOnScreenData }} />;
     case 'image': return <Image {...{ c }} />;
     case 'number_of_instances': return <NumberOfInstances {...{ c }} />;
     case 'typography': return <Typography {...{ c }} />;

@@ -3,6 +3,7 @@ import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import FormControlLabel, { FormControlLabelProps } from '@material-ui/core/FormControlLabel';
+import { AttributeData } from '@decisively-io/types-interview';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { deriveLabel, IBoolean } from '../../types/controls';
@@ -12,10 +13,11 @@ export interface IProps {
   c: IBoolean;
   checkboxProps?: CheckboxProps;
   formControlLabelProps?: FormControlLabelProps;
+  chOnScreenData?: (data: AttributeData) => void;
 }
 
 
-export const _: React.FC< IProps > = React.memo(({ c, checkboxProps }) => {
+export const _: React.FC<IProps> = React.memo(({ c, checkboxProps, chOnScreenData }) => {
   const { control } = useFormContext();
   const { attribute } = c;
 
@@ -26,12 +28,20 @@ export const _: React.FC< IProps > = React.memo(({ c, checkboxProps }) => {
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         const typedValue = value as IBoolean[ 'value' ];
 
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          if (chOnScreenData) {
+            chOnScreenData({ [ attribute ]: e.target.checked });
+          }
+
+          onChange(e.target.checked);
+        };
+
         return (
           <FormControl._ title={c.label}>
             <FormControlLabel
               control={(
                 <Checkbox
-                  onChange={onChange}
+                  onChange={handleChange}
                   checked={typedValue || false}
                   indeterminate={typeof typedValue !== 'boolean'}
                   {...checkboxProps}

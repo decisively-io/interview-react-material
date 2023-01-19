@@ -3,6 +3,8 @@ import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { DatePicker, DatePickerProps } from '@material-ui/pickers';
 import { format } from 'date-fns';
+import { AttributeData } from '@decisively-io/types-interview';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IDate, DATE_FORMAT, resolveNowInDate, deriveLabel } from '../../types/controls';
@@ -11,10 +13,11 @@ import { IDate, DATE_FORMAT, resolveNowInDate, deriveLabel } from '../../types/c
 export interface IProps {
   c: IDate;
   datePickerProps?: Partial< DatePickerProps >;
+  chOnScreenData?: (data: AttributeData) => void;
 }
 
 
-export const _: React.FC< IProps > = React.memo(({ c, datePickerProps }) => {
+export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenData }) => {
   const { control } = useFormContext();
   const {
     attribute,
@@ -33,6 +36,16 @@ export const _: React.FC< IProps > = React.memo(({ c, datePickerProps }) => {
       render={({ field: { value, onChange }, fieldState: { error } }) => {
         const typedValue = value as IDate[ 'value' ];
 
+        const handleChange = (d: MaterialUiPickersDate) => {
+          if (d) {
+            if (chOnScreenData) {
+              chOnScreenData({ [ attribute ]: format(d, DATE_FORMAT) });
+            }
+
+            onChange(format(d, DATE_FORMAT));
+          }
+        };
+
         return (
           <FormControl._ title={c.label}>
             <DatePicker {...{
@@ -40,7 +53,7 @@ export const _: React.FC< IProps > = React.memo(({ c, datePickerProps }) => {
               error: error !== undefined,
               helperText: error?.message || ' ',
               value: typeof typedValue === 'string' ? new Date(typedValue) : null,
-              onChange: d => d && onChange(format(d, DATE_FORMAT)),
+              onChange: handleChange,
               format: DATE_FORMAT,
               maxDate: resolvedMax && new Date(resolvedMax),
               minDate: resolvedMin && new Date(resolvedMin),
