@@ -3,6 +3,8 @@ import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { TimePicker, TimePickerProps } from '@material-ui/pickers';
 import { format } from 'date-fns';
+import { AttributeData } from '@decisively-io/types-interview';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { deriveLabel, ITime, TIME_FORMAT_12, TIME_FORMAT_24 } from '../../types/controls';
@@ -11,6 +13,7 @@ import { deriveLabel, ITime, TIME_FORMAT_12, TIME_FORMAT_24 } from '../../types/
 export interface IProps {
   c: ITime;
   timePickerProps?: Partial< TimePickerProps >;
+  chOnScreenData?: (data: AttributeData) => void;
 }
 
 export const secondLessViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
@@ -20,7 +23,7 @@ export const allViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
   'hours', 'minutes', 'seconds',
 ];
 
-export const _: React.FC< IProps > = React.memo(({ c, timePickerProps }) => {
+export const _: React.FC<IProps> = React.memo(({ c, timePickerProps, chOnScreenData }) => {
   const { control } = useFormContext();
   const {
     attribute,
@@ -47,6 +50,16 @@ export const _: React.FC< IProps > = React.memo(({ c, timePickerProps }) => {
           ? new Date(`1970-01-01T${ value }`)
           : null;
 
+        const handleChange = (d: MaterialUiPickersDate) => {
+          if (d) {
+            if (chOnScreenData) {
+              chOnScreenData({ [ attribute ]: format(d, TIME_FORMAT_24) });
+            }
+
+            onChange(format(d, TIME_FORMAT_24));
+          }
+        };
+
         return (
           <FormControl._ title={c.label}>
             <TimePicker
@@ -54,7 +67,7 @@ export const _: React.FC< IProps > = React.memo(({ c, timePickerProps }) => {
               error={error !== undefined}
               helperText={error?.message || ' '}
               value={compValue}
-              onChange={d => d && onChange(format(d, TIME_FORMAT_24))}
+              onChange={handleChange}
               format={uiTimeFormat}
               inputVariant='outlined'
               ampm={Boolean(amPmFormat)}

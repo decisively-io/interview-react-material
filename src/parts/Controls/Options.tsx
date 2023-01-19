@@ -7,6 +7,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import { AttributeData } from '@decisively-io/types-interview';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { deriveLabel, IOptions } from '../../types/controls';
 import * as ErrorComp from './__error';
@@ -20,11 +21,12 @@ export interface IProps {
   c: IOptions;
   autocompleteProps?: AutocompleteProps< IOptions[ 'options' ][ 0 ], false, false, true>;
   autocompleteTextFieldProps?: TextFieldProps;
+  chOnScreenData?: (data: AttributeData) => void;
 }
 
 const RadioControl = <Radio />;
 
-export const _: React.FC< IProps > = React.memo(({ c, autocompleteProps, autocompleteTextFieldProps }) => {
+export const _: React.FC<IProps> = React.memo(({ c, autocompleteProps, autocompleteTextFieldProps, chOnScreenData }) => {
   const { control } = useFormContext();
   const {
     attribute,
@@ -69,6 +71,10 @@ export const _: React.FC< IProps > = React.memo(({ c, autocompleteProps, autocom
           ({ currentTarget: { value } }) => {
             const nextValue = isBool ? (value === 'true') : value;
 
+            if (chOnScreenData) {
+              chOnScreenData({ [ attribute ]: nextValue });
+            }
+
             onChange(nextValue);
           }
         );
@@ -101,11 +107,19 @@ export const _: React.FC< IProps > = React.memo(({ c, autocompleteProps, autocom
                     }
                     onChange={(_, newValue) => {
                       if(newValue === null) {
+                        if (chOnScreenData) {
+                          chOnScreenData({ [ attribute ]: null } as any);
+                        }
+
                         onChange(null);
                         return;
                       }
 
                       if(typeof newValue === 'string') return;
+
+                      if (chOnScreenData) {
+                        chOnScreenData({ [ attribute ]: newValue.value });
+                      }
 
                       onChange(newValue.value);
                     }}
