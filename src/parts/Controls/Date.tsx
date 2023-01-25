@@ -52,7 +52,9 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
               label: deriveLabel(c),
               error: error !== undefined,
               helperText: error?.message || ' ',
-              value: typeof typedValue === 'string' ? new Date(typedValue) : null,
+              value: typeof typedValue === 'string'
+                ? (typedValue === 'now' ? new Date() : new Date(typedValue))
+                : null,
               onChange: handleChange,
               format: DATE_FORMAT,
               maxDate: resolvedMax && new Date(resolvedMax),
