@@ -73,6 +73,7 @@ export const _: React.FC<IProps> = React.memo(({ c, timePickerProps, chOnScreenD
               ampm={Boolean(amPmFormat)}
               minutesStep={minutes_increment}
               views={allowSeconds ? allViews : secondLessViews}
+              disabled={c.disabled}
               {...timePickerProps}
             />
           </FormControl._>

@@ -60,6 +60,7 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
               maxDate: resolvedMax && new Date(resolvedMax),
               minDate: resolvedMin && new Date(resolvedMin),
               inputVariant: 'outlined',
+              disabled: c.disabled,
               ...datePickerProps,
             }}
             />

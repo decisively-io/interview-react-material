@@ -63,6 +63,7 @@ export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, chOnScreen
                 variant: 'outlined',
                 error: error !== undefined,
                 helperText: error?.message || ' ',
+                disabled: c.disabled,
                 ...maybeWithMulti,
                 ...textFieldProps,
               })

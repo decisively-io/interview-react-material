@@ -15,12 +15,12 @@ export interface IProps {
   chOnScreenData?: (data: AttributeData) => void;
 }
 
-type IArg = { value: ICurrency[ 'value' ]; c: ICurrency; } & NonNullable< IProps[ 'textFieldProps' ] >;
+type IArg = { value: ICurrency[ 'value' ] } & NonNullable< IProps[ 'textFieldProps' ] >;
 
 const withFallback = (arg: IArg) => (
   (arg.value === null || arg.value === undefined)
     ? <TextField {...arg} value='' />
-    : <TextField {...arg} value={arg.value} />
+    : <TextField {...arg} />
 );
 
 
@@ -60,8 +60,8 @@ export const _: React.FC<IProps> = React.memo(({ c, textFieldProps, chOnScreenDa
                 variant: 'outlined',
                 error: error !== undefined,
                 helperText: error?.message || ' ',
-                c,
                 InputProps,
+                disabled: c.disabled,
                 ...textFieldProps,
               })
             }

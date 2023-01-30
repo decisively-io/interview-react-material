@@ -68,6 +68,7 @@ export const _: React.FC<IProps> = React.memo(({ c, dateTimePickerProps, chOnScr
               minutesStep={minutes_increment}
               maxDate={maxDate}
               minDate={minDate}
+              disabled={c.disabled}
               {...dateTimePickerProps}
             />
           </FormControl._>

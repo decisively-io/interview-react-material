@@ -45,6 +45,7 @@ export const _: React.FC< IProps > = React.memo(({ c, textFieldProps }) => {
                 variant: 'outlined',
                 error: error !== undefined,
                 helperText: error?.message || ' ',
+                disabled: c.disabled,
                 ...textFieldProps,
               })
             }

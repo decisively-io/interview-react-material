@@ -80,7 +80,7 @@ export const _: React.FC<IProps> = React.memo(({ c, autocompleteProps, autocompl
         );
 
         return (
-          <FormControl._ title={c.label}>
+          <FormControl._ title={c.label} disabled={c.disabled}>
             {
               asRadio
                 ? (
@@ -153,6 +153,7 @@ export const _: React.FC<IProps> = React.memo(({ c, autocompleteProps, autocompl
                         {...autocompleteTextFieldProps}
                       />
                     )}
+                    disabled={c.disabled}
                     {...autocompleteProps}
                   />
                 )

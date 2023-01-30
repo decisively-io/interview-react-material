@@ -35,7 +35,6 @@ export const defaultSession: Session = {
   },
   context: { entity: '' },
   sessionId: '',
-  state: {},
   status: 'in-progress',
   steps: [],
 };

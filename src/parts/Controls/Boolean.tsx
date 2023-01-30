@@ -37,7 +37,7 @@ export const _: React.FC<IProps> = React.memo(({ c, checkboxProps, chOnScreenDat
         };
 
         return (
-          <FormControl._ title={c.label}>
+          <FormControl._ title={c.label} disabled={c.disabled}>
             <FormControlLabel
               control={(
                 <Checkbox
