@@ -25,7 +25,7 @@ const withFallback = (arg: IParam) => (
 
 export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, chOnScreenData }) => {
   const { control } = useFormContext();
-  const { attribute, multi } = c;
+  const { attribute, multi, variation } = c;
 
 
   const maybeWithMulti: Pick< IParam, 'multiline' | 'maxRows' | 'minRows' > = (
@@ -36,6 +36,9 @@ export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, chOnScreen
         ...multi,
       }
   );
+  const maybeWithType = variation === undefined ? {} : {
+    type: variation.type,
+  };
 
 
   return (
@@ -64,6 +67,7 @@ export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, chOnScreen
                 error: error !== undefined,
                 helperText: error?.message || ' ',
                 disabled: c.disabled,
+                ...maybeWithType,
                 ...maybeWithMulti,
                 ...textFieldProps,
               })
