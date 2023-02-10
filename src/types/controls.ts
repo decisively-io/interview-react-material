@@ -516,7 +516,7 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
   return yup.object().shape(shape).required();
 }
 
-export function normalizeContolValue(c: NonNestedControl, v: any): typeof v {
+export function normalizeControlValue(c: NonNestedControl, v: any): typeof v {
   if(c.type === 'text') {
     const typedV = v as null | string | undefined;
 
@@ -530,8 +530,8 @@ export function normalizeContolValue(c: NonNestedControl, v: any): typeof v {
   return v;
 }
 
-export function normalizeControlsValue(v: IControlsValue, cs: Screen['controls']): typeof v {
-  return produce(v, draft => (cs.reduce(
+export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen['controls']): typeof controlsValue {
+  return produce({}, draft => cs.reduce< IControlsValue >(
     (a, c) => {
       if(c.type === 'typography' || c.type === 'file' || c.type === 'image') {
         return a;
@@ -539,39 +539,51 @@ export function normalizeControlsValue(v: IControlsValue, cs: Screen['controls']
 
       if(c.type === 'number_of_instances') {
         // eslint-disable-next-line no-param-reassign
-        a[ c.entity ] = normalizeContolValue(c, a[ c.entity ]);
+        a[ c.entity ] = normalizeControlValue(c, controlsValue[ c.entity ]);
         return a;
       }
 
       if(c.type === 'entity') {
-        const v = a[ c.entity ];
-        if(!v) return a;
+        const controlValue = controlsValue[ c.entity ];
+        if(!controlValue || !Array.isArray(controlValue)) return a;
+        if(controlValue.some(it => it.typeof !== 'object' || it === null)) return a;
 
-        const typedV = v as Array< IControlsValue >;
-        const { template } = c;
+        const entityValue = controlValue as IControlsValue[];
 
-        typedV.forEach(value => template.forEach(t => {
-          if(t.type === 'typography' || t.type === 'file' || t.type === 'image') {
-            return;
-          }
+        const reduced = entityValue.reduce< typeof entityValue >((a, singleEntity) => {
+          if(typeof singleEntity !== 'object' || singleEntity === null) return a;
 
-          if(t.type === 'number_of_instances') {
+          const newValue = c.template.reduce< typeof singleEntity >((innerA, t) => {
+            if(t.type === 'typography' || t.type === 'file' || t.type === 'image') {
+              return innerA;
+            }
+
+            if(t.type === 'number_of_instances') {
+              // eslint-disable-next-line no-param-reassign
+              innerA[ t.entity ] = normalizeControlValue(t, singleEntity[ t.entity ]);
+              return innerA;
+            }
+
             // eslint-disable-next-line no-param-reassign
-            value[ t.entity ] = normalizeContolValue(t, value[ t.entity ]);
-            return;
-          }
+            innerA[ t.attribute ] = normalizeControlValue(t, singleEntity[ t.attribute ]);
+            return innerA;
+          }, {});
 
-          // eslint-disable-next-line no-param-reassign
-          value[ t.attribute ] = normalizeContolValue(t, value[ t.attribute ]);
-        }));
+          if(Object.keys(newValue).length === 0) return a;
+
+          return a.concat(newValue);
+        }, []);
+
+        // eslint-disable-next-line no-param-reassign
+        if(reduced.length) a[ c.entity ] = reduced;
 
         return a;
       }
 
       // eslint-disable-next-line no-param-reassign
-      a[ c.attribute ] = normalizeContolValue(c, a[ c.attribute ]);
+      a[ c.attribute ] = normalizeControlValue(c, controlsValue[ c.attribute ]);
       return a;
     },
     draft,
-  )));
+  ));
 }
