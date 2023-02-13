@@ -527,6 +527,12 @@ export function normalizeControlValue(c: NonNestedControl, v: any): typeof v {
         : typedV;
   }
 
+  if(c.type === 'boolean') {
+    return c.required
+      ? Boolean(v)
+      : typeof v === 'boolean' ? v : null;
+  }
+
   return v;
 }
 
