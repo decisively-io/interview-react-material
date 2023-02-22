@@ -552,7 +552,7 @@ export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen
       if(c.type === 'entity') {
         const controlValue = controlsValue[ c.entity ];
         if(!controlValue || !Array.isArray(controlValue)) return a;
-        if(controlValue.some(it => it.typeof !== 'object' || it === null)) return a;
+        if(controlValue.some(it => typeof it !== 'object' || it === null)) return a;
 
         const entityValue = controlValue as IControlsValue[];
 
@@ -576,6 +576,8 @@ export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen
           }, {});
 
           if(Object.keys(newValue).length === 0) return a;
+
+          newValue[ '@id' ] = singleEntity[ '@id' ];
 
           return a.concat(newValue);
         }, []);
