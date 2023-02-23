@@ -133,6 +133,7 @@ export class Root extends React.PureComponent< IProps, IState > {
   }
 
   __next: Content.IProps[ 'next' ] = (data, reset) => {
+    const parentPropName = '@parent';
     const {
       props: { next },
       state: { session: s },
@@ -140,7 +141,11 @@ export class Root extends React.PureComponent< IProps, IState > {
 
     this.setState({ nextDisabled: true, isSubmitting: true });
 
-    next(s, normalizeControlsValue(data, s.screen.controls))
+    const normalized = normalizeControlsValue(data, s.screen.controls);
+
+    if(data[ parentPropName ]) normalized[ parentPropName ] = data[ parentPropName ];
+
+    next(s, normalized)
       .then(s => {
         console.log('next success, resetting');
         reset();
