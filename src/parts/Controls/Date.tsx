@@ -3,18 +3,27 @@ import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { DatePicker, DatePickerProps } from '@material-ui/pickers';
 import { format } from 'date-fns';
+import IconButton from '@material-ui/core/IconButton';
+import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+import Box from '@material-ui/core/Box';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import { AttributeData } from '@decisively-io/types-interview';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import styled from 'styled-components';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
 import { IDate, DATE_FORMAT, resolveNowInDate, deriveLabel } from '../../types/controls';
 
 
 export interface IProps {
-  c: IDate;
+  c: IDate & { manualControlsCssOverride?: string };
   datePickerProps?: Partial< DatePickerProps >;
   chOnScreenData?: (data: AttributeData) => void;
 }
+
+const ManualControlsWrap = styled(Box)<{ cssOverride?: string }>`
+  ${ p => p.cssOverride };
+`;
 
 
 export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenData }) => {
@@ -23,10 +32,22 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
     attribute,
     max,
     min,
+    allowManual,
+    manualControlsCssOverride,
   } = c;
+  const datePickerRef = React.useRef< HTMLInputElement >(null);
 
   const resolvedMax = resolveNowInDate(max);
   const resolvedMin = resolveNowInDate(min);
+
+
+  const datePickerStyle = React.useMemo< React.CSSProperties >(() => (
+    allowManual ? { visibility: 'hidden', position: 'absolute' } : {}
+  ), [allowManual]);
+
+  const emulateClickOnPicker = React.useCallback(() => (
+    datePickerRef.current?.click()
+  ), []);
 
 
   return (
@@ -35,6 +56,15 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
       name={attribute}
       render={({ field: { value, onChange }, fieldState: { error } }) => {
         const typedValue = value as IDate[ 'value' ];
+        const manualInputProps: TextFieldProps = {
+          label: deriveLabel(c),
+          error: error !== undefined,
+          helperText: error?.message || ' ',
+          value,
+          variant: 'outlined',
+          onChange,
+          fullWidth: true,
+        };
 
         const handleChange = (d: MaterialUiPickersDate) => {
           if (d) {
@@ -61,9 +91,38 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
               minDate: resolvedMin && new Date(resolvedMin),
               inputVariant: 'outlined',
               disabled: c.disabled,
+              style: datePickerStyle,
+              inputRef: datePickerRef,
               ...datePickerProps,
             }}
             />
+
+            {
+              Boolean(allowManual) === false ? null : (
+                <ManualControlsWrap
+                  display='flex'
+                  width='100%'
+                  gridGap='0.5rem'
+                  alignItems='center'
+                  cssOverride={manualControlsCssOverride}
+                >
+                  <Box flexGrow='1'>
+                    {
+                      (value === undefined || value === null)
+                        ? <TextField {...{ ...manualInputProps, value: '' }} />
+                        : <TextField {...manualInputProps} />
+                    }
+                  </Box>
+
+                  <Box flexShrink='0' marginTop='-1.25rem'>
+                    <IconButton onClick={emulateClickOnPicker}>
+                      <CalendarTodayIcon />
+                    </IconButton>
+                  </Box>
+                </ManualControlsWrap>
+              )
+            }
+
           </FormControl._>
         );
       }}

@@ -253,32 +253,44 @@ function generateValidatorForControl(
     }
     case 'date': {
       const { max, min, required } = c;
+      /** a.k.a YYYY-MM-DD */
+      const DATE_FORMAT_REGEX = /^\d\d\d\d\-\d\d\-\d\d$/;
 
       const nowLessMax = resolveNowInDate(max);
       const nowLessMin = resolveNowInDate(min);
 
 
       const schema = yup.string().nullable();
+      const finalSchema: typeof schema = (
+        [schema]
+          .map(it => (required === undefined ? it : it.test(
+            'withRequired',
+            requiredErrStr,
+            v => v !== undefined && v !== null && v !== '',
+          )))
+          .map(it => it.test(
+            'correctFormat',
+            'Should be formatted like YYYY-MM-DD',
+            v => (v === undefined || v === null || v === '' ? true : (
+              Boolean(
+                v.match(DATE_FORMAT_REGEX) &&
+                Number.isNaN(Number(new Date(v))) === false,
+              )
+            )),
+          ))
+          .map(it => (nowLessMax === undefined ? it : it.test(
+            'withMax',
+            `Should be before or equal to ${ nowLessMax }`,
+            v => v !== undefined && v !== null && v <= nowLessMax,
+          )))
+          .map(it => (nowLessMin === undefined ? it : it.test(
+            'withMin',
+            `Should be after or equal to ${ nowLessMin }`,
+            v => v !== undefined && v !== null && v >= nowLessMin,
+          )))
+      )[ 0 ];
 
-      const withRequired: typeof schema = required === undefined ? schema : schema.test(
-        'withRequired',
-        requiredErrStr,
-        v => v !== undefined && v !== null,
-      );
-
-      const afterMax: typeof withRequired = nowLessMax === undefined ? withRequired : withRequired.test(
-        'withMax',
-        `Should be before or equal to ${ nowLessMax }`,
-        v => v !== undefined && v !== null && v <= nowLessMax,
-      );
-
-      const afterMin: typeof afterMax = nowLessMin === undefined ? afterMax : afterMax.test(
-        'withMin',
-        `Should be after or equal to ${ nowLessMin }`,
-        v => v !== undefined && v !== null && v >= nowLessMin,
-      );
-
-      return afterMin;
+      return finalSchema;
     }
     case 'time': {
       const { max, min, required, amPmFormat } = c;
