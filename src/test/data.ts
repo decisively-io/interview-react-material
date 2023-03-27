@@ -61,7 +61,7 @@ export const session: Session = {
         id: 'typographySimple',
         style: 'h3',
         text: 'Hello',
-        emoji: '😇',
+        // emoji: '😇',
       },
       {
         type: 'typography',
