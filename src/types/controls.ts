@@ -533,7 +533,7 @@ export function normalizeControlValue(c: NonNestedControl, v: any): typeof v {
     const typedV = v as null | string | undefined;
 
     return (typedV === null || typedV === undefined)
-      ? typedV
+      ? null
       : (c.variation !== undefined && c.variation.type === 'number')
         ? Number(typedV)
         : typedV;
@@ -545,7 +545,7 @@ export function normalizeControlValue(c: NonNestedControl, v: any): typeof v {
       : typeof v === 'boolean' ? v : null;
   }
 
-  return v;
+  return v === undefined ? null : v;
 }
 
 export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen['controls']): typeof controlsValue {
