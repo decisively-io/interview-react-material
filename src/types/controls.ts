@@ -3,6 +3,7 @@ import produce from 'immer';
 import * as yup from 'yup';
 import { format } from 'date-fns';
 import { v4 as uuid } from 'uuid';
+import DateFns from '@date-io/date-fns';
 
 import {
   IControlsValue,
@@ -18,6 +19,8 @@ import {
   NonNestedControl,
 } from '@decisively-io/types-interview';
 
+
+const DATE_FNS = new DateFns();
 
 export * from '@decisively-io/types-interview/dist/controls';
 
@@ -104,15 +107,22 @@ function getDefaultControlValue(
         ? c.default
         : c.value;
 
-    case 'date':
-      return c.value === undefined
+    case 'date': {
+
+      const valueRaw = c.value === undefined
         ? c.default
         : c.value;
 
-    case 'time':
-      return c.value === undefined
+      return valueRaw === 'now' ? DATE_FNS.format(new Date(), 'yyyy-MM-dd') : valueRaw;
+    }
+
+    case 'time': {
+      const valueRaw = c.value === undefined
         ? c.default
         : c.value;
+
+      return valueRaw === 'now' ? DATE_FNS.format(new Date(), 'HH:mm:ss') : valueRaw;
+    }
 
     case 'datetime':
       return c.value === undefined
