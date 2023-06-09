@@ -115,7 +115,7 @@ export class Root extends React.PureComponent< IProps, IState > {
   // ===================================================================================
 
 
-  __back: Content.IProps[ 'back' ] = (data, reset) => {
+  __back: Content.IProps[ 'back' ] = (_, reset) => {
     const {
       props: { back },
       state: { session: s },
@@ -123,7 +123,7 @@ export class Root extends React.PureComponent< IProps, IState > {
 
     this.setState({ backDisabled: true });
 
-    back(s, normalizeControlsValue(data, s.screen.controls))
+    back(s, {})
       .then(s => {
         reset();
         console.log('back success, setting new session data', s);
