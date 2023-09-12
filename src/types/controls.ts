@@ -573,7 +573,12 @@ export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen
 
       if(c.type === 'entity') {
         const controlValue = controlsValue[ c.entity ];
-        if(!controlValue || !Array.isArray(controlValue)) return a;
+        if(!controlValue || !Array.isArray(controlValue)) {
+          // eslint-disable-next-line no-param-reassign
+          a[ c.entity ] = [];
+
+          return a;
+        }
         if(controlValue.some(it => typeof it !== 'object' || it === null)) return a;
 
         const entityValue = controlValue as IControlsValue[];
