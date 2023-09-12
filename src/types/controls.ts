@@ -610,7 +610,7 @@ export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen
         }, []);
 
         // eslint-disable-next-line no-param-reassign
-        if(reduced.length) a[ c.entity ] = reduced;
+        a[ c.entity ] = reduced;
 
         return a;
       }
