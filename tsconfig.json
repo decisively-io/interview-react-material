@@ -51,7 +51,6 @@
     "suppressImplicitAnyIndexErrors": false,
     "traceResolution": false,
     "useDefineForClassFields": false,
-    "watch": false,
     "outDir": "dist",
     "baseUrl": "./src",
     "rootDir": "./src",

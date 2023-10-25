@@ -12,6 +12,7 @@ import * as Frame from './Frame';
 import * as Menu from './Menu';
 import * as Content from './Content';
 import type { IRenderControlProps } from './Controls/__controlsTypes';
+import type { ThemedCompT, ThemedCompProps } from './themes/types';
 
 
 export const defaultStep: Session[ 'steps' ][ 0 ] = {
@@ -49,6 +50,7 @@ export interface IProps extends Pick< IRenderControlProps, 'controlComponents' >
   chOnScreenData?: (data: AttributeData) => void;
   // flag to indicate that the component is loading data from an external source
   externalLoading?: boolean;
+  ThemedComp?: ThemedCompT;
 }
 
 export interface IState extends Pick<
@@ -167,7 +169,7 @@ export class Root extends React.PureComponent< IProps, IState > {
         isSubmitting,
         nextDisabled,
       },
-      props: { controlComponents },
+      props: { controlComponents, ThemedComp },
       __setCurrentStep,
       __back,
       __next,
@@ -179,56 +181,37 @@ export class Root extends React.PureComponent< IProps, IState > {
     const currentStep = getCurrentStep({ ...defaultStep, steps });
     const stepIndex = currentStep ? steps.findIndex(s => s.id === currentStep.id) : -1;
 
-    if(status !== 'in-progress') {
-      return (
-        <Frame._
-          contentJSX={(
-            <Content._
-              // use screen id as key, as it will re-render if the screen changes
-              key={screen.id}
-              step={currentStep}
-              screen={screen}
-              controlComponents={controlComponents}
-            />
-          )}
-          menuJSX={(
-            <Menu._
-              status={status}
-              stages={steps}
-              progress={progress}
-              onClick={__setCurrentStep}
-            />
-          )}
-        />
-      );
+    const menuProps: ThemedCompProps[ 'menu' ] = {
+      status,
+      stages: steps,
+      progress,
+      onClick: __setCurrentStep,
+    };
+    const contentProps: ThemedCompProps[ 'content' ] = {
+      // use screen id as key, as it will re-render if the screen changes
+      keyForRemount: screen.id,
+      step: currentStep,
+      screen,
+      controlComponents,
+      // eslint-disable-next-line no-negated-condition
+      ...(status !== 'in-progress' ? {} : {
+        next: __next,
+        back: __back,
+        backDisabled: backDisabled || stepIndex === 0 || externalLoading,
+        isSubmitting: isSubmitting || externalLoading,
+        nextDisabled: nextDisabled || externalLoading,
+        chOnScreenData,
+      }),
+    };
+
+    if(ThemedComp !== undefined) {
+      return <ThemedComp menu={menuProps} content={contentProps} />;
     }
 
     return (
-
       <Frame._
-        contentJSX={(
-          <Content._
-            // use screen id as key, as it will re-render if the screen changes
-            key={screen.id}
-            step={currentStep}
-            screen={screen}
-            next={__next}
-            back={__back}
-            backDisabled={backDisabled || stepIndex === 0 || externalLoading}
-            isSubmitting={isSubmitting || externalLoading}
-            nextDisabled={nextDisabled || externalLoading}
-            controlComponents={controlComponents}
-            chOnScreenData={chOnScreenData}
-          />
-        )}
-        menuJSX={(
-          <Menu._
-            status={status}
-            stages={steps}
-            progress={progress}
-            onClick={__setCurrentStep}
-          />
-        )}
+        contentJSX={<Content._ key={contentProps.keyForRemount} {...contentProps} />}
+        menuJSX={<Menu._ {...menuProps} />}
       />
     );
   }
@@ -238,7 +221,7 @@ export * as Frame from './Frame';
 export * as Menu from './Menu';
 export * as Font from './__font';
 export * as Content from './Content';
-
+export * as Themes from './themes';
 
 // these are needed because when we use this lib in project with
 // module not set to cjs, it starts importing other entities, and

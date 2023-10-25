@@ -97,7 +97,7 @@ export interface IRootProps extends Pick< IRenderControlProps, 'controlComponent
 
   className?: string;
   step: Step | null;
-  screen: Screen;
+  screen: Screen | null;
   next?: (data: IControlsValue, reset: () => unknown) => unknown;
   back?: ((data: IControlsValue, reset: () => unknown) => unknown);
   backDisabled?: boolean;
@@ -213,7 +213,7 @@ export const _: React.FC< IRootProps > = React.memo(p => {
 _.displayName = `${ CONTENT_DISPLAY_NAME }/__Root`;
 
 
-export interface IProps extends Pick<
+export type IProps = Pick<
   IRootProps,
   | 'className'
   | 'back'
@@ -223,9 +223,9 @@ export interface IProps extends Pick<
   | 'nextDisabled'
   | 'isSubmitting'
   | 'controlComponents'
-> {
-  screen: IRootProps[ 'screen' ] | null;
-}
+  | 'screen'
+  | 'chOnScreenData'
+>;
 
 // export const _: React.FC< IProps > = React.memo(
 //   props => {
