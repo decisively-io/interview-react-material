@@ -6,8 +6,8 @@ import { DISPLAY_NAME_PREFIX } from '../constants';
 
 
 export const classes = {
-  '>menu': 'menu',
-  '>content': 'content',
+  '>menu': 'menu_aBBc89',
+  '>content': 'content_KQ3zSZ',
 };
 
 

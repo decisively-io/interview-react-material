@@ -20,20 +20,20 @@ import type { IRenderControlProps } from './__controlsTypes';
 
 
 export const classes = {
-  '>h': 'heading',
+  '>h': 'heading_jQlatn',
 
   '>fieldGroups': {
-    _: 'fieldGroups',
+    _: 'fieldGroups_bpLNPY',
 
     '>fieldGroup': {
-      _: 'fieldGroup',
+      _: 'fieldGroup_0HTULO',
 
-      '>fieldControls': 'fieldControls',
-      '>fieldActions': 'fieldActions',
+      '>fieldControls': 'fieldControls_OkY7Py',
+      '>fieldActions': 'fieldActions_7nxMEV',
     },
   },
 
-  '>add': 'addIconBtn',
+  '>add': 'addIconBtn_CIglRA',
 };
 
 const fieldGrpsClss = classes[ '>fieldGroups' ];

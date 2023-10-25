@@ -18,21 +18,21 @@ import type { IRenderControlProps } from './Controls/__controlsTypes';
 
 export const classes = {
   '>formWrap': {
-    _: 'formWrap',
+    _: 'formWrap_2NgTRe',
 
     '>form': {
-      _: 'form',
-      '>h': 'heading',
-      '>controls': 'controls',
+      _: 'form_eyu2Bt',
+      '>h': 'heading_U1LjQu',
+      '>controls': 'controls_Uj4EDN',
     },
   },
   '>btns': {
-    _: 'btns',
+    _: 'btns_fiwac2',
 
-    '>back': 'back',
+    '>back': 'back_Qt7DZ6',
     '>submit': {
-      _: 'submit',
-      '>next': 'next',
+      _: 'submit_qOUndF',
+      '>next': 'next_ggiip5',
     },
   },
 };

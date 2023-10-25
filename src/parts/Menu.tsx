@@ -35,30 +35,30 @@ export const getCnameForLevel = (level: number): string => `lvl${ level }`;
 
 export const classes = {
   '>list': {
-    _: 'list',
+    _: 'list_WlKObv',
     '>item': {
-      _: 'item',
+      _: 'item_9Bq463',
 
-      '&.complete': 'complete',
-      '&.active': 'active',
-      '&.visited': 'visited',
+      '&.complete': 'complete_KNWPo2',
+      '&.active': 'active_QnECa8',
+      '&.visited': 'visited_Dles8p',
       '>avatar': {
-        _: 'avatar',
-        '>T': 'typography',
+        _: 'avatar_3IdtNl',
+        '>T': 'typography_wmHqqq',
       },
-      '>text': 'text',
+      '>text': 'text_KmRP5i',
     },
-    '>collapse': 'collapse',
+    '>collapse': 'collapse_Y0R9FN',
   },
   '>progress': {
-    _: 'progress',
+    _: 'progress_D9jF3j',
 
-    '>bar': 'bar',
+    '>bar': 'bar_O9bSkR',
     '>info': {
-      _: 'info',
+      _: 'info_l9qs6g',
 
-      '>summary': 'summary',
-      '>est': 'estimate',
+      '>summary': 'summary_tsZ4SR',
+      '>est': 'estimate_sItjZq',
     },
   },
 };
