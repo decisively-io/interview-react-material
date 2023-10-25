@@ -21,8 +21,8 @@ export interface IProps {
   chOnScreenData?: (data: AttributeData) => void;
 }
 
-const ManualControlsWrap = styled(Box)<{ cssOverride?: string }>`
-  ${ p => p.cssOverride };
+const ManualControlsWrap = styled(Box)<{ $cssOverride?: string }>`
+  ${ p => p.$cssOverride };
 `;
 
 
@@ -104,7 +104,7 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
                   width='100%'
                   gridGap='0.5rem'
                   alignItems='center'
-                  cssOverride={manualControlsCssOverride}
+                  $cssOverride={manualControlsCssOverride}
                 >
                   <Box flexGrow='1'>
                     {
