@@ -22,11 +22,20 @@ export interface IProps {
   autocompleteProps?: AutocompleteProps< IOptions[ 'options' ][ 0 ], false, false, true>;
   autocompleteTextFieldProps?: TextFieldProps;
   chOnScreenData?: (data: AttributeData) => void;
+  className?: string;
 }
 
 const RadioControl = <Radio />;
 
-export const _: React.FC<IProps> = React.memo(({ c, autocompleteProps, autocompleteTextFieldProps, chOnScreenData }) => {
+export const _: React.FC<IProps> = React.memo(p => {
+  const {
+    c,
+    autocompleteProps,
+    autocompleteTextFieldProps,
+    chOnScreenData,
+    className,
+  } = p;
+
   const { control } = useFormContext();
   const {
     attribute,
@@ -80,7 +89,7 @@ export const _: React.FC<IProps> = React.memo(({ c, autocompleteProps, autocompl
         );
 
         return (
-          <FormControl._ title={c.label} disabled={c.disabled}>
+          <FormControl._ title={c.label} disabled={c.disabled} className={className}>
             {
               asRadio
                 ? (
