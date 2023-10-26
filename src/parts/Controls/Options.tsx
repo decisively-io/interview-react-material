@@ -15,6 +15,8 @@ import * as FormControl from './__formControl';
 
 
 const filter = createFilterOptions< IOptions[ 'options' ][ 0 ] >();
+export const asRadioClsnm = 'asRadio_udecnm';
+export const autocompleteClsnm = 'autocomplete_n5JJ8qT';
 
 
 export interface IProps {
@@ -68,6 +70,11 @@ export const _: React.FC<IProps> = React.memo(p => {
 
   const Label = deriveLabel(c);
 
+  const finalClsnm = [
+    asRadio ? asRadioClsnm : autocompleteClsnm,
+    className,
+  ].filter(Boolean).join(' ');
+
 
   return (
     <Controller
@@ -89,7 +96,7 @@ export const _: React.FC<IProps> = React.memo(p => {
         );
 
         return (
-          <FormControl._ title={c.label} disabled={c.disabled} className={className}>
+          <FormControl._ title={c.label} disabled={c.disabled} className={finalClsnm}>
             {
               asRadio
                 ? (
