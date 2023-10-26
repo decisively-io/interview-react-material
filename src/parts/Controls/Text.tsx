@@ -12,6 +12,7 @@ export interface IProps {
   c: IText;
   textFieldProps?: TextFieldProps;
   chOnScreenData?: (data: AttributeData) => void;
+  className?: string;
 }
 
 
@@ -23,7 +24,7 @@ const withFallback = (arg: IParam) => (
     : <TextField {...arg} value='' />
 );
 
-export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, chOnScreenData }) => {
+export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute, multi, variation } = c;
 
@@ -57,7 +58,7 @@ export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, chOnScreen
         };
 
         return (
-          <FormControl._ title={c.label}>
+          <FormControl._ title={c.label} className={className}>
             {
               withFallback({
                 onChange: handleChange,

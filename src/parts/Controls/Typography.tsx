@@ -9,6 +9,7 @@ import { ITypography } from '../../types/controls';
 export interface IProps {
   c: ITypography;
   typographyProps?: TypographyProps;
+  className?: string;
 }
 
 const DISPLAY_NAME = `${ DISPLAY_NAME_PREFIX }/Typography`;
@@ -62,29 +63,35 @@ const BannerComp: React.FC<{ text: string; style: BannerStyle; emoji?: ITypograp
 BannerComp.displayName = `${ DISPLAY_NAME }/BannerComp`;
 
 
-export const _: React.FC< IProps > = React.memo(({ c, typographyProps }) => {
+export const _: React.FC< IProps > = React.memo(({ c, typographyProps, className }) => {
   const { style, emoji } = c;
   const text = c.text ?? 'Error: missing value \'text\'';
 
-  if(style === 'banner-red' || style === 'banner-green' || style === 'banner-yellow') {
-    return <BannerComp {...{ style, text, emoji }} />;
-  }
-
   return (
-    <Typography variant={style} {...typographyProps}>
-      {
-        emoji === undefined ? null : (
-          <span className='emoji'>
-            {emoji}
-            &nbsp;&nbsp;
-          </span>
-        )
-      }
+    <div className={className}>
+      {(() => {
+        if(style === 'banner-red' || style === 'banner-green' || style === 'banner-yellow') {
+          return <BannerComp {...{ style, text, emoji }} />;
+        }
 
-      <span className='text'>
-        {text}
-      </span>
-    </Typography>
+        return (
+          <Typography variant={style} {...typographyProps}>
+            {
+              emoji === undefined ? null : (
+                <span className='emoji'>
+                  {emoji}
+                  &nbsp;&nbsp;
+                </span>
+              )
+            }
+
+            <span className='text'>
+              {text}
+            </span>
+          </Typography>
+        );
+      })()}
+    </div>
   );
 });
 _.displayName = DISPLAY_NAME;

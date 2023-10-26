@@ -14,10 +14,11 @@ export interface IProps {
   checkboxProps?: CheckboxProps;
   formControlLabelProps?: FormControlLabelProps;
   chOnScreenData?: (data: AttributeData) => void;
+  className?: string;
 }
 
 
-export const _: React.FC<IProps> = React.memo(({ c, checkboxProps, chOnScreenData }) => {
+export const _: React.FC<IProps> = React.memo(({ c, checkboxProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute } = c;
 
@@ -37,7 +38,7 @@ export const _: React.FC<IProps> = React.memo(({ c, checkboxProps, chOnScreenDat
         };
 
         return (
-          <FormControl._ title={c.label} disabled={c.disabled}>
+          <FormControl._ title={c.label} disabled={c.disabled} className={className}>
             <FormControlLabel
               control={(
                 <Checkbox
