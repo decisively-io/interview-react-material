@@ -19,6 +19,7 @@ export interface IProps {
   c: IDate & { manualControlsCssOverride?: string };
   datePickerProps?: Partial< DatePickerProps >;
   chOnScreenData?: (data: AttributeData) => void;
+  className?: string;
 }
 
 const ManualControlsWrap = styled(Box)<{ $cssOverride?: string }>`
@@ -26,7 +27,7 @@ const ManualControlsWrap = styled(Box)<{ $cssOverride?: string }>`
 `;
 
 
-export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenData }) => {
+export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const {
     attribute,
@@ -77,7 +78,7 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
         };
 
         return (
-          <FormControl._ title={c.label}>
+          <FormControl._ title={c.label} className={className}>
             <DatePicker {...{
               label: deriveLabel(c),
               error: error !== undefined,

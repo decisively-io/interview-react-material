@@ -13,6 +13,7 @@ export interface IProps {
   c: ICurrency;
   textFieldProps?: Omit< TextFieldProps, 'value' >;
   chOnScreenData?: (data: AttributeData) => void;
+  className?: string;
 }
 
 type IArg = { value: ICurrency[ 'value' ] } & NonNullable< IProps[ 'textFieldProps' ] >;
@@ -24,7 +25,7 @@ const withFallback = (arg: IArg) => (
 );
 
 
-export const _: React.FC<IProps> = React.memo(({ c, textFieldProps, chOnScreenData }) => {
+export const _: React.FC<IProps> = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute, symbol } = c;
 
@@ -51,7 +52,7 @@ export const _: React.FC<IProps> = React.memo(({ c, textFieldProps, chOnScreenDa
         };
 
         return (
-          <FormControl._ title={c.label}>
+          <FormControl._ title={c.label} className={className}>
             {
               withFallback({
                 onChange: handleChange,

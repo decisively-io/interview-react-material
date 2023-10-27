@@ -10,6 +10,7 @@ import { deriveLabel, INumberOfInstances } from '../../types/controls';
 export interface IProps {
   c: INumberOfInstances;
   textFieldProps?: Omit< TextFieldProps, 'value' >;
+  className?: string;
 }
 
 
@@ -24,7 +25,7 @@ const withFallback = (arg: IArg) => (
     : <TextField {...arg} />
 );
 
-export const _: React.FC< IProps > = React.memo(({ c, textFieldProps }) => {
+export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, className }) => {
   const { control } = useFormContext();
   const { entity } = c;
 
@@ -36,7 +37,7 @@ export const _: React.FC< IProps > = React.memo(({ c, textFieldProps }) => {
         const typedValue = value as Value;
 
         return (
-          <FormControl._ title={c.label}>
+          <FormControl._ title={c.label} className={className}>
             {
               withFallback({
                 onChange,

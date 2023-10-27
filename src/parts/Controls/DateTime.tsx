@@ -14,10 +14,11 @@ export interface IProps {
   c: IDateTime;
   dateTimePickerProps?: Partial< DateTimePickerProps >;
   chOnScreenData?: (data: AttributeData) => void;
+  className?: string;
 }
 
 
-export const _: React.FC<IProps> = React.memo(({ c, dateTimePickerProps, chOnScreenData }) => {
+export const _: React.FC<IProps> = React.memo(({ c, dateTimePickerProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const {
     date_max,
@@ -55,7 +56,7 @@ export const _: React.FC<IProps> = React.memo(({ c, dateTimePickerProps, chOnScr
         };
 
         return (
-          <FormControl._ title={c.label}>
+          <FormControl._ title={c.label} className={className}>
             <DateTimePicker
               label={deriveLabel(c)}
               error={error !== undefined}

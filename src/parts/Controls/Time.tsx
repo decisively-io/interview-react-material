@@ -14,6 +14,7 @@ export interface IProps {
   c: ITime;
   timePickerProps?: Partial< TimePickerProps >;
   chOnScreenData?: (data: AttributeData) => void;
+  className?: string;
 }
 
 export const secondLessViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
@@ -23,7 +24,7 @@ export const allViews: React.ComponentProps< typeof TimePicker >[ 'views' ] = [
   'hours', 'minutes', 'seconds',
 ];
 
-export const _: React.FC<IProps> = React.memo(({ c, timePickerProps, chOnScreenData }) => {
+export const _: React.FC<IProps> = React.memo(({ c, timePickerProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const {
     attribute,
@@ -61,7 +62,7 @@ export const _: React.FC<IProps> = React.memo(({ c, timePickerProps, chOnScreenD
         };
 
         return (
-          <FormControl._ title={c.label}>
+          <FormControl._ title={c.label} className={className}>
             <TimePicker
               label={deriveLabel(c)}
               error={error !== undefined}
