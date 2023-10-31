@@ -35,6 +35,7 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
     min,
     allowManual,
     manualControlsCssOverride,
+    disabled,
   } = c;
   const datePickerRef = React.useRef< HTMLInputElement >(null);
 
@@ -65,6 +66,7 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
           variant: 'outlined',
           onChange,
           fullWidth: true,
+          disabled: c.disabled,
         };
 
         const handleChange = (d: MaterialUiPickersDate) => {

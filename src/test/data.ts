@@ -99,7 +99,7 @@ export const session: Session = {
         attribute: 'attributeDate',
         id: 'date1',
         label: 'Date 1',
-        // disabled: true,
+        disabled: true,
         allowManual: true,
         // min: '2022-04-01',
         // max: 'now',
