@@ -223,12 +223,13 @@ export const session: Session = {
           ...defaultStep,
           id: '1.1',
           title: 'Welcome',
-          current: true,
+          visited: true,
         },
         {
           ...defaultStep,
           id: '1.2',
           title: 'Itinerary',
+          current: true,
         },
         {
           ...defaultStep,
@@ -249,12 +250,29 @@ export const session: Session = {
     },
     {
       ...defaultStep,
-      id: '2.1',
+      id: '2',
       title: 'What happened?',
+      steps: [
+        {
+          ...defaultStep,
+          id: '2.2',
+          title: 'What happened 2?',
+        },
+        {
+          ...defaultStep,
+          id: '2.3',
+          title: 'What happened 3?',
+        },
+        {
+          ...defaultStep,
+          id: '2.4',
+          title: 'What happened 4?',
+        },
+      ],
     },
     {
       ...defaultStep,
-      id: '3.1',
+      id: '3',
       title: 'Outcome?',
     },
   ],

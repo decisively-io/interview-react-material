@@ -194,46 +194,39 @@ const RenderStage: React.FC< IRenderStageProps > = React.memo(
     const listCName = cls(classes[ '>list' ]._, getCnameForLevel(level + 1));
 
 
-    if(s.steps !== undefined && s.steps.length === 0) {
-      return (
-        <>
-          <ListItem onClick={clickOnItem} button className={itemCName}>
-            { AvatarJSX }
-            <ListItemText primary={s.title} className={textCName} />
-          </ListItem>
-        </>
-      );
-    }
-
     const canNavigate = s.complete || s.visited || s.current;
     const interviewComplete = status !== 'in-progress';
     const disableNavigation = !canNavigate || (interviewComplete && !s.current);
+
     return (
       <>
         <ListItem
+          onClick={clickOnItem}
           disabled={disableNavigation}
           button
-          onClick={clickOnItem}
           className={itemCName}
         >
           { AvatarJSX }
           <ListItemText primary={s.title} className={textCName} />
         </ListItem>
-        <Collapse in={open} timeout='auto' className={collapseCName}>
-          { s.steps && (
-            <List className={listCName}>
-              { s.steps.map(it => (
-                <RenderStage
-                  key={it.id}
-                  s={it}
-                  status={status}
-                  level={level + 1}
-                  onClick={onClick}
-                />
-              )) }
-            </List>
-          ) }
-        </Collapse>
+        {
+          s.steps === undefined || s.steps.length === 0 ? null : (
+            <Collapse in={open} timeout='auto' className={collapseCName}>
+              <List className={listCName}>
+                { s.steps.map(it => (
+                  <RenderStage
+                    key={it.id}
+                    s={it}
+                    status={status}
+                    level={level + 1}
+                    onClick={onClick}
+                  />
+                )) }
+              </List>
+            </Collapse>
+          )
+        }
+
       </>
     );
   },
