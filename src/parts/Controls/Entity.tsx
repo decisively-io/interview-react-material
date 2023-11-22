@@ -137,6 +137,15 @@ export const _: React.FC<IProps> = React.memo(({ c, RenderControl, controlCompon
           >
             <Grid className={fieldGrpClss[ '>fieldControls' ]} item xs={10}>
               {template.map(value => {
+                if(value.type === 'typography') {
+                  return (
+                    <RenderControl
+                      c={value}
+                      controlComponents={controlComponents}
+                    />
+                  );
+                }
+
                 if('attribute' in value) {
                   const key = [entity, index, value.attribute].join('.');
                   return (

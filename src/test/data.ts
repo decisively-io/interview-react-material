@@ -172,6 +172,12 @@ export const session: Session = {
         label: 'Entity 1 with a really-really-really long label so that it would surely overlow, right?',
         template: [
           {
+            type: 'typography',
+            id: 'entTypographyId1',
+            style: 'banner-yellow',
+            text: 'typography in entity',
+          },
+          {
             type: 'boolean',
             id: 'boolean2',
             attribute: 'booleanAttribute2',
