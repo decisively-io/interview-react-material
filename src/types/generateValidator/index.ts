@@ -1,1 +1,1 @@
-export * from './core';
+export * as generateValidator from './core';

@@ -1,19 +1,18 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, test } from '@jest/globals';
 import { describeWithTags, validateOpts } from '../../../__jest';
-import { generateValidator2 } from '../core';
+import { generateValidatorForControl2, errMsgs } from '../core';
 
 
-const tags = ['types', 'generateValidator', 'boolean', 'nvH4MuhZtJ'];
+const tags = ['types', 'generateValidatorForControl2', 'numberOfInstances', 'VOIfRZLY0p'];
 
 
 describeWithTags(tags, tags.join(', '), () => {
   test('succeeds (simple)', () => {
-    const validator = generateValidator2({ type: 'boolean', attribute: '', id: '' });
+    const validator = generateValidatorForControl2({ type: 'number_of_instances', entity: '', id: '', min: 0 });
 
-    const invalid = ['', {}, [], 123];
 
-    invalid.forEach(val => {
+    [{}, [], false, true, ''].forEach(val => {
       try {
         validator.validateSync(val, validateOpts);
 
@@ -21,12 +20,12 @@ describeWithTags(tags, tags.join(', '), () => {
       } catch (e) {
         if(!(e instanceof Error)) throw e;
 
-        expect(e.message.startsWith('this must be a `boolean` type')).toBe(true);
+        expect(e.message).toBe(errMsgs.numberOfInstances.type);
       }
     });
 
-    const valid = [true, false, null, undefined];
-    valid.forEach(val => (
+    const correctVals = [0, 1, 10];
+    correctVals.forEach(val => (
       expect(validator.validateSync(val, validateOpts)).toBe(val)
     ));
   });

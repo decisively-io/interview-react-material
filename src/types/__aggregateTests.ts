@@ -1,1 +1,2 @@
-import {} from './generateValidator/__aggregateTests';
+import {} from './generateValidatorForControl/__aggregateTests';
+import {} from './generateValidator/_.test';

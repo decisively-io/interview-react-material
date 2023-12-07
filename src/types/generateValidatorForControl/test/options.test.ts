@@ -1,18 +1,18 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, test } from '@jest/globals';
 import { describeWithTags, validateOpts } from '../../../__jest';
-import { generateValidator2 } from '../core';
+import { generateValidatorForControl2, errMsgs } from '../core';
 
 
-const tags = ['types', 'generateValidator', 'text', 'ug2XrrQHlR'];
+const tags = ['types', 'generateValidatorForControl2', 'options', 'GVjkwW8Fpu'];
 
 
 describeWithTags(tags, tags.join(', '), () => {
   test('succeeds (simple)', () => {
-    const validator = generateValidator2({ type: 'text', id: '', attribute: '' });
+    const validator = generateValidatorForControl2({ type: 'options', id: '', attribute: '', enum_id: '', options: [] });
 
 
-    [{}, [], false, true, 123].forEach(val => {
+    [{}, [], 123].forEach(val => {
       try {
         validator.validateSync(val, validateOpts);
 
@@ -20,11 +20,11 @@ describeWithTags(tags, tags.join(', '), () => {
       } catch (e) {
         if(!(e instanceof Error)) throw e;
 
-        expect(e.message.startsWith('this must be a `string` type')).toBe(true);
+        expect(e.message).toBe(errMsgs.options.type);
       }
     });
 
-    const correctVals = ['', null, undefined, 'test', 'some long value'];
+    const correctVals = [false, true, '', null, undefined, 'test', 'some long value'];
     correctVals.forEach(val => (
       expect(validator.validateSync(val, validateOpts)).toBe(val)
     ));

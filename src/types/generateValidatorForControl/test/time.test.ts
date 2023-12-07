@@ -1,15 +1,15 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, test } from '@jest/globals';
 import { describeWithTags, validateOpts } from '../../../__jest';
-import { generateValidator2, errMsgs } from '../core';
+import { generateValidatorForControl2, errMsgs } from '../core';
 
 
-const tags = ['types', 'generateValidator', 'date', 'NjrTIx1pF1'];
+const tags = ['types', 'generateValidatorForControl2', 'time', 'twXm2OGvzh'];
 
 
 describeWithTags(tags, tags.join(', '), () => {
   test('succeeds (simple)', () => {
-    const validator = generateValidator2({ type: 'date', attribute: '', id: '' });
+    const validator = generateValidatorForControl2({ type: 'time', attribute: '', id: '' });
 
 
     [{}, [], false, true, 2023].forEach(val => {
@@ -25,7 +25,7 @@ describeWithTags(tags, tags.join(', '), () => {
     });
 
 
-    ['2023', '12-10-2023'].forEach(val => {
+    ['12', 'HH:mm:ss', '25:99:99'].forEach(val => {
       try {
         validator.validateSync(val, validateOpts);
 
@@ -33,12 +33,12 @@ describeWithTags(tags, tags.join(', '), () => {
       } catch (e) {
         if(!(e instanceof Error)) throw e;
 
-        expect(e.message).toBe(errMsgs.date.format);
+        expect(e.message).toBe(errMsgs.time.format);
       }
     });
 
 
-    const correctVals = ['', '2023-12-07', '2023-10-11', undefined, null];
+    const correctVals = ['', '12:33:00', '23:11:19', undefined, null];
     correctVals.forEach(val => (
       expect(validator.validateSync(val, validateOpts)).toBe(val)
     ));
