@@ -16,7 +16,6 @@ import {
   TIME_FORMAT_12,
   DATE_FORMAT,
   Screen,
-  NonNestedControl,
 } from '@decisively-io/types-interview';
 
 
@@ -468,25 +467,25 @@ export const getEntityValueIndx = (path: string): number => {
 };
 
 
-function maybeGetErrMessage(path: string, template: IEntity[ 'template' ], value: any): string | false {
-  const i = getEntityValueIndx(path);
-  const c = template[ i ];
-  if(c.type === 'file' || c.type === 'typography' || c.type === 'image') {
-    return false;
-  }
+// function maybeGetErrMessage(path: string, template: IEntity[ 'template' ], value: any): string | false {
+//   const i = getEntityValueIndx(path);
+//   const c = template[ i ];
+//   if(c.type === 'file' || c.type === 'typography' || c.type === 'image') {
+//     return false;
+//   }
 
-  const validator = generateValidatorForControl(c);
+//   const validator = generateValidatorForControl(c);
 
-  try {
-    validator.validateSync(value);
-  } catch(e) {
-    if(e instanceof Error) {
-      return e.message;
-    }
-  }
+//   try {
+//     validator.validateSync(value);
+//   } catch(e) {
+//     if(e instanceof Error) {
+//       return e.message;
+//     }
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
 export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
   const shape = cs.reduce(
@@ -507,25 +506,32 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
         case 'entity':
           const template: IEntity[ 'template' ] = c.template;
 
+          const validators = template.reduce< Record< string, yup.AnySchema > >(
+            (a, it) => {
+              if(it.type === 'file' || it.type === 'image' || it.type === 'typography') {
+                return a;
+              }
+
+              if(it.type === 'entity') {
+                return {
+                  ...a,
+                };
+              }
+
+              return {
+                ...a,
+                [ it.type === 'number_of_instances' ? it.entity : it.attribute ]: generateValidatorForControl(it),
+              };
+            },
+            {},
+          );
+
           return {
             ...a,
             [ c.entity ]: yup.array(
               yup.object({
                 '@id': yup.string(),
-
-                ...template.reduce< Record< string, yup.AnySchema > >(
-                  (a, it) => {
-                    if(it.type === 'file' || it.type === 'image' || it.type === 'typography') {
-                      return a;
-                    }
-
-                    return {
-                      ...a,
-                      [ it.type === 'number_of_instances' ? it.entity : it.attribute ]: generateValidatorForControl(it),
-                    };
-                  },
-                  {},
-                ),
+                ...validators,
               }),
             ),
           };
@@ -538,7 +544,7 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
   return yup.object().shape(shape).required();
 }
 
-export function normalizeControlValue(c: NonNestedControl, v: any): typeof v {
+export function normalizeControlValue(c: Control, v: any): typeof v {
   if(c.type === 'text') {
     const typedV = v as null | string | undefined;
 
@@ -594,6 +600,10 @@ export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen
             if(t.type === 'number_of_instances') {
               // eslint-disable-next-line no-param-reassign
               innerA[ t.entity ] = normalizeControlValue(t, singleEntity[ t.entity ]);
+              return innerA;
+            }
+
+            if(t.type === 'entity') {
               return innerA;
             }
 

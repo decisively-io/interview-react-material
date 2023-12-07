@@ -12,7 +12,6 @@ import { DISPLAY_NAME_PREFIX } from './__prefix';
 import {
   deriveLabel,
   IEntity,
-  NonNestedControl,
   Control,
   deriveDefaultControlsValue,
 } from '../../types/controls';
@@ -66,7 +65,7 @@ export interface IProps extends Pick< IRenderControlProps, 'controlComponents' >
   className?: string;
 }
 
-type TemplateControl = NonNestedControl & { attribute: string };
+type TemplateControl = Control & { attribute: string };
 
 interface ISubControlProps extends Pick< IRenderControlProps, 'controlComponents' > {
   parent: IEntity;

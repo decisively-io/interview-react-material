@@ -47,6 +47,7 @@
     "noStrictGenericChecks": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "suppressExcessPropertyErrors": false,
     "suppressImplicitAnyIndexErrors": false,
     "traceResolution": false,
@@ -66,8 +67,9 @@
     "noUnusedParameters": false
   },
   "include": [
-    "src/index.tsx",
-    "./src/test/index.tsx"
+    "./src/index.tsx",
+    "./src/test/index.tsx",
+    "./src/__aggregateTests.ts",
   ],
   "exclude": [
     "node_modules",
