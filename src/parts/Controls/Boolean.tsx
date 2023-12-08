@@ -6,7 +6,8 @@ import FormControlLabel, { FormControlLabelProps } from '@material-ui/core/FormC
 import { AttributeData } from '@decisively-io/types-interview';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { deriveLabel, IBoolean } from '../../types/controls';
+import { IBoolean } from '../../types/controls';
+import { deriveLabel } from '../../types/deriveLabel';
 import * as ErrorComp from './__error';
 
 export interface IProps {

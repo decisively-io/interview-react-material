@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, test } from '@jest/globals';
 import { describeWithTags, validateOpts } from '../../../__jest';
-import { generateValidatorForControl2 } from '../core';
+import { generateValidatorForControl } from '../core';
 
 
 const tags = ['types', 'generateValidatorForControl2', 'text', 'ug2XrrQHlR'];
@@ -9,7 +9,7 @@ const tags = ['types', 'generateValidatorForControl2', 'text', 'ug2XrrQHlR'];
 
 describeWithTags(tags, tags.join(', '), () => {
   test('succeeds (simple)', () => {
-    const validator = generateValidatorForControl2({ type: 'text', id: '', attribute: '' });
+    const validator = generateValidatorForControl({ type: 'text', id: '', attribute: '' });
 
 
     [{}, [], false, true, 123].forEach(val => {

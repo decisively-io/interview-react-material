@@ -3,10 +3,11 @@ import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { AttributeData } from '@decisively-io/types-interview';
+import type { AttributeData } from '@decisively-io/types-interview';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { deriveLabel, ICurrency } from '../../types/controls';
+import type { ICurrency } from '../../types/controls';
+import { deriveLabel } from '../../types/deriveLabel';
 
 
 export interface IProps {

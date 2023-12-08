@@ -7,12 +7,14 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import { AttributeData } from '@decisively-io/types-interview';
+import type { AttributeData } from '@decisively-io/types-interview';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import styled from 'styled-components';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { IDate, DATE_FORMAT, resolveNowInDate, deriveLabel } from '../../types/controls';
+import { IDate, DATE_FORMAT } from '../../types/controls';
+import { deriveLabel } from '../../types/deriveLabel';
+import { resolveNowInDate } from '../../types/generateValidatorForControl';
 
 
 export interface IProps {

@@ -4,7 +4,8 @@ import { useFormContext, Controller } from 'react-hook-form';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { deriveLabel, INumberOfInstances } from '../../types/controls';
+import type { INumberOfInstances } from '../../types/controls';
+import { deriveLabel } from '../../types/deriveLabel';
 
 
 export interface IProps {

@@ -1,3 +1,2 @@
 export * from './controls';
-export * as generateValidatorForControl from './generateValidatorForControl';
-export * as generateValidator from './generateValidator';
+export * as v2 from './v2';

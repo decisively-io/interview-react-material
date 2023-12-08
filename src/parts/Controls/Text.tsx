@@ -5,7 +5,8 @@ import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import { AttributeData } from '@decisively-io/types-interview';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { deriveLabel, IText } from '../../types/controls';
+import type { IText } from '../../types/controls';
+import { deriveLabel } from '../../types/deriveLabel';
 
 
 export interface IProps {

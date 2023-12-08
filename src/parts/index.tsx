@@ -6,7 +6,7 @@ import {
   AttributeData,
 } from '@decisively-io/types-interview';
 import { getCurrentStep } from '@decisively-io/interview-sdk';
-import { normalizeControlsValue } from '../types';
+import { normalizeControlsValue } from '../types/normalizeControlsVal';
 import { DISPLAY_NAME_PREFIX } from '../constants';
 import * as Frame from './Frame';
 import * as Menu from './Menu';

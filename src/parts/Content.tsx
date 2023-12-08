@@ -12,7 +12,9 @@ import { Step, Screen, AttributeData } from '@decisively-io/types-interview';
 import { CircularProgress } from '@material-ui/core';
 import * as Controls from './Controls';
 import { DISPLAY_NAME_PREFIX } from '../constants';
-import { generateValidator, deriveDefaultControlsValue, IControlsValue } from '../types/controls';
+import { IControlsValue } from '../types/controls';
+import { deriveDefaultControlsValue } from '../types/getDefaultControlsVal';
+import { generateValidator } from '../types/generateValidator';
 import type { IRenderControlProps } from './Controls/__controlsTypes';
 
 

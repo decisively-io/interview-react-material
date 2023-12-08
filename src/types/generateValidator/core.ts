@@ -1,8 +1,6 @@
 import * as yup from 'yup';
-import type {
-  Control,
-} from '@decisively-io/types-interview';
-import { generateValidatorForControl2 } from 'types/generateValidatorForControl';
+import type { Control } from '@decisively-io/types-interview';
+import { generateValidatorForControl } from '../generateValidatorForControl';
 
 
 export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
@@ -17,10 +15,10 @@ export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
         case 'text':
         case 'date':
         case 'options':
-          return { ...a, [ c.attribute ]: generateValidatorForControl2(c) };
+          return { ...a, [ c.attribute ]: generateValidatorForControl(c) };
         case 'number_of_instances':
         case 'entity':
-          return { ...a, [ c.entity ]: generateValidatorForControl2(c) };
+          return { ...a, [ c.entity ]: generateValidatorForControl(c) };
         default: return a;
       }
     },

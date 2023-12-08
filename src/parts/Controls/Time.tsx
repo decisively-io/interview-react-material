@@ -7,7 +7,8 @@ import { AttributeData } from '@decisively-io/types-interview';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { deriveLabel, ITime, TIME_FORMAT_12, TIME_FORMAT_24 } from '../../types/controls';
+import { ITime, TIME_FORMAT_12, TIME_FORMAT_24 } from '../../types/controls';
+import { deriveLabel } from '../../types/deriveLabel';
 
 
 export interface IProps {

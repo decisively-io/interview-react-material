@@ -37,7 +37,7 @@ export const session: Session = {
         attribute: 'attributeBool',
         id: 'bool1',
         label: 'Bool 1',
-        required: true,
+        // required: true,
         // disabled: true,
         // default: false,
         // value: undefined,
@@ -105,7 +105,7 @@ export const session: Session = {
         // max: 'now',
         // default: '2022-01-01',
         // value: null,
-        required: true,
+        // required: true,
         // default: '2022-01-11',
       },
       {
@@ -167,6 +167,7 @@ export const session: Session = {
       },
       {
         type: 'entity',
+        entity: 'entity1',
         id: 'entity1-UUID',
         min: 1,
         label: 'Entity 1 with a really-really-really long label so that it would surely overlow, right?',
@@ -203,6 +204,20 @@ export const session: Session = {
             // required: true,
             // default: true,
           },
+          {
+            type: 'entity',
+            id: 'entityNested-UUID',
+            entity: 'entityNested-id',
+            min: 1,
+            label: 'Entity nested name',
+            template: [
+              {
+                type: 'text',
+                id: 'entityNested-UUID-text1',
+                attribute: 'entityNested-UUID-attr1',
+              },
+            ],
+          },
           // {
           //   type: 'datetime',
           //   id: 'datetime2',
@@ -211,7 +226,6 @@ export const session: Session = {
           //   label: 'DateTime 2',
           // },
         ],
-        entity: 'entity1',
       },
     ],
   },

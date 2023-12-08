@@ -53,9 +53,9 @@
     "traceResolution": false,
     "useDefineForClassFields": false,
     "outDir": "dist",
-    "baseUrl": "./src",
+    // "baseUrl": "./src",
     "rootDir": "./src",
-    "paths": {},
+    // "paths": {},
     "plugins": [],
     "lib": [
       "ESNext",

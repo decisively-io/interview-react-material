@@ -3,11 +3,13 @@ import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { DateTimePicker, DateTimePickerProps } from '@material-ui/pickers';
 import { format } from 'date-fns';
-import { AttributeData } from '@decisively-io/types-interview';
+import type { AttributeData } from '@decisively-io/types-interview';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import * as FormControl from './__formControl';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { IDateTime, DATE_TIME_FORMAT_24, DATE_TIME_FORMAT_12, resolveNowInDate, deriveLabel } from '../../types/controls';
+import { IDateTime, DATE_TIME_FORMAT_24, DATE_TIME_FORMAT_12 } from '../../types/controls';
+import { deriveLabel } from '../../types/deriveLabel';
+import { resolveNowInDate } from '../../types/generateValidatorForControl';
 
 
 export interface IProps {

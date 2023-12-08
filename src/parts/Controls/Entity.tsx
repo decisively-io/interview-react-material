@@ -9,16 +9,17 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import { v4 as uuid } from 'uuid';
 import { DISPLAY_NAME_PREFIX } from './__prefix';
-import {
-  deriveLabel,
+import type {
   IEntity,
   Control,
-  deriveDefaultControlsValue,
 } from '../../types/controls';
+import { deriveLabel } from '../../types/deriveLabel';
+import { deriveDefaultControlsValue } from '../../types/getDefaultControlsVal';
 import type { IRenderControlProps } from './__controlsTypes';
 
 
 export const classes = {
+  _: 'root_bTTj8u',
   '>h': 'heading_jQlatn',
 
   '>fieldGroups': {
@@ -40,6 +41,10 @@ const fieldGrpClss = classes[ '>fieldGroups' ][ '>fieldGroup' ];
 
 
 const Wrap = styled.div`
+  >.${ fieldGrpsClss._ } .${ fieldGrpClss[ '>fieldControls' ] } .${ classes._ } {
+    margin-left: 2rem;
+  }
+
   >.${ classes[ '>h' ] } {
     margin-bottom: 1rem;
   }
@@ -65,7 +70,7 @@ export interface IProps extends Pick< IRenderControlProps, 'controlComponents' >
   className?: string;
 }
 
-type TemplateControl = Control & { attribute: string };
+type TemplateControl = Control;
 
 interface ISubControlProps extends Pick< IRenderControlProps, 'controlComponents' > {
   parent: IEntity;
@@ -84,11 +89,18 @@ const SubControl: React.FC< ISubControlProps > = ({
   component: RenderControl,
   controlComponents,
 }) => {
-  const name = [entity, index, template.attribute].join('.');
+  const suffix = 'attribute' in template
+    ? template.attribute
+    : 'entity' in template
+      ? template.entity
+      : '';
+
+
+  const name = [entity, index, suffix].join('.');
   const control = {
     ...template,
     attribute: name,
-    value: parent.value?.[ index ]?.[ template.attribute ],
+    value: parent.value?.[ index ]?.[ suffix ],
   } as Control;
 
   return <RenderControl c={control} controlComponents={controlComponents} />;
@@ -117,9 +129,10 @@ export const _: React.FC<IProps> = React.memo(({ c, RenderControl, controlCompon
     '@id': uuid(),
     ...deriveDefaultControlsValue(template),
   }), [append, template]);
+  const fullClassName = [className, classes._].filter(Boolean).join(' ');
 
   return (
-    <Wrap className={className}>
+    <Wrap className={fullClassName}>
       <Typography className={classes[ '>h' ]} variant='h5'>
         {deriveLabel(c)}
       </Typography>
@@ -160,7 +173,22 @@ export const _: React.FC<IProps> = React.memo(({ c, RenderControl, controlCompon
                   );
                 }
 
-                console.log('Unsupported template control', value);
+                if(value.type === 'entity') {
+                  const key = [entity, index, value.entity].join('.');
+                  return (
+                    <SubControl
+                      key={key}
+                      parent={c}
+                      template={value}
+                      entity={entity}
+                      index={index}
+                      component={RenderControl}
+                      controlComponents={controlComponents}
+                    />
+                  );
+                }
+
+                console.error('interview-react-material | DQWj7PCvLE | Unsupported template control', value);
                 return null;
               })}
             </Grid>
