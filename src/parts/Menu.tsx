@@ -184,8 +184,7 @@ const RenderStage: React.FC<IRenderStageProps> = React.memo(({ s, status, level 
   const listCName = cls(classes[">list"]._, getCnameForLevel(level + 1));
 
   const canNavigate = s.complete || s.visited || s.current;
-  const interviewComplete = status !== "in-progress";
-  const disableNavigation = !canNavigate || (interviewComplete && !s.current);
+  const disableNavigation = !canNavigate;
 
   return (
     <>

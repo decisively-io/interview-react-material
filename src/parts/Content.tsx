@@ -101,8 +101,6 @@ export interface IRootProps extends Pick<IRenderControlProps, "controlComponents
   chOnScreenData?: (data: AttributeData) => void;
 }
 
-const CONTENT_DISPLAY_NAME = `${DISPLAY_NAME_PREFIX}/Content`;
-
 export const _: React.FC<IRootProps> = React.memo((p) => {
   const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData } = p;
   const { controls } = screen ?? { controls: [] };
@@ -170,7 +168,7 @@ export const _: React.FC<IRootProps> = React.memo((p) => {
     </MuiPickersUtilsProvider>
   );
 });
-_.displayName = `${CONTENT_DISPLAY_NAME}/__Root`;
+_.displayName = `${DISPLAY_NAME_PREFIX}/Content`;
 
 export type IProps = Pick<IRootProps, "className" | "back" | "next" | "step" | "backDisabled" | "nextDisabled" | "isSubmitting" | "controlComponents" | "screen" | "chOnScreenData">;
 

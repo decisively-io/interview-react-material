@@ -1,6 +1,6 @@
 {
   "name": "@decisively-io/interview-react-material",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.5",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
@@ -8,8 +8,8 @@
     "prepublishOnly": "npm run build",
     "dev": "tsc --watch",
     "build": "rimraf dist && tsc && rimraf ./dist/test",
-    "check:fix": "npx @biomejs/biome check --apply-unsafe .",
-    "check": "npx @biomejs/biome check .",
+    "check:fix": "npx @biomejs/biome check --apply-unsafe src",
+    "check": "npx @biomejs/biome check src",
     "prepare": "install-peers",
     "deploy": "yarn build && yarn publish"
   },

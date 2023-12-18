@@ -120,7 +120,10 @@ export class Root extends React.PureComponent<IProps, IState> {
       state: { session: s },
     } = this;
 
-    this.setState({ nextDisabled: true, isSubmitting: true });
+    this.setState({
+      nextDisabled: true,
+      isSubmitting: true,
+    });
 
     const normalized = normalizeControlsValue(data, s.screen.controls);
 
@@ -131,7 +134,10 @@ export class Root extends React.PureComponent<IProps, IState> {
       reset();
       console.log("next success, setting new session data", s);
       this.___setSession(s);
-      this.setState({ nextDisabled: false, isSubmitting: false });
+      this.setState({
+        nextDisabled: false,
+        isSubmitting: false,
+      });
     });
   };
 
@@ -148,7 +154,10 @@ export class Root extends React.PureComponent<IProps, IState> {
 
     const { steps, screen, progress, status } = session;
     const { chOnScreenData, externalLoading } = this.props;
-    const currentStep = getCurrentStep({ ...defaultStep, steps });
+    const currentStep = getCurrentStep({
+      ...defaultStep,
+      steps,
+    });
     const stepIndex = currentStep ? steps.findIndex((s) => s.id === currentStep.id) : -1;
 
     const menuProps: ThemedCompProps["menu"] = {
@@ -163,16 +172,12 @@ export class Root extends React.PureComponent<IProps, IState> {
       step: currentStep,
       screen,
       controlComponents,
-      ...(status !== "in-progress"
-        ? {}
-        : {
-            next: __next,
-            back: __back,
-            backDisabled: backDisabled || stepIndex === 0 || externalLoading,
-            isSubmitting: isSubmitting || externalLoading,
-            nextDisabled: nextDisabled || externalLoading,
-            chOnScreenData,
-          }),
+      next: __next,
+      back: __back,
+      backDisabled: backDisabled || stepIndex === 0 || externalLoading,
+      isSubmitting: isSubmitting || externalLoading,
+      nextDisabled: nextDisabled || externalLoading,
+      chOnScreenData,
     };
 
     if (ThemedComp !== undefined) {

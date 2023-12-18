@@ -335,50 +335,47 @@ function maybeGetErrMessage(path: string, template: IEntity["template"], value: 
 }
 
 export function generateValidator(cs: Control[]): yup.AnyObjectSchema {
-  const shape = cs.reduce(
-    (a, c) => {
-      switch (c.type) {
-        case "boolean":
-        case "currency":
-        case "time":
-        case "datetime":
-        case "text":
-        case "date":
-        case "options": {
-          a[c.attribute] = generateValidatorForControl(c);
-          return a;
-        }
-        case "number_of_instances": {
-          a[c.entity] = generateValidatorForControl(c);
-          return a;
-        }
-        case "entity": {
-          const template: IEntity["template"] = c.template;
-
-          a[c.entity] = yup.array(
-            yup.object({
-              "@id": yup.string(),
-
-              ...template.reduce<Record<string, yup.AnySchema>>((a, it) => {
-                if (it.type === "file" || it.type === "image" || it.type === "typography") {
-                  return a;
-                }
-
-                a[it.type === "number_of_instances" ? it.entity : (it as any).attribute] = generateValidatorForControl(it as any);
-
-                return a;
-              }, {} as any),
-            }),
-          );
-
-          return a;
-        }
-        default:
-          return a;
+  const shape = cs.reduce((a, c) => {
+    switch (c.type) {
+      case "boolean":
+      case "currency":
+      case "time":
+      case "datetime":
+      case "text":
+      case "date":
+      case "options": {
+        a[c.attribute] = generateValidatorForControl(c);
+        return a;
       }
-    },
-    {} as any,
-  );
+      case "number_of_instances": {
+        a[c.entity] = generateValidatorForControl(c);
+        return a;
+      }
+      case "entity": {
+        const template: IEntity["template"] = c.template;
+
+        a[c.entity] = yup.array(
+          yup.object({
+            "@id": yup.string(),
+
+            ...template.reduce<Record<string, yup.AnySchema>>((a, it) => {
+              if (it.type === "file" || it.type === "image" || it.type === "typography") {
+                return a;
+              }
+
+              a[it.type === "number_of_instances" ? it.entity : (it as any).attribute] = generateValidatorForControl(it as any);
+
+              return a;
+            }, {} as any),
+          }),
+        );
+
+        return a;
+      }
+      default:
+        return a;
+    }
+  }, {} as any);
 
   return yup.object().shape(shape).required();
 }
