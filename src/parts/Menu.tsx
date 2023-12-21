@@ -178,7 +178,7 @@ const RenderStage: React.FC<IRenderStageProps> = React.memo(({ s, status, level 
 
   const open = React.useMemo(() => containsCurrentStep(s), [s]);
 
-  const itemCName = cls(clssItem._, cNameForLevel, open && clssItem["&.active"], (s.complete && !s.skipped) && clssItem["&.complete"], s.visited && clssItem["&.visited"]);
+  const itemCName = cls(clssItem._, cNameForLevel, open && clssItem["&.active"], s.complete && !s.skipped && clssItem["&.complete"], s.visited && clssItem["&.visited"]);
   const textCName = cls(clssItem[">text"], cNameForLevel);
   const collapseCName = cls(classes[">list"][">collapse"], cNameForLevel);
   const listCName = cls(classes[">list"]._, getCnameForLevel(level + 1));

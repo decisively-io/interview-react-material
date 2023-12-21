@@ -41,6 +41,7 @@ export interface IProps extends Pick<IRenderControlProps, "controlComponents"> {
   navigateTo: (s: Session, stepId: Session["steps"][0]["id"]) => Promise<typeof s>;
   // callback to notify external component that data has been updated
   chOnScreenData?: (data: AttributeData) => void;
+  onDataChange?: (data: AttributeData, name: string | undefined) => void;
   // flag to indicate that the component is loading data from an external source
   externalLoading?: boolean;
   ThemedComp?: ThemedCompT;
@@ -146,7 +147,7 @@ export class Root extends React.PureComponent<IProps, IState> {
   render(): JSX.Element {
     const {
       state: { session, backDisabled, isSubmitting, nextDisabled },
-      props: { controlComponents, ThemedComp },
+      props: { controlComponents, onDataChange, ThemedComp },
       __setCurrentStep,
       __back,
       __next,
@@ -184,7 +185,7 @@ export class Root extends React.PureComponent<IProps, IState> {
       return <ThemedComp menu={menuProps} content={contentProps} />;
     }
 
-    return <Frame._ contentJSX={<Content._ key={contentProps.keyForRemount} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
+    return <Frame._ contentJSX={<Content._ key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
   }
 }
 

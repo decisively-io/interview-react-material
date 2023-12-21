@@ -1,3 +1,4 @@
+import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -56,27 +57,6 @@ export interface IProps extends Pick<IRenderControlProps, "controlComponents"> {
   className?: string;
 }
 
-type TemplateControl = Control & { attribute: string };
-
-interface ISubControlProps extends Pick<IRenderControlProps, "controlComponents"> {
-  parent: IEntity;
-  template: TemplateControl;
-  entity: string;
-  index: number;
-  component: React.FC<IRenderControlProps>;
-}
-
-const SubControl: React.FC<ISubControlProps> = ({ parent, template, entity, index, component: RenderControl, controlComponents }) => {
-  const name = [entity, index, template.attribute].join(".");
-  const control = {
-    ...template,
-    attribute: name,
-    value: parent.value?.[index]?.[template.attribute],
-  } as Control;
-
-  return <RenderControl c={control} controlComponents={controlComponents} />;
-};
-
 // const DebugState = () => {
 //   const { watch } = useFormContext();
 //   React.useEffect(() => {
@@ -91,9 +71,11 @@ export const _: React.FC<IProps> = React.memo(({ c, RenderControl, controlCompon
   const { entity, template } = c;
   const { control } = useFormContext();
 
+  const parentPath = (c as any).attribute;
+
   const { fields, append, remove } = useFieldArray({
     control,
-    name: entity,
+    name: parentPath || entity,
   });
 
   const appendHanler = React.useCallback(
@@ -115,14 +97,31 @@ export const _: React.FC<IProps> = React.memo(({ c, RenderControl, controlCompon
         {fields.map((field, index) => (
           <Grid item container key={field.id} alignItems="flex-start" justifyContent="space-between" className={fieldGrpClss._}>
             <Grid className={fieldGrpClss[">fieldControls"]} item xs={10}>
-              {template.map((value) => {
+              {template.map((value, controlIndex) => {
                 if (value.type === "typography") {
-                  return <RenderControl c={value} controlComponents={controlComponents} />;
+                  return <RenderControl key={controlIndex} c={value} controlComponents={controlComponents} />;
                 }
 
-                if ("attribute" in value) {
-                  const key = [entity, index, value.attribute].join(".");
-                  return <SubControl key={key} parent={c} template={value} entity={entity} index={index} component={RenderControl} controlComponents={controlComponents} />;
+                if ("attribute" in value || value.type === "entity") {
+                  const parent = c;
+                  const key = (value as any).attribute || (value as any).entity;
+                  const path = [parentPath ? `${parentPath}.${index}` : `${entity}.${index}`, key].filter((v) => v !== undefined).join(".");
+                  const control = {
+                    ...value,
+                    attribute: path,
+                    value: parent.value?.[index]?.[key],
+                  } as Control;
+
+                  const content = <RenderControl key={controlIndex} c={control} controlComponents={controlComponents} />;
+
+                  if (value.type === "entity") {
+                    return (
+                      <Box key={controlIndex} padding={1}>
+                        {content}
+                      </Box>
+                    );
+                  }
+                  return content;
                 }
 
                 console.log("Unsupported template control", value);

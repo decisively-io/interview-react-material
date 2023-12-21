@@ -103,7 +103,6 @@ export const session: Session = {
         // max: 'now',
         // default: '2022-01-01',
         // value: null,
-        required: true,
         // default: '2022-01-11',
       },
       {
@@ -210,6 +209,33 @@ export const session: Session = {
           // },
         ],
         entity: "entity1",
+      },
+
+      // nested entities
+      {
+        id: "9f00b560-e109-4115-8d10-6c8fed00af77",
+        type: "entity",
+        template: [
+          {
+            id: "fafc7666-313a-45fb-9f70-d55d979ac6ca",
+            type: "entity",
+            template: [
+              {
+                id: "45ee6e21-8a3d-4ab9-b304-5025f110e1e2",
+                label: "the clour of the hat",
+                required: true,
+                attribute: "c5c47f9b-4ad7-4e8a-b0bf-2e96ae44f181",
+                type: "text",
+              },
+            ],
+            label: "hats",
+            display: "vertical",
+            entity: "hats",
+          },
+        ],
+        label: "men",
+        display: "vertical",
+        entity: "men",
       },
     ],
   },

@@ -10,7 +10,8 @@
         "noDangerouslySetInnerHtml": "off"
       },
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noArrayIndexKey": "off"
       },
       "style": {
         "noNonNullAssertion": "off"

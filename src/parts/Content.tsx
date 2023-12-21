@@ -43,35 +43,35 @@ const Wrap = styled.form`
   flex-direction: column;
   overflow: auto;
 
-  >.${classes[">formWrap"]._} {
+  > .${classes[">formWrap"]._} {
     flex-grow: 1;
     overflow: auto;
 
-    >.${formClss._} {
+    > .${formClss._} {
       margin: 0 auto;
       padding: 1.5rem 2rem;
       max-width: 43.75rem;
       display: flex;
       flex-direction: column;
 
-      >.${formClss[">h"]} {
+      > .${formClss[">h"]} {
         margin-bottom: 1.5rem;
       }
     }
   }
 
-  >.${classes[">btns"]._} {
+  > .${classes[">btns"]._} {
     padding: 1rem 2rem;
     width: 100%;
     border-top: 1px solid #E5E5E5;
     display: flex;
     justify-content: space-between;
 
-    >.${submitClss._} {
+    > .${submitClss._} {
       display: flex;
       align-items: center;
 
-      >.${submitClss[">next"]} {
+      > .${submitClss[">next"]} {
         margin-left: 1rem;
       }
     }
@@ -99,21 +99,24 @@ export interface IRootProps extends Pick<IRenderControlProps, "controlComponents
   nextDisabled?: boolean;
   isSubmitting?: boolean;
   chOnScreenData?: (data: AttributeData) => void;
+  onDataChange?: (data: AttributeData, name: string | undefined) => void;
 }
 
 export const _: React.FC<IRootProps> = React.memo((p) => {
-  const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData } = p;
+  const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData, onDataChange } = p;
   const { controls } = screen ?? { controls: [] };
   const defaultValues = deriveDefaultControlsValue(controls);
   const resolver = yupResolver(generateValidator(controls));
 
-  const methods = useForm({ resolver, defaultValues });
+  const methods = useForm({
+    resolver,
+    defaultValues,
+  });
 
-  const { getValues, reset } = methods;
+  const { getValues, reset, watch } = methods;
 
   const onSubmit = React.useCallback(
     (data: IControlsValue) => {
-      console.log("form on submit", data);
       if (next) {
         next(data, reset);
       }
@@ -131,6 +134,16 @@ export const _: React.FC<IRootProps> = React.memo((p) => {
   if (!screen) return null;
 
   const pageTitle = screen.title || step?.title || "";
+
+  React.useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      if (type === "change") {
+        onDataChange?.(value, name);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onDataChange]);
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <FormProvider {...methods}>
