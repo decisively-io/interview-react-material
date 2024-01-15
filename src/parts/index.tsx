@@ -159,7 +159,7 @@ export class Root extends React.PureComponent<IProps, IState> {
       ...defaultStep,
       steps,
     });
-    const stepIndex = currentStep ? steps.findIndex((s) => s.id === currentStep.id) : -1;
+    const stepIndex = steps.findIndex((s) => s.id === screen.id);
 
     const menuProps: ThemedCompProps["menu"] = {
       status,
@@ -167,17 +167,20 @@ export class Root extends React.PureComponent<IProps, IState> {
       progress,
       onClick: __setCurrentStep,
     };
+
+    const lastStep = stepIndex === steps.length - 1 && status !== "in-progress";
+
     const contentProps: ThemedCompProps["content"] = {
       // use screen id as key, as it will re-render if the screen changes
       keyForRemount: screen.id,
       step: currentStep,
       screen,
       controlComponents,
-      next: __next,
+      next: lastStep ? undefined : __next,
       back: __back,
       backDisabled: backDisabled || stepIndex === 0 || externalLoading,
       isSubmitting: isSubmitting || externalLoading,
-      nextDisabled: nextDisabled || externalLoading,
+      nextDisabled: nextDisabled || externalLoading || lastStep,
       chOnScreenData,
     };
 

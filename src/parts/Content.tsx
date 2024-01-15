@@ -102,8 +102,8 @@ export interface IRootProps extends Pick<IRenderControlProps, "controlComponents
   onDataChange?: (data: AttributeData, name: string | undefined) => void;
 }
 
-export const _: React.FC<IRootProps> = React.memo((p) => {
-  const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData, onDataChange } = p;
+export const _: React.FC<IRootProps> = React.memo((props) => {
+  const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData, onDataChange } = props;
   const { controls } = screen ?? { controls: [] };
   const defaultValues = deriveDefaultControlsValue(controls);
   const resolver = yupResolver(generateValidator(controls));
