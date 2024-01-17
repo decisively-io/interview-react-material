@@ -56,7 +56,7 @@ const stripSession = (s: SessionInstance): Session => ({
 const App = () => {
   const [session, setSession] = useState<SessionInstance>();
 
-  const getSession: Parts.IProps["getSession"] = useCallback(async () => {
+  const getSession: Parts.RootProps["getSession"] = useCallback(async () => {
     if (Math.random() > -1) {
       setSession(dataSession as any);
       return dataSession;
@@ -69,7 +69,7 @@ const App = () => {
     return stripSession(res);
   }, []);
 
-  const navigateTo: Parts.IProps["navigateTo"] = async (_, id) => {
+  const navigateTo: Parts.RootProps["navigateTo"] = async (_, id) => {
     if (!session) return _;
 
     console.log("navigate", id);
@@ -79,7 +79,7 @@ const App = () => {
     return res;
   };
 
-  const next: Parts.IProps["next"] = async (s, data) => {
+  const next: Parts.RootProps["next"] = async (s, data) => {
     // if(Math.random() > -1) {
     //   console.log(data);
     //   return s;
@@ -95,7 +95,7 @@ const App = () => {
     return s;
   };
 
-  const back: Parts.IProps["back"] = async (s, data) => {
+  const back: Parts.RootProps["back"] = async (s, data) => {
     if (session) {
       const res = await session.back();
       setSession(res);

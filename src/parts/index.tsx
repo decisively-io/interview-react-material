@@ -34,7 +34,7 @@ export const defaultSession: Session = {
   steps: [],
 };
 
-export interface IProps extends Pick<IRenderControlProps, "controlComponents"> {
+export interface RootProps extends Pick<IRenderControlProps, "controlComponents"> {
   getSession: () => Promise<Session>;
   next: (s: Session, d: IControlsValue) => Promise<typeof s>;
   back: (s: Session, d: IControlsValue) => Promise<typeof s>;
@@ -47,20 +47,25 @@ export interface IProps extends Pick<IRenderControlProps, "controlComponents"> {
   ThemedComp?: ThemedCompT;
 }
 
-export interface IState extends Pick<Content.IProps, "backDisabled" | "nextDisabled" | "isSubmitting"> {
+export interface RootState {
   session: Session;
+  backDisabled: boolean;
+  isSubmitting: boolean;
+  isRequestPending: boolean;
+  nextDisabled: boolean;
 }
 
-export class Root extends React.PureComponent<IProps, IState> {
+export class Root extends React.PureComponent<RootProps, RootState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Root`;
 
-  constructor(p: Root["props"]) {
-    super(p);
+  constructor(props: RootProps) {
+    super(props);
 
     this.state = {
       session: defaultSession,
       backDisabled: false,
       isSubmitting: false,
+      isRequestPending:false,
       nextDisabled: false,
     };
   }
@@ -77,7 +82,10 @@ export class Root extends React.PureComponent<IProps, IState> {
       state: { session },
     } = this;
 
-    navigateTo(session, stepId).then((s) => this.setState({ session: s }));
+    this.setState({ isRequestPending: true });
+    navigateTo(session, stepId).then((s) => this.setState({ session: s })).finally(() => {
+      this.setState({ isRequestPending: false });
+    });
   };
 
   __getSession = (): void => {
@@ -104,13 +112,13 @@ export class Root extends React.PureComponent<IProps, IState> {
       state: { session: s },
     } = this;
 
-    this.setState({ backDisabled: true });
+    this.setState({ backDisabled: true, isRequestPending: true });
 
     back(s, {}).then((s) => {
       reset();
       console.log("back success, setting new session data", s);
       this.___setSession(s);
-      this.setState({ backDisabled: false });
+      this.setState({ backDisabled: false, isRequestPending: false });
     });
   };
 
@@ -123,6 +131,7 @@ export class Root extends React.PureComponent<IProps, IState> {
 
     this.setState({
       nextDisabled: true,
+      isRequestPending: true,
       isSubmitting: true,
     });
 
@@ -137,16 +146,41 @@ export class Root extends React.PureComponent<IProps, IState> {
       this.___setSession(s);
       this.setState({
         nextDisabled: false,
+        isRequestPending: false,
         isSubmitting: false,
       });
     });
   };
 
+  isFirstStep = (steps: Session["steps"], id: string): boolean => {
+    if (!Array.isArray(steps) || steps.length === 0) return false;
+    const first = steps[0];
+    if (first.id === id) {
+      return true;
+    }
+    if (first.steps?.length) {
+      return this.isFirstStep(first.steps, id);
+    }
+    return false;
+  }
+
+  isLastStep = (steps: Session["steps"], id: string): boolean => {
+    if (!Array.isArray(steps) || steps.length === 0) return false;
+    const last = steps[steps.length - 1];
+    if (last.id === id) {
+      return true;
+    }
+    if (last.steps?.length) {
+      return this.isLastStep(last.steps, id);
+    }
+    return false;
+  }
+
   // ===================================================================================
 
   render(): JSX.Element {
     const {
-      state: { session, backDisabled, isSubmitting, nextDisabled },
+      state: { session, backDisabled, isSubmitting, nextDisabled, isRequestPending },
       props: { controlComponents, onDataChange, ThemedComp },
       __setCurrentStep,
       __back,
@@ -159,7 +193,6 @@ export class Root extends React.PureComponent<IProps, IState> {
       ...defaultStep,
       steps,
     });
-    const stepIndex = steps.findIndex((s) => s.id === screen.id);
 
     const menuProps: ThemedCompProps["menu"] = {
       status,
@@ -168,7 +201,7 @@ export class Root extends React.PureComponent<IProps, IState> {
       onClick: __setCurrentStep,
     };
 
-    const lastStep = stepIndex === steps.length - 1 && status !== "in-progress";
+    const lastStep = this.isLastStep(steps, screen?.id) && status !== "in-progress";
 
     const contentProps: ThemedCompProps["content"] = {
       // use screen id as key, as it will re-render if the screen changes
@@ -178,9 +211,9 @@ export class Root extends React.PureComponent<IProps, IState> {
       controlComponents,
       next: lastStep ? undefined : __next,
       back: __back,
-      backDisabled: backDisabled || stepIndex === 0 || externalLoading,
+      backDisabled: isRequestPending || backDisabled || this.isFirstStep(steps, screen?.id) || externalLoading,
       isSubmitting: isSubmitting || externalLoading,
-      nextDisabled: nextDisabled || externalLoading || lastStep,
+      nextDisabled: isRequestPending || nextDisabled || externalLoading || lastStep,
       chOnScreenData,
     };
 
