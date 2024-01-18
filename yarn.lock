@@ -187,22 +187,24 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
-"@biomejs/biome@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.npmjs.org/@biomejs/biome/-/biome-1.4.1.tgz"
-  integrity sha512-JccVAwPbhi37pdxbAGmaOBjUTKEwEjWAhl7rKkVVuXHo4MLASXJ5HR8BTgrImi4/7rTBsGz1tgVD1Kwv1CHGRg==
+"@biomejs/biome@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.npmjs.org/@biomejs/biome/-/biome-1.5.2.tgz"
+  integrity sha512-LhycxGQBQLmfv6M3e4tMfn/XKcUWyduDYOlCEBrHXJ2mMth2qzYt1JWypkWp+XmU/7Hl2dKvrP4mZ5W44+nWZw==
   optionalDependencies:
-    "@biomejs/cli-darwin-arm64" "1.4.1"
-    "@biomejs/cli-darwin-x64" "1.4.1"
-    "@biomejs/cli-linux-arm64" "1.4.1"
-    "@biomejs/cli-linux-x64" "1.4.1"
-    "@biomejs/cli-win32-arm64" "1.4.1"
-    "@biomejs/cli-win32-x64" "1.4.1"
+    "@biomejs/cli-darwin-arm64" "1.5.2"
+    "@biomejs/cli-darwin-x64" "1.5.2"
+    "@biomejs/cli-linux-arm64" "1.5.2"
+    "@biomejs/cli-linux-arm64-musl" "1.5.2"
+    "@biomejs/cli-linux-x64" "1.5.2"
+    "@biomejs/cli-linux-x64-musl" "1.5.2"
+    "@biomejs/cli-win32-arm64" "1.5.2"
+    "@biomejs/cli-win32-x64" "1.5.2"
 
-"@biomejs/cli-darwin-arm64@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.npmjs.org/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-1.4.1.tgz"
-  integrity sha512-PZWy2Idndqux38p6AXSDQM2ldRAWi32bvb7bMbTN0ALzpWYMYnxd71ornatumSSJYoNhKmxzDLq+jct7nZJ79w==
+"@biomejs/cli-darwin-arm64@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.npmjs.org/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-1.5.2.tgz"
+  integrity sha512-3JVl08aHKsPyf0XL9SEj1lssIMmzOMAn2t1zwZKBiy/mcZdb0vuyMSTM5haMQ/90wEmrkYN7zux777PHEGrGiw==
 
 "@date-io/core@^1.3.13", "@date-io/core@1.x":
   version "1.3.13"

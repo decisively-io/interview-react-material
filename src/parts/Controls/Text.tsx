@@ -6,7 +6,7 @@ import { IText, deriveLabel } from "../../types/controls";
 import * as FormControl from "./__formControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-export interface IProps {
+export interface TextProps {
   c: IText;
   textFieldProps?: TextFieldProps;
   chOnScreenData?: (data: AttributeData) => void;
@@ -17,7 +17,7 @@ type IParam = TextFieldProps;
 
 const withFallback = (arg: IParam) => (typeof arg.value === "string" ? <TextField {...arg} /> : <TextField {...arg} value="" />);
 
-export const _: React.FC<IProps> = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
+export const _: React.FC<TextProps> = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute, multi, variation } = c;
 

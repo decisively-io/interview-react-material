@@ -8,14 +8,14 @@ import { DATE_TIME_FORMAT_12, DATE_TIME_FORMAT_24, IDateTime, deriveLabel, resol
 import * as FormControl from "./__formControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-export interface IProps {
+export interface DateTimeProps {
   c: IDateTime;
   dateTimePickerProps?: Partial<DateTimePickerProps>;
   chOnScreenData?: (data: AttributeData) => void;
   className?: string;
 }
 
-export const _: React.FC<IProps> = React.memo(({ c, dateTimePickerProps, chOnScreenData, className }) => {
+export const _: React.FC<DateTimeProps> = React.memo(({ c, dateTimePickerProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { date_max, date_min, minutes_increment, amPmFormat, attribute } = c;
 

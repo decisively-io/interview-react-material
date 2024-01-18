@@ -12,28 +12,43 @@ const Wrap = styled.div`
   display: flex;
   overflow: auto;
 
-  >.${classes[">menu"]} {
+  > .${classes[">menu"]} {
     min-width: 20rem;
     max-width: 20rem;
     border-right: 1px solid #E5E5E5;
   }
 
-  >.${classes[">content"]} {
+  > .${classes[">content"]} {
     overflow: auto;
     flex-grow: 1;
   }
 `;
 
-export interface IProps {
+export interface FrameProps {
   menuJSX?: JSX.Element;
   contentJSX: JSX.Element;
   className?: string;
 }
 
-export const _: React.FC<IProps> = React.memo(({ contentJSX, menuJSX, className }) => (
-  <Wrap className={className}>
-    {menuJSX && <div className={classes[">menu"]}>{menuJSX}</div>}
-    <div className={classes[">content"]}>{contentJSX}</div>
-  </Wrap>
-));
-_.displayName = `${DISPLAY_NAME_PREFIX}/Frame`;
+const Frame = Object.assign(
+  React.memo((props: FrameProps) => {
+    const { menuJSX, contentJSX, className } = props;
+    return (
+      <Wrap className={className}>
+        {menuJSX && <div className={classes[">menu"]}>{menuJSX}</div>}
+        <div className={classes[">content"]}>{contentJSX}</div>
+      </Wrap>
+    );
+  }),
+  {
+    displayName: `${DISPLAY_NAME_PREFIX}/Frame`,
+    /*** @deprecated use Frame directly */
+    _: undefined as any as React.ComponentType<FrameProps>,
+  },
+);
+Frame._ = Frame;
+
+/** @deprecated use Frame directly */
+export const _ = Frame;
+
+export default Frame;

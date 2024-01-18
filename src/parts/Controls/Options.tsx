@@ -16,7 +16,7 @@ const filter = createFilterOptions<IOptions["options"][0]>();
 export const asRadioClsnm = "asRadio_udecnm";
 export const autocompleteClsnm = "autocomplete_n5JJ8qT";
 
-export interface IProps {
+export interface OptionsProps {
   c: IOptions;
   autocompleteProps?: AutocompleteProps<IOptions["options"][0], false, false, true>;
   autocompleteTextFieldProps?: TextFieldProps;
@@ -26,7 +26,7 @@ export interface IProps {
 
 const RadioControl = <Radio />;
 
-export const _: React.FC<IProps> = React.memo((p) => {
+export const _: React.FC<OptionsProps> = React.memo((p) => {
   const { c, autocompleteProps, autocompleteTextFieldProps, chOnScreenData, className } = p;
 
   const { control } = useFormContext();

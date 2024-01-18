@@ -9,7 +9,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { v4 as uuid } from "uuid";
 import { Control, IEntity, deriveDefaultControlsValue, deriveLabel } from "../../types/controls";
-import type { IRenderControlProps } from "./__controlsTypes";
+import type { RenderControlProps } from "./__controlsTypes";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
 export const classes = {
@@ -51,9 +51,9 @@ const Wrap = styled.div`
   }
 `;
 
-export interface IProps extends Pick<IRenderControlProps, "controlComponents"> {
+export interface EntityProps extends Pick<RenderControlProps, "controlComponents"> {
   c: IEntity;
-  RenderControl: React.FC<IRenderControlProps>;
+  RenderControl: React.FC<RenderControlProps>;
   className?: string;
 }
 
@@ -67,7 +67,7 @@ export interface IProps extends Pick<IRenderControlProps, "controlComponents"> {
 //   return null;
 // };
 
-export const _: React.FC<IProps> = React.memo(({ c, RenderControl, controlComponents, className }) => {
+export const _: React.FC<EntityProps> = React.memo(({ c, RenderControl, controlComponents, className }) => {
   const { entity, template } = c;
   const { control } = useFormContext();
 

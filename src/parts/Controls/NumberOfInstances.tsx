@@ -5,7 +5,7 @@ import { INumberOfInstances, deriveLabel } from "../../types/controls";
 import * as FormControl from "./__formControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-export interface IProps {
+export interface NumberOfInstancesProps {
   c: INumberOfInstances;
   textFieldProps?: Omit<TextFieldProps, "value">;
   className?: string;
@@ -13,11 +13,11 @@ export interface IProps {
 
 type Value = number | null | undefined;
 
-type IArg = { value: Value } & NonNullable<IProps["textFieldProps"]>;
+type IArg = { value: Value } & NonNullable<NumberOfInstancesProps["textFieldProps"]>;
 
 const withFallback = (arg: IArg) => (arg.value === undefined || arg.value === null ? <TextField {...arg} value="" /> : <TextField {...arg} />);
 
-export const _: React.FC<IProps> = React.memo(({ c, textFieldProps, className }) => {
+export const _: React.FC<NumberOfInstancesProps> = React.memo(({ c, textFieldProps, className }) => {
   const { control } = useFormContext();
   const { entity } = c;
 

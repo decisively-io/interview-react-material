@@ -1,12 +1,12 @@
-import Typography, { TypographyProps } from "@material-ui/core/Typography";
+import Typography, { TypographyProps as MaterialTypographyProps } from "@material-ui/core/Typography";
 import React from "react";
 import styled from "styled-components";
 import { ITypography } from "../../types/controls";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-export interface IProps {
+export interface TypographyProps {
   c: ITypography;
-  typographyProps?: TypographyProps;
+  typographyProps?: MaterialTypographyProps;
   className?: string;
 }
 
@@ -51,7 +51,7 @@ const BannerComp: React.FC<{ text: string; style: BannerStyle; emoji?: ITypograp
 });
 BannerComp.displayName = `${DISPLAY_NAME}/BannerComp`;
 
-export const _: React.FC<IProps> = React.memo(({ c, typographyProps, className }) => {
+export const _: React.FC<TypographyProps> = React.memo(({ c, typographyProps, className }) => {
   const { style, emoji } = c;
   const text = c.text ?? "Error: missing value 'text'";
 

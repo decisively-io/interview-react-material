@@ -7,18 +7,18 @@ import { ICurrency, deriveLabel } from "../../types/controls";
 import * as FormControl from "./__formControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-export interface IProps {
+export interface CurrencyProps {
   c: ICurrency;
   textFieldProps?: Omit<TextFieldProps, "value">;
   chOnScreenData?: (data: AttributeData) => void;
   className?: string;
 }
 
-type IArg = { value: ICurrency["value"] } & NonNullable<IProps["textFieldProps"]>;
+type IArg = { value: ICurrency["value"] } & NonNullable<CurrencyProps["textFieldProps"]>;
 
 const withFallback = (arg: IArg) => (arg.value === null || arg.value === undefined ? <TextField {...arg} value="" /> : <TextField {...arg} />);
 
-export const _: React.FC<IProps> = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
+export const _: React.FC<CurrencyProps> = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute, symbol } = c;
 

@@ -3,9 +3,9 @@ import { AttributeData, IControlsValue, Session } from "@decisively-io/types-int
 import React from "react";
 import { DISPLAY_NAME_PREFIX } from "../constants";
 import { normalizeControlsValue } from "../types";
-import * as Content from "./Content";
-import type { IRenderControlProps } from "./Controls/__controlsTypes";
-import * as Frame from "./Frame";
+import Content, { ContentProps } from "./Content";
+import type { RenderControlProps } from "./Controls/__controlsTypes";
+import Frame from "./Frame";
 import * as Menu from "./Menu";
 import type { ThemedCompProps, ThemedCompT } from "./themes/types";
 
@@ -34,7 +34,7 @@ export const defaultSession: Session = {
   steps: [],
 };
 
-export interface RootProps extends Pick<IRenderControlProps, "controlComponents"> {
+export interface RootProps extends Pick<RenderControlProps, "controlComponents"> {
   getSession: () => Promise<Session>;
   next: (s: Session, d: IControlsValue) => Promise<typeof s>;
   back: (s: Session, d: IControlsValue) => Promise<typeof s>;
@@ -55,17 +55,17 @@ export interface RootState {
   nextDisabled: boolean;
 }
 
-export class Root extends React.PureComponent<RootProps, RootState> {
+export class Root<P extends RootProps = RootProps> extends React.PureComponent<P, RootState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Root`;
 
-  constructor(props: RootProps) {
+  constructor(props: P) {
     super(props);
 
     this.state = {
       session: defaultSession,
       backDisabled: false,
       isSubmitting: false,
-      isRequestPending:false,
+      isRequestPending: false,
       nextDisabled: false,
     };
   }
@@ -83,9 +83,11 @@ export class Root extends React.PureComponent<RootProps, RootState> {
     } = this;
 
     this.setState({ isRequestPending: true });
-    navigateTo(session, stepId).then((s) => this.setState({ session: s })).finally(() => {
-      this.setState({ isRequestPending: false });
-    });
+    navigateTo(session, stepId)
+      .then((s) => this.setState({ session: s }))
+      .finally(() => {
+        this.setState({ isRequestPending: false });
+      });
   };
 
   __getSession = (): void => {
@@ -106,23 +108,29 @@ export class Root extends React.PureComponent<RootProps, RootState> {
 
   // ===================================================================================
 
-  __back: Content.IProps["back"] = (_, reset) => {
+  __back: ContentProps["back"] = (_, reset) => {
     const {
       props: { back },
       state: { session: s },
     } = this;
 
-    this.setState({ backDisabled: true, isRequestPending: true });
+    this.setState({
+      backDisabled: true,
+      isRequestPending: true,
+    });
 
     back(s, {}).then((s) => {
       reset();
       console.log("back success, setting new session data", s);
       this.___setSession(s);
-      this.setState({ backDisabled: false, isRequestPending: false });
+      this.setState({
+        backDisabled: false,
+        isRequestPending: false,
+      });
     });
   };
 
-  __next: Content.IProps["next"] = (data, reset) => {
+  __next: ContentProps["next"] = (data, reset) => {
     const parentPropName = "@parent";
     const {
       props: { next },
@@ -162,7 +170,7 @@ export class Root extends React.PureComponent<RootProps, RootState> {
       return this.isFirstStep(first.steps, id);
     }
     return false;
-  }
+  };
 
   isLastStep = (steps: Session["steps"], id: string): boolean => {
     if (!Array.isArray(steps) || steps.length === 0) return false;
@@ -174,7 +182,7 @@ export class Root extends React.PureComponent<RootProps, RootState> {
       return this.isLastStep(last.steps, id);
     }
     return false;
-  }
+  };
 
   // ===================================================================================
 
@@ -218,17 +226,18 @@ export class Root extends React.PureComponent<RootProps, RootState> {
     };
 
     if (ThemedComp !== undefined) {
+      // @ts-ignore
       return <ThemedComp menu={menuProps} content={contentProps} />;
     }
 
-    return <Frame._ contentJSX={<Content._ key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
+    return <Frame contentJSX={<Content._ key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
   }
 }
 
-export * as Frame from "./Frame";
+export { default as Frame } from "./Frame";
 export * as Menu from "./Menu";
 export * as Font from "./__font";
-export * as Content from "./Content";
+export { default as Content } from "./Content";
 export * as Themes from "./themes";
 
 // these are needed because when we use this lib in project with

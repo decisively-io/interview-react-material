@@ -13,7 +13,7 @@ import { DATE_FORMAT, IDate, deriveLabel, resolveNowInDate } from "../../types/c
 import * as FormControl from "./__formControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-export interface IProps {
+export interface DateProps {
   c: IDate & { manualControlsCssOverride?: string };
   datePickerProps?: Partial<DatePickerProps>;
   chOnScreenData?: (data: AttributeData) => void;
@@ -24,7 +24,7 @@ const ManualControlsWrap = styled(Box)<{ $cssOverride?: string }>`
   ${(p) => p.$cssOverride};
 `;
 
-export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenData, className }) => {
+export const _: React.FC<DateProps> = React.memo(({ c, datePickerProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute, max, min, allowManual, manualControlsCssOverride, disabled } = c;
   const datePickerRef = React.useRef<HTMLInputElement>(null);
@@ -34,7 +34,7 @@ export const _: React.FC<IProps> = React.memo(({ c, datePickerProps, chOnScreenD
 
   const datePickerStyle = React.useMemo<React.CSSProperties>(() => (allowManual ? { visibility: "hidden", position: "absolute" } : {}), [allowManual]);
 
-  const emulateClickOnPicker = React.useCallback(() => datePickerRef.current?.click(), [datePickerRef]);
+  const emulateClickOnPicker = React.useCallback(() => datePickerRef.current?.click(), []);
 
   return (
     <Controller

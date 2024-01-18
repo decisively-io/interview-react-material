@@ -8,7 +8,7 @@ import * as ErrorComp from "./__error";
 import * as FormControl from "./__formControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-export interface IProps {
+export interface BooleanProps {
   c: IBoolean;
   checkboxProps?: CheckboxProps;
   formControlLabelProps?: FormControlLabelProps;
@@ -16,7 +16,7 @@ export interface IProps {
   className?: string;
 }
 
-export const _: React.FC<IProps> = React.memo(({ c, checkboxProps, chOnScreenData, className }) => {
+export const _: React.FC<BooleanProps> = React.memo(({ c, checkboxProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute } = c;
 

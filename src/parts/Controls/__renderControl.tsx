@@ -10,10 +10,10 @@ import * as OptionsNS from "./Options";
 import * as TextNS from "./Text";
 import * as TimeNS from "./Time";
 import * as TypographyNS from "./Typography";
-import type { IRenderControlProps } from "./__controlsTypes";
+import type { RenderControlProps } from "./__controlsTypes";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-export const RenderControl: React.FC<IRenderControlProps> = React.memo(({ c, controlComponents, chOnScreenData }) => {
+export const RenderControl: React.FC<RenderControlProps> = React.memo(({ c, controlComponents, chOnScreenData }) => {
   const {
     /* biome-ignore lint/suspicious/noShadowRestrictedNames: for the public interface of the library */
     Boolean = BooleanNS._,

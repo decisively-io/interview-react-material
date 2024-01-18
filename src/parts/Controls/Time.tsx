@@ -8,7 +8,7 @@ import { ITime, TIME_FORMAT_12, TIME_FORMAT_24, deriveLabel } from "../../types/
 import * as FormControl from "./__formControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-export interface IProps {
+export interface TimeProps {
   c: ITime;
   timePickerProps?: Partial<TimePickerProps>;
   chOnScreenData?: (data: AttributeData) => void;
@@ -18,7 +18,7 @@ export interface IProps {
 export const secondLessViews: React.ComponentProps<typeof TimePicker>["views"] = ["hours", "minutes"];
 export const allViews: React.ComponentProps<typeof TimePicker>["views"] = ["hours", "minutes", "seconds"];
 
-export const _: React.FC<IProps> = React.memo(({ c, timePickerProps, chOnScreenData, className }) => {
+export const _: React.FC<TimeProps> = React.memo(({ c, timePickerProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute, amPmFormat, minutes_increment, allowSeconds } = c;
   let uiTimeFormat = amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24;

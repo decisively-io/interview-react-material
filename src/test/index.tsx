@@ -64,7 +64,6 @@ const App = () => {
 
     const { id, interview } = PWD;
     const res = await provider.create(id, { interview });
-    // provider.load(id, sessionAllVisited)
     setSession(res);
     return stripSession(res);
   }, []);

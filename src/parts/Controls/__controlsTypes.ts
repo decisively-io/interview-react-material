@@ -15,22 +15,22 @@ import type * as Text from "./Text";
 import type * as Time from "./Time";
 import type * as Typography from "./Typography";
 
-export interface IControlsHash {
-  Boolean?: React.ComponentType<Boolean.IProps>;
-  Currency?: React.ComponentType<Currency.IProps>;
-  Date?: React.ComponentType<Date.IProps>;
-  DateTime?: React.ComponentType<DateTime.IProps>;
-  Entity?: React.ComponentType<Entity.IProps>;
-  Image?: React.ComponentType<Image.IProps>;
-  NumberOfInstances?: React.ComponentType<NumberOfInstances.IProps>;
-  Options?: React.ComponentType<Options.IProps>;
-  Text?: React.ComponentType<Text.IProps>;
-  Time?: React.ComponentType<Time.IProps>;
-  Typography?: React.ComponentType<Typography.IProps>;
+export interface ControlComponents {
+  Boolean?: React.ComponentType<Boolean.BooleanProps>;
+  Currency?: React.ComponentType<Currency.CurrencyProps>;
+  Date?: React.ComponentType<Date.DateProps>;
+  DateTime?: React.ComponentType<DateTime.DateTimeProps>;
+  Entity?: React.ComponentType<Entity.EntityProps>;
+  Image?: React.ComponentType<Image.ImageProps>;
+  NumberOfInstances?: React.ComponentType<NumberOfInstances.NumberOfInstancesProps>;
+  Options?: React.ComponentType<Options.OptionsProps>;
+  Text?: React.ComponentType<Text.TextProps>;
+  Time?: React.ComponentType<Time.TimeProps>;
+  Typography?: React.ComponentType<Typography.TypographyProps>;
 }
 
-export interface IRenderControlProps {
+export interface RenderControlProps {
   c: Control;
-  controlComponents?: IControlsHash;
+  controlComponents?: ControlComponents;
   chOnScreenData?: (data: AttributeData) => void;
 }
