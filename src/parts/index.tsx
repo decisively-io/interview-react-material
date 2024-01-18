@@ -120,7 +120,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
     });
 
     back(s, {}).then((s) => {
-      reset();
+      reset?.();
       console.log("back success, setting new session data", s);
       this.___setSession(s);
       this.setState({
@@ -149,7 +149,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
 
     next(s, normalized).then((s) => {
       console.log("next success, resetting");
-      reset();
+      reset?.();
       console.log("next success, setting new session data", s);
       this.___setSession(s);
       this.setState({

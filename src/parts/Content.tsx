@@ -113,7 +113,6 @@ const Content = Object.assign(
       resolver,
       defaultValues,
     });
-
     const { getValues, reset, watch } = methods;
 
     const onSubmit = React.useCallback(
