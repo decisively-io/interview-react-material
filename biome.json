@@ -6,6 +6,9 @@
 
     "rules": {
       "recommended": true,
+      "a11y": {
+        "useKeyWithClickEvents": "off"
+      },
       "security": {
         "noDangerouslySetInnerHtml": "off"
       },
@@ -22,5 +25,10 @@
     "enabled": true,
     "indentStyle": "space",
     "lineWidth": 320
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   }
 }

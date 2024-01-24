@@ -42,6 +42,7 @@ const Frame = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Frame`,
+    classes,
     /*** @deprecated use Frame directly */
     _: undefined as any as React.ComponentType<FrameProps>,
   },

@@ -3,7 +3,7 @@ import { AttributeData, IControlsValue, Session } from "@decisively-io/types-int
 import React from "react";
 import { DISPLAY_NAME_PREFIX } from "../constants";
 import { normalizeControlsValue } from "../types";
-import Content, { ContentProps } from "./Content";
+import Content, { ContentHandle, ContentProps } from "./Content";
 import type { RenderControlProps } from "./Controls/__controlsTypes";
 import Frame from "./Frame";
 import * as Menu from "./Menu";
@@ -57,6 +57,7 @@ export interface RootState {
 
 export class Root<P extends RootProps = RootProps> extends React.PureComponent<P, RootState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Root`;
+  private contentRef = React.createRef<ContentHandle>();
 
   constructor(props: P) {
     super(props);
@@ -105,6 +106,10 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
   componentDidUpdate(prevProps: Root["props"]): void {
     if (prevProps.getSession !== this.props.getSession) this.__getSession();
   }
+
+  setFormValues = (values: IControlsValue): void => {
+    this.contentRef.current?.setValues(values);
+  };
 
   // ===================================================================================
 
@@ -230,7 +235,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
       return <ThemedComp menu={menuProps} content={contentProps} />;
     }
 
-    return <Frame contentJSX={<Content._ key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
+    return <Frame contentJSX={<Content ref={this.contentRef} key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
   }
 }
 
