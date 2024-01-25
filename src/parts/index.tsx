@@ -1,9 +1,10 @@
 import { getCurrentStep } from "@decisively-io/interview-sdk";
 import { AttributeData, IControlsValue, Session } from "@decisively-io/types-interview";
 import React from "react";
+import { UseFormReturn } from "react-hook-form";
 import { DISPLAY_NAME_PREFIX } from "../constants";
 import { normalizeControlsValue } from "../types";
-import Content, { ContentHandle, ContentProps } from "./Content";
+import Content, { ContentProps } from "./Content";
 import type { RenderControlProps } from "./Controls/__controlsTypes";
 import Frame from "./Frame";
 import * as Menu from "./Menu";
@@ -55,9 +56,17 @@ export interface RootState {
   nextDisabled: boolean;
 }
 
+export interface InterviewContextState {
+  registerFormMethods: (methods: UseFormReturn<IControlsValue>) => void;
+}
+
+export const InterviewContext = React.createContext<InterviewContextState>({
+  registerFormMethods: () => {},
+});
+
 export class Root<P extends RootProps = RootProps> extends React.PureComponent<P, RootState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Root`;
-  private contentRef = React.createRef<ContentHandle>();
+  private formMethods: UseFormReturn<IControlsValue> | undefined;
 
   constructor(props: P) {
     super(props);
@@ -108,7 +117,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
   }
 
   setFormValues = (values: IControlsValue): void => {
-    this.contentRef.current?.setValues(values);
+    this.formMethods?.reset(values);
   };
 
   // ===================================================================================
@@ -189,6 +198,10 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
     return false;
   };
 
+  registerFormMethods(formMethods: UseFormReturn<IControlsValue>) {
+    this.formMethods = formMethods;
+  }
+
   // ===================================================================================
 
   render(): JSX.Element {
@@ -230,12 +243,15 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
       chOnScreenData,
     };
 
+    let content: React.ReactNode;
     if (ThemedComp !== undefined) {
       // @ts-ignore
-      return <ThemedComp menu={menuProps} content={contentProps} />;
+      content = <ThemedComp menu={menuProps} content={contentProps} />;
+    } else {
+      content = <Frame contentJSX={<Content key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
     }
 
-    return <Frame contentJSX={<Content ref={this.contentRef} key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
+    return <InterviewContext.Provider value={this}>{content}</InterviewContext.Provider>;
   }
 }
 

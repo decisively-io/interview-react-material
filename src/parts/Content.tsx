@@ -5,13 +5,14 @@ import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import React, { useImperativeHandle } from "react";
+import React, { useContext, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX } from "../constants";
 import { IControlsValue, deriveDefaultControlsValue, generateValidator } from "../types/controls";
 import Controls from "./Controls";
 import type { RenderControlProps } from "./Controls/__controlsTypes";
+import { InterviewContext } from "./index";
 
 export const classes = {
   ">formWrap": {
@@ -102,98 +103,89 @@ export interface ContentRootProps extends Pick<RenderControlProps, "controlCompo
   onDataChange?: (data: AttributeData, name: string | undefined) => void;
 }
 
-export interface ContentHandle {
-  setValues: (values: IControlsValue) => void;
-}
-
 const Content = Object.assign(
-  React.memo(
-    React.forwardRef<ContentHandle, ContentRootProps>((props, ref) => {
-      const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData, onDataChange } = props;
-      const { controls } = screen ?? { controls: [] };
-      const defaultValues = deriveDefaultControlsValue(controls);
-      const resolver = yupResolver(generateValidator(controls));
+  React.memo((props: ContentRootProps) => {
+    const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData, onDataChange } = props;
+    const { controls } = screen ?? { controls: [] };
+    const defaultValues = deriveDefaultControlsValue(controls);
+    const resolver = yupResolver(generateValidator(controls));
 
-      const methods = useForm({
-        resolver,
-        defaultValues,
-      });
-      useImperativeHandle(ref, () => ({
-        setValues: (values) => {
-          const { reset } = methods;
-          reset(values);
-        },
-      }));
+    const interviewContext = useContext(InterviewContext);
 
-      const { getValues, reset, watch } = methods;
+    const methods = useForm({
+      resolver,
+      defaultValues,
+    });
+    interviewContext.registerFormMethods(methods);
 
-      const onSubmit = React.useCallback(
-        (data: IControlsValue) => {
-          if (next) {
-            next(data, reset);
-          }
-        },
-        [next, reset],
-      );
+    const { getValues, reset, watch } = methods;
 
-      const onBack = React.useCallback(() => {
-        const values = getValues();
-        if (back) {
-          back(values, reset);
+    const onSubmit = React.useCallback(
+      (data: IControlsValue) => {
+        if (next) {
+          next(data, reset);
         }
-      }, [getValues, back, reset]);
+      },
+      [next, reset],
+    );
 
-      if (!screen) return null;
+    const onBack = React.useCallback(() => {
+      const values = getValues();
+      if (back) {
+        back(values, reset);
+      }
+    }, [getValues, back, reset]);
 
-      const pageTitle = screen.title || step?.title || "";
+    if (!screen) return null;
 
-      React.useEffect(() => {
-        const subscription = watch((value, { name, type }) => {
-          if (type === "change") {
-            onDataChange?.(value, name);
-          }
-        });
-        return () => subscription.unsubscribe();
-      }, [watch, onDataChange]);
+    const pageTitle = screen.title || step?.title || "";
 
-      return (
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <FormProvider {...methods}>
-            <Wrap onSubmit={methods.handleSubmit(onSubmit)} className={className}>
-              <div className={classes[">formWrap"]._}>
-                <div className={formClss._}>
-                  <Typography variant="h4" className={formClss[">h"]}>
-                    {pageTitle}
-                  </Typography>
+    React.useEffect(() => {
+      const subscription = watch((value, { name, type }) => {
+        if (type === "change") {
+          onDataChange?.(value, name);
+        }
+      });
+      return () => subscription.unsubscribe();
+    }, [watch, onDataChange]);
 
-                  <StyledControlsWrap className={formClss[">controls"]}>
-                    <Controls controlComponents={controlComponents} controls={screen.controls} chOnScreenData={chOnScreenData} />
-                  </StyledControlsWrap>
-                </div>
+    return (
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <FormProvider {...methods}>
+          <Wrap onSubmit={methods.handleSubmit(onSubmit)} className={className}>
+            <div className={classes[">formWrap"]._}>
+              <div className={formClss._}>
+                <Typography variant="h4" className={formClss[">h"]}>
+                  {pageTitle}
+                </Typography>
+
+                <StyledControlsWrap className={formClss[">controls"]}>
+                  <Controls controlComponents={controlComponents} controls={screen.controls} chOnScreenData={chOnScreenData} />
+                </StyledControlsWrap>
               </div>
-              {(next || back) && (
-                <div className={classes[">btns"]._}>
-                  {back && (
-                    <Button size="medium" variant="outlined" disabled={backDisabled} onClick={onBack} className={classes[">btns"][">back"]}>
-                      <Typography>Back</Typography>
+            </div>
+            {(next || back) && (
+              <div className={classes[">btns"]._}>
+                {back && (
+                  <Button size="medium" variant="outlined" disabled={backDisabled} onClick={onBack} className={classes[">btns"][">back"]}>
+                    <Typography>Back</Typography>
+                  </Button>
+                )}
+                {next && (
+                  <div className={submitClss._}>
+                    {isSubmitting && <CircularProgress size="2rem" />}
+                    <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled} className={submitClss[">next"]}>
+                      <Typography>Next</Typography>
                     </Button>
-                  )}
-                  {next && (
-                    <div className={submitClss._}>
-                      {isSubmitting && <CircularProgress size="2rem" />}
-                      <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled} className={submitClss[">next"]}>
-                        <Typography>Next</Typography>
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </Wrap>
-          </FormProvider>
-        </MuiPickersUtilsProvider>
-      );
-    }),
-  ),
+                  </div>
+                )}
+              </div>
+            )}
+          </Wrap>
+        </FormProvider>
+      </MuiPickersUtilsProvider>
+    );
+  }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Content`,
     classes,
