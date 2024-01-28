@@ -1,82 +1,86 @@
-/* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
-import React from 'react';
-import { useFormContext, Controller } from 'react-hook-form';
-import TextField, { TextFieldProps } from '@material-ui/core/TextField';
-import { AttributeData } from '@decisively-io/types-interview';
-import * as FormControl from './__formControl';
-import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { deriveLabel, IText } from '../../types/controls';
+import { AttributeData } from "@decisively-io/types-interview";
+import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import styled from "styled-components";
+import { IText, deriveLabel } from "../../types/controls";
+import { InterviewContext } from "../index";
+import FormControl from "./FormControl";
+import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-
-export interface IProps {
+export interface TextProps {
   c: IText;
   textFieldProps?: TextFieldProps;
   chOnScreenData?: (data: AttributeData) => void;
   className?: string;
 }
 
-
 type IParam = TextFieldProps;
 
-const withFallback = (arg: IParam) => (
-  typeof arg.value === 'string'
-    ? <TextField {...arg} />
-    : <TextField {...arg} value='' />
-);
+const StyledTextField = styled(TextField)`
+  flex: 1;
+`;
 
-export const _: React.FC< IProps > = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
+const withFallback = (arg: IParam) => (typeof arg.value === "string" ? <StyledTextField {...arg} /> : <StyledTextField {...arg} value="" />);
+
+export const _: React.FC<TextProps> = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute, multi, variation } = c;
+  const interview = React.useContext(InterviewContext);
+  const explanation = interview?.getExplanation(attribute);
 
-
-  const maybeWithMulti: Pick< IParam, 'multiline' | 'maxRows' | 'minRows' > = (
+  const maybeWithMulti: Pick<IParam, "multiline" | "maxRows" | "minRows"> =
     multi === undefined
       ? {}
       : {
-        multiline: true,
-        ...multi,
-      }
-  );
-  const maybeWithType = variation === undefined ? {} : {
-    type: variation.type,
-  };
-
+          multiline: true,
+          ...multi,
+        };
+  const maybeWithType =
+    variation === undefined
+      ? {}
+      : {
+          type: variation.type,
+        };
 
   return (
     <Controller
       control={control}
       name={attribute}
       render={({ field: { onChange, value }, fieldState: { error } }) => {
-        const typedValue = value as IText[ 'value' ];
+        const typedValue = value as IText["value"];
 
-        const handleChange = (e: React.ChangeEvent< HTMLInputElement >) => {
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           if (chOnScreenData) {
-            chOnScreenData({ [ attribute ]: e.target.value });
+            chOnScreenData({ [attribute]: e.target.value });
           }
 
           onChange(e.target.value);
         };
 
         return (
-          <FormControl._ title={c.label} className={className}>
-            {
-              withFallback({
-                onChange: handleChange,
-                label: deriveLabel(c),
-                value: typedValue,
-                variant: 'outlined',
-                error: error !== undefined,
-                helperText: error?.message || ' ',
-                disabled: c.disabled,
-                ...maybeWithType,
-                ...maybeWithMulti,
-                ...textFieldProps,
-              })
-            }
-          </FormControl._>
+          <FormControl explanation={explanation} title={c.label} className={className}>
+            {({ Explanation }) => (
+              <>
+                <Explanation visible={c.showExplanation} />
+                {withFallback({
+                  onChange: handleChange,
+                  label: deriveLabel(c),
+                  value: typedValue,
+                  variant: "outlined",
+                  error: error !== undefined,
+                  helperText: error?.message || " ",
+                  disabled: c.disabled,
+                  ...maybeWithType,
+                  ...maybeWithMulti,
+                  ...textFieldProps,
+                })}
+              </>
+            )}
+          </FormControl>
         );
       }}
     />
   );
 });
-_.displayName = `${ DISPLAY_NAME_PREFIX }/Text`;
+_.displayName = `${DISPLAY_NAME_PREFIX}/Text`;

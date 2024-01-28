@@ -1,1 +1,1 @@
-export const DISPLAY_NAME_PREFIX = 'Decisively/Interview';
+export const DISPLAY_NAME_PREFIX = "Decisively/Interview";

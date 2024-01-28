@@ -7,3 +7,6 @@ src
 tsconfig.json
 *.sh
 questions.md
+.idea
+.parcel-cache
+bun.lockb

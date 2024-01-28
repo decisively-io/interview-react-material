@@ -1,75 +1,79 @@
-/* eslint-disable import/no-extraneous-dependencies, react/jsx-pascal-case */
-import React from 'react';
-import { useFormContext, Controller } from 'react-hook-form';
-import TextField, { TextFieldProps } from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { AttributeData } from '@decisively-io/types-interview';
-import * as FormControl from './__formControl';
-import { DISPLAY_NAME_PREFIX } from './__prefix';
-import { deriveLabel, ICurrency } from '../../types/controls';
+import { AttributeData } from "@decisively-io/types-interview";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import styled from "styled-components";
+import { ICurrency, deriveLabel } from "../../types/controls";
+import { InterviewContext } from "../index";
+import FormControl from "./FormControl";
+import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
-
-export interface IProps {
+export interface CurrencyProps {
   c: ICurrency;
-  textFieldProps?: Omit< TextFieldProps, 'value' >;
+  textFieldProps?: Omit<TextFieldProps, "value">;
   chOnScreenData?: (data: AttributeData) => void;
   className?: string;
 }
 
-type IArg = { value: ICurrency[ 'value' ] } & NonNullable< IProps[ 'textFieldProps' ] >;
+type IArg = { value: ICurrency["value"] } & NonNullable<CurrencyProps["textFieldProps"]>;
 
-const withFallback = (arg: IArg) => (
-  (arg.value === null || arg.value === undefined)
-    ? <TextField {...arg} value='' />
-    : <TextField {...arg} />
-);
+const StyledTextField = styled(TextField)`
+  flex: 1;
+`;
+const withFallback = (arg: IArg) => (arg.value === null || arg.value === undefined ? <StyledTextField {...arg} value="" /> : <StyledTextField {...arg} />);
 
-
-export const _: React.FC<IProps> = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
+export const _: React.FC<CurrencyProps> = React.memo(({ c, textFieldProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute, symbol } = c;
 
-
   const InputProps = React.useMemo(
-    () => ({ startAdornment: <InputAdornment position='start'>{symbol || '$'}</InputAdornment> }),
+    () => ({
+      startAdornment: <InputAdornment position="start">{symbol || "$"}</InputAdornment>,
+    }),
     [symbol],
   );
 
+  const interview = React.useContext(InterviewContext);
+  const explanation = interview?.getExplanation(attribute);
 
   return (
     <Controller
       control={control}
       name={attribute}
       render={({ field: { value, onChange }, fieldState: { error } }) => {
-        const typedValue = value as ICurrency[ 'value' ];
+        const typedValue = value as ICurrency["value"];
 
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           if (chOnScreenData) {
-            chOnScreenData({ [ attribute ]: e.target.value });
+            chOnScreenData({ [attribute]: e.target.value });
           }
 
           onChange(e.target.value);
         };
 
         return (
-          <FormControl._ title={c.label} className={className}>
-            {
-              withFallback({
-                onChange: handleChange,
-                label: deriveLabel(c),
-                value: typedValue,
-                variant: 'outlined',
-                error: error !== undefined,
-                helperText: error?.message || ' ',
-                InputProps,
-                disabled: c.disabled,
-                ...textFieldProps,
-              })
-            }
-          </FormControl._>
+          <FormControl explanation={explanation} title={c.label} className={className}>
+            {({ Explanation }) => (
+              <>
+                <Explanation visible={c.showExplanation} />
+                {withFallback({
+                  onChange: handleChange,
+                  label: deriveLabel(c),
+                  value: typedValue,
+                  variant: "outlined",
+                  error: error !== undefined,
+                  helperText: error?.message || " ",
+                  InputProps,
+                  disabled: c.disabled,
+                  ...textFieldProps,
+                })}
+              </>
+            )}
+          </FormControl>
         );
       }}
     />
   );
 });
-_.displayName = `${ DISPLAY_NAME_PREFIX }/Currency`;
+_.displayName = `${DISPLAY_NAME_PREFIX}/Currency`;
