@@ -10,7 +10,8 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { DATE_FORMAT, IDate, deriveLabel, resolveNowInDate } from "../../types/controls";
-import * as FormControl from "./__formControl";
+import { InterviewContext } from "../index";
+import FormControl from "./FormControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
 export interface DateProps {
@@ -32,9 +33,21 @@ export const _: React.FC<DateProps> = React.memo(({ c, datePickerProps, chOnScre
   const resolvedMax = resolveNowInDate(max);
   const resolvedMin = resolveNowInDate(min);
 
-  const datePickerStyle = React.useMemo<React.CSSProperties>(() => (allowManual ? { visibility: "hidden", position: "absolute" } : {}), [allowManual]);
+  const datePickerStyle = React.useMemo<React.CSSProperties>(
+    () =>
+      allowManual
+        ? {
+            visibility: "hidden",
+            position: "absolute",
+          }
+        : {},
+    [allowManual],
+  );
 
   const emulateClickOnPicker = React.useCallback(() => datePickerRef.current?.click(), []);
+
+  const interview = React.useContext(InterviewContext);
+  const explanation = interview?.getExplanation(attribute);
 
   return (
     <Controller
@@ -64,37 +77,53 @@ export const _: React.FC<DateProps> = React.memo(({ c, datePickerProps, chOnScre
         };
 
         return (
-          <FormControl._ title={c.label} className={className}>
-            <DatePicker
-              {...{
-                label: deriveLabel(c),
-                error: error !== undefined,
-                helperText: error?.message || " ",
-                value: typeof typedValue === "string" ? (typedValue === "now" ? new Date() : new Date(typedValue)) : null,
-                onChange: handleChange,
-                format: DATE_FORMAT,
-                maxDate: resolvedMax && new Date(resolvedMax),
-                minDate: resolvedMin && new Date(resolvedMin),
-                inputVariant: "outlined",
-                disabled: c.disabled,
-                style: datePickerStyle,
-                inputRef: datePickerRef,
-                ...datePickerProps,
-              }}
-            />
+          <FormControl explanation={explanation} title={c.label} className={className}>
+            {({ Explanation }) => (
+              <>
+                <DatePicker
+                  {...{
+                    label: deriveLabel(c),
+                    error: error !== undefined,
+                    helperText: error?.message || " ",
+                    value: typeof typedValue === "string" ? (typedValue === "now" ? new Date() : new Date(typedValue)) : null,
+                    onChange: handleChange,
+                    format: DATE_FORMAT,
+                    maxDate: resolvedMax && new Date(resolvedMax),
+                    minDate: resolvedMin && new Date(resolvedMin),
+                    inputVariant: "outlined",
+                    disabled: c.disabled,
+                    style: datePickerStyle,
+                    inputRef: datePickerRef,
+                    ...datePickerProps,
+                  }}
+                />
 
-            {Boolean(allowManual) === false ? null : (
-              <ManualControlsWrap display="flex" width="100%" gridGap="0.5rem" alignItems="center" $cssOverride={manualControlsCssOverride}>
-                <Box flexGrow="1">{value === undefined || value === null ? <TextField {...{ ...manualInputProps, value: "" }} /> : <TextField {...manualInputProps} />}</Box>
+                {Boolean(allowManual) === false ? null : (
+                  <ManualControlsWrap display="flex" width="100%" gridGap="0.5rem" alignItems="center" $cssOverride={manualControlsCssOverride}>
+                    <Explanation />
+                    <Box flexGrow="1">
+                      {value === undefined || value === null ? (
+                        <TextField
+                          {...{
+                            ...manualInputProps,
+                            value: "",
+                          }}
+                        />
+                      ) : (
+                        <TextField {...manualInputProps} />
+                      )}
+                    </Box>
 
-                <Box flexShrink="0" marginTop="-1.25rem">
-                  <IconButton onClick={emulateClickOnPicker}>
-                    <CalendarTodayIcon />
-                  </IconButton>
-                </Box>
-              </ManualControlsWrap>
+                    <Box flexShrink="0" marginTop="-1.25rem">
+                      <IconButton onClick={emulateClickOnPicker}>
+                        <CalendarTodayIcon />
+                      </IconButton>
+                    </Box>
+                  </ManualControlsWrap>
+                )}
+              </>
             )}
-          </FormControl._>
+          </FormControl>
         );
       }}
     />

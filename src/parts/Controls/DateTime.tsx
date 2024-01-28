@@ -4,8 +4,10 @@ import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { format } from "date-fns";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import styled from "styled-components";
 import { DATE_TIME_FORMAT_12, DATE_TIME_FORMAT_24, IDateTime, deriveLabel, resolveNowInDate } from "../../types/controls";
-import * as FormControl from "./__formControl";
+import { InterviewContext } from "../index";
+import FormControl from "./FormControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
 export interface DateTimeProps {
@@ -14,6 +16,10 @@ export interface DateTimeProps {
   chOnScreenData?: (data: AttributeData) => void;
   className?: string;
 }
+
+const StyledDateTimePicker = styled(DateTimePicker)`
+  flex: 1;
+)`;
 
 export const _: React.FC<DateTimeProps> = React.memo(({ c, dateTimePickerProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
@@ -26,6 +32,9 @@ export const _: React.FC<DateTimeProps> = React.memo(({ c, dateTimePickerProps, 
 
   const maxDate = nowLessDateMax ? new Date(`${nowLessDateMax}T23:59:59`) : undefined;
   const minDate = nowLessDateMin ? new Date(`${nowLessDateMin}T23:59:59`) : undefined;
+
+  const interview = React.useContext(InterviewContext);
+  const explanation = interview?.getExplanation(attribute);
 
   return (
     <Controller
@@ -45,23 +54,29 @@ export const _: React.FC<DateTimeProps> = React.memo(({ c, dateTimePickerProps, 
         };
 
         return (
-          <FormControl._ title={c.label} className={className}>
-            <DateTimePicker
-              label={deriveLabel(c)}
-              error={error !== undefined}
-              helperText={error?.message || " "}
-              value={typeof typedValue === "string" ? new Date(value) : null}
-              onChange={handleChange}
-              format={uiTimeFormat}
-              inputVariant="outlined"
-              ampm={Boolean(amPmFormat)}
-              minutesStep={minutes_increment}
-              maxDate={maxDate}
-              minDate={minDate}
-              disabled={c.disabled}
-              {...dateTimePickerProps}
-            />
-          </FormControl._>
+          <FormControl explanation={explanation} title={c.label} className={className}>
+            {({ Explanation }) => (
+              <>
+                <Explanation />
+
+                <StyledDateTimePicker
+                  label={deriveLabel(c)}
+                  error={error !== undefined}
+                  helperText={error?.message || " "}
+                  value={typeof typedValue === "string" ? new Date(value) : null}
+                  onChange={handleChange}
+                  format={uiTimeFormat}
+                  inputVariant="outlined"
+                  ampm={Boolean(amPmFormat)}
+                  minutesStep={minutes_increment}
+                  maxDate={maxDate}
+                  minDate={minDate}
+                  disabled={c.disabled}
+                  {...dateTimePickerProps}
+                />
+              </>
+            )}
+          </FormControl>
         );
       }}
     />

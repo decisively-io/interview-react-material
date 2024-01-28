@@ -7,9 +7,11 @@ import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import Autocomplete, { AutocompleteProps, createFilterOptions } from "@material-ui/lab/Autocomplete";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import styled from "styled-components";
 import { IOptions, deriveLabel } from "../../types/controls";
+import { InterviewContext } from "../index";
+import FormControl from "./FormControl";
 import * as ErrorComp from "./__error";
-import * as FormControl from "./__formControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
 const filter = createFilterOptions<IOptions["options"][0]>();
@@ -23,6 +25,10 @@ export interface OptionsProps {
   chOnScreenData?: (data: AttributeData) => void;
   className?: string;
 }
+
+const StyledAutoComplete = styled(Autocomplete)`
+  flex: 1;
+` as typeof Autocomplete<IOptions["options"][0], false, false, true>;
 
 const RadioControl = <Radio />;
 
@@ -39,6 +45,8 @@ export const _: React.FC<OptionsProps> = React.memo((p) => {
   const Label = deriveLabel(c);
 
   const finalClsnm = [asRadio ? asRadioClsnm : autocompleteClsnm, className].filter(Boolean).join(" ");
+  const interview = React.useContext(InterviewContext);
+  const explanation = interview?.getExplanation(attribute);
 
   return (
     <Controller
@@ -58,64 +66,76 @@ export const _: React.FC<OptionsProps> = React.memo((p) => {
         };
 
         return (
-          <FormControl._ title={c.label} disabled={c.disabled} className={finalClsnm}>
-            {asRadio ? (
+          <FormControl explanation={explanation} title={c.label} disabled={c.disabled} className={finalClsnm}>
+            {({ Explanation }) => (
               <>
-                <FormLabel error={Boolean(error)} component="legend">
-                  {Label}
-                </FormLabel>
-                <RadioGroup value={typedValue === undefined || typedValue === null ? null : typedValue} onChange={setValueRadio}>
-                  {radioOptionsJSX}
-                </RadioGroup>
-                <ErrorComp._>{error?.message || " "}</ErrorComp._>
-              </>
-            ) : (
-              <Autocomplete<IOptions["options"][0], false, false, true>
-                value={typedValue === null || typedValue === undefined ? null : options.find((it) => it.value === typedValue) || { value: typedValue, label: String(typedValue) }}
-                onChange={(_, newValue) => {
-                  if (newValue === null) {
-                    if (chOnScreenData) {
-                      chOnScreenData({ [attribute]: null } as any);
+                <Explanation />
+                {asRadio ? (
+                  <>
+                    <FormLabel error={Boolean(error)} component="legend">
+                      {Label}
+                    </FormLabel>
+                    <RadioGroup value={typedValue === undefined || typedValue === null ? null : typedValue} onChange={setValueRadio}>
+                      {radioOptionsJSX}
+                    </RadioGroup>
+                    <ErrorComp._>{error?.message || " "}</ErrorComp._>
+                  </>
+                ) : (
+                  <StyledAutoComplete
+                    value={
+                      typedValue === null || typedValue === undefined
+                        ? null
+                        : options.find((it) => it.value === typedValue) || {
+                            value: typedValue,
+                            label: String(typedValue),
+                          }
                     }
+                    onChange={(_, newValue) => {
+                      if (newValue === null) {
+                        if (chOnScreenData) {
+                          chOnScreenData({ [attribute]: null } as any);
+                        }
 
-                    onChange(null);
-                    return;
-                  }
+                        onChange(null);
+                        return;
+                      }
 
-                  if (typeof newValue === "string") return;
+                      if (typeof newValue === "string") return;
 
-                  if (chOnScreenData) {
-                    chOnScreenData({ [attribute]: newValue.value });
-                  }
+                      if (chOnScreenData) {
+                        chOnScreenData({ [attribute]: newValue.value });
+                      }
 
-                  onChange(newValue.value);
-                }}
-                filterOptions={(options, params) => {
-                  const filtered = filter(options, params);
+                      onChange(newValue.value);
+                    }}
+                    filterOptions={(options, params) => {
+                      const filtered = filter(options, params);
 
-                  // Suggest the creation of a new value
-                  if (allow_other && !isBool && params.inputValue !== "") {
-                    filtered.push({
-                      label: `Add "${params.inputValue}"`,
-                      value: params.inputValue,
-                    });
-                  }
+                      // Suggest the creation of a new value
+                      if (allow_other && !isBool && params.inputValue !== "") {
+                        filtered.push({
+                          label: `Add "${params.inputValue}"`,
+                          value: params.inputValue,
+                        });
+                      }
 
-                  return filtered;
-                }}
-                selectOnFocus
-                clearOnBlur
-                handleHomeEndKeys
-                options={options}
-                getOptionLabel={(option) => option.label}
-                renderOption={(option) => option.label}
-                freeSolo={allow_other}
-                renderInput={(params) => <TextField {...params} label={Label} error={Boolean(error)} helperText={error?.message || " "} variant="outlined" {...autocompleteTextFieldProps} />}
-                disabled={c.disabled}
-                {...autocompleteProps}
-              />
+                      return filtered;
+                    }}
+                    selectOnFocus
+                    clearOnBlur
+                    handleHomeEndKeys
+                    options={options}
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(option) => option.label}
+                    freeSolo={allow_other}
+                    renderInput={(params) => <TextField {...params} label={Label} error={Boolean(error)} helperText={error?.message || " "} variant="outlined" {...autocompleteTextFieldProps} />}
+                    disabled={c.disabled}
+                    {...autocompleteProps}
+                  />
+                )}
+              </>
             )}
-          </FormControl._>
+          </FormControl>
         );
       }}
     />

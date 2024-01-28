@@ -58,10 +58,16 @@ export interface RootState {
 
 export interface InterviewContextState {
   registerFormMethods: (methods: UseFormReturn<IControlsValue>) => void;
+  getExplanation: (attribute: string) => string | undefined;
+  state: {
+    session: Session;
+  };
 }
 
 export const InterviewContext = React.createContext<InterviewContextState>({
   registerFormMethods: () => {},
+  state: {} as any,
+  getExplanation: () => undefined,
 });
 
 export class Root<P extends RootProps = RootProps> extends React.PureComponent<P, RootState> {
@@ -81,6 +87,14 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
   }
 
   // ===================================================================================
+
+  getExplanation = (attribute: string): string | undefined => {
+    const {
+      state: { session },
+    } = this;
+    const id = attribute.split(".").pop();
+    return id && session.explanations?.[id];
+  };
 
   ___setSession = (s: Session): void => {
     this.setState({ session: s });
@@ -204,7 +218,11 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
 
   // ===================================================================================
 
-  render(): JSX.Element {
+  renderWrapper = (content: React.ReactNode): React.ReactNode => {
+    return <InterviewContext.Provider value={this}>{content}</InterviewContext.Provider>;
+  };
+
+  render() {
     const {
       state: { session, backDisabled, isSubmitting, nextDisabled, isRequestPending },
       props: { controlComponents, onDataChange, ThemedComp },
@@ -251,14 +269,14 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
       content = <Frame contentJSX={<Content key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
     }
 
-    return <InterviewContext.Provider value={this}>{content}</InterviewContext.Provider>;
+    return this.renderWrapper(content);
   }
 }
 
-export { default as Frame } from "./Frame";
+export { default as Frame, type FrameProps } from "./Frame";
 export * as Menu from "./Menu";
 export * as Font from "./__font";
-export { default as Content } from "./Content";
+export { default as Content, type ContentProps } from "./Content";
 export * as Themes from "./themes";
 
 // these are needed because when we use this lib in project with

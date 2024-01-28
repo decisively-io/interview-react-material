@@ -55,6 +55,7 @@ const Wrap = styled.form`
       display: flex;
       flex-direction: column;
 
+
       > .${formClss[">h"]} {
         margin-bottom: 1.5rem;
       }
@@ -81,6 +82,8 @@ const Wrap = styled.form`
       font-weight: 600;
       text-transform: initial;
     }
+
+
   }
 `;
 

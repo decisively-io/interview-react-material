@@ -1,8 +1,9 @@
 import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import styled from "styled-components";
 import { INumberOfInstances, deriveLabel } from "../../types/controls";
-import * as FormControl from "./__formControl";
+import FormControl from "./FormControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
 export interface NumberOfInstancesProps {
@@ -15,7 +16,11 @@ type Value = number | null | undefined;
 
 type IArg = { value: Value } & NonNullable<NumberOfInstancesProps["textFieldProps"]>;
 
-const withFallback = (arg: IArg) => (arg.value === undefined || arg.value === null ? <TextField {...arg} value="" /> : <TextField {...arg} />);
+const StyledTextField = styled(TextField)`
+  flex: 1;
+`;
+
+const withFallback = (arg: IArg) => (arg.value === undefined || arg.value === null ? <StyledTextField {...arg} value="" /> : <StyledTextField {...arg} />);
 
 export const _: React.FC<NumberOfInstancesProps> = React.memo(({ c, textFieldProps, className }) => {
   const { control } = useFormContext();
@@ -29,7 +34,7 @@ export const _: React.FC<NumberOfInstancesProps> = React.memo(({ c, textFieldPro
         const typedValue = value as Value;
 
         return (
-          <FormControl._ title={c.label} className={className}>
+          <FormControl title={c.label} className={className}>
             {withFallback({
               onChange,
               label: deriveLabel(c),
@@ -40,7 +45,7 @@ export const _: React.FC<NumberOfInstancesProps> = React.memo(({ c, textFieldPro
               disabled: c.disabled,
               ...textFieldProps,
             })}
-          </FormControl._>
+          </FormControl>
         );
       }}
     />

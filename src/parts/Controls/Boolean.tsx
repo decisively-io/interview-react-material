@@ -4,8 +4,9 @@ import FormControlLabel, { FormControlLabelProps } from "@material-ui/core/FormC
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { IBoolean, deriveLabel } from "../../types/controls";
+import { InterviewContext } from "../index";
+import FormControl from "./FormControl";
 import * as ErrorComp from "./__error";
-import * as FormControl from "./__formControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
 export interface BooleanProps {
@@ -19,6 +20,8 @@ export interface BooleanProps {
 export const _: React.FC<BooleanProps> = React.memo(({ c, checkboxProps, chOnScreenData, className }) => {
   const { control } = useFormContext();
   const { attribute } = c;
+  const interview = React.useContext(InterviewContext);
+  const explanation = interview?.getExplanation(attribute);
 
   return (
     <Controller
@@ -36,10 +39,15 @@ export const _: React.FC<BooleanProps> = React.memo(({ c, checkboxProps, chOnScr
         };
 
         return (
-          <FormControl._ title={c.label} disabled={c.disabled} className={className}>
-            <FormControlLabel control={<Checkbox onChange={handleChange} checked={typedValue || false} indeterminate={typeof typedValue !== "boolean"} {...checkboxProps} />} label={deriveLabel(c)} />
-            <ErrorComp._>{error?.message || " "}</ErrorComp._>
-          </FormControl._>
+          <FormControl explanation={explanation} title={c.label} disabled={c.disabled} className={className}>
+            {({ Explanation }) => (
+              <>
+                <Explanation style={{ marginTop: 4 }} />
+                <FormControlLabel control={<Checkbox onChange={handleChange} checked={typedValue || false} indeterminate={typeof typedValue !== "boolean"} {...checkboxProps} />} label={deriveLabel(c)} />
+                <ErrorComp._>{error?.message || " "}</ErrorComp._>
+              </>
+            )}
+          </FormControl>
         );
       }}
     />

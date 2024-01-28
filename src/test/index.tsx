@@ -51,6 +51,7 @@ const stripSession = (s: SessionInstance): Session => ({
   steps: s.steps,
   context: s.context,
   data: s.data,
+  explanations: s.explanations,
 });
 
 const App = () => {

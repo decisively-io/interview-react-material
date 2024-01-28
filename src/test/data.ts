@@ -3,6 +3,9 @@ import { defaultStep } from "../parts";
 
 export const session: Session = {
   data: { "@parent": "" } as any,
+  explanations: {
+    textEmailOrNumberAttr21: "hi",
+  },
   screen: {
     id: "screen1",
     title: "Screen 1",
