@@ -62,7 +62,7 @@ export const _: React.FC<TextProps> = React.memo(({ c, textFieldProps, chOnScree
           <FormControl explanation={explanation} title={c.label} className={className}>
             {({ Explanation }) => (
               <>
-                <Explanation />
+                <Explanation visible={c.showExplanation} />
                 {withFallback({
                   onChange: handleChange,
                   label: deriveLabel(c),

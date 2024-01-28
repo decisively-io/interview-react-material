@@ -12,6 +12,7 @@ export interface FormControlProps extends BaseFormControlProps {
 
 export interface ExplanationProps {
   style?: React.CSSProperties;
+  visible?: boolean;
 }
 
 export interface FormControlRenderOptions {
@@ -37,12 +38,13 @@ const FormControl = React.memo((props: FormControlProps) => {
   const [helpHover, setHelpHover] = React.useState(false);
 
   const Explanation = (props: ExplanationProps) => {
-    if (!explanation) {
+    const { visible, ...otherProps } = props;
+    if (!visible || !explanation) {
       return null;
     }
 
     return (
-      <ExplanationTooltip placement={"bottom-start"} open={focus || helpHover} title={explanation || "no explanation"} {...props}>
+      <ExplanationTooltip placement={"bottom-start"} open={focus || helpHover} title={explanation || "no explanation"} {...otherProps}>
         {/* biome-ignore lint: it's fine not having onFocus */}
         <div onMouseOver={() => setHelpHover(true)} onMouseLeave={() => setHelpHover(false)}>
           <HelpOutline />

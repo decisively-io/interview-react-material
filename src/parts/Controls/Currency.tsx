@@ -56,7 +56,7 @@ export const _: React.FC<CurrencyProps> = React.memo(({ c, textFieldProps, chOnS
           <FormControl explanation={explanation} title={c.label} className={className}>
             {({ Explanation }) => (
               <>
-                <Explanation />
+                <Explanation visible={c.showExplanation} />
                 {withFallback({
                   onChange: handleChange,
                   label: deriveLabel(c),

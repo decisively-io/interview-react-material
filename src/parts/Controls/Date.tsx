@@ -100,7 +100,7 @@ export const _: React.FC<DateProps> = React.memo(({ c, datePickerProps, chOnScre
 
                 {Boolean(allowManual) === false ? null : (
                   <ManualControlsWrap display="flex" width="100%" gridGap="0.5rem" alignItems="center" $cssOverride={manualControlsCssOverride}>
-                    <Explanation />
+                    <Explanation visible={c.showExplanation} />
                     <Box flexGrow="1">
                       {value === undefined || value === null ? (
                         <TextField

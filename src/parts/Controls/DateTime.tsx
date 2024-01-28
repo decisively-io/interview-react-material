@@ -57,7 +57,7 @@ export const _: React.FC<DateTimeProps> = React.memo(({ c, dateTimePickerProps, 
           <FormControl explanation={explanation} title={c.label} className={className}>
             {({ Explanation }) => (
               <>
-                <Explanation />
+                <Explanation visible={c.showExplanation} />
 
                 <StyledDateTimePicker
                   label={deriveLabel(c)}

@@ -69,7 +69,7 @@ export const _: React.FC<OptionsProps> = React.memo((p) => {
           <FormControl explanation={explanation} title={c.label} disabled={c.disabled} className={finalClsnm}>
             {({ Explanation }) => (
               <>
-                <Explanation />
+                <Explanation visible={c.showExplanation} />
                 {asRadio ? (
                   <>
                     <FormLabel error={Boolean(error)} component="legend">

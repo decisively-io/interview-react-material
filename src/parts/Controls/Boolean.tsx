@@ -42,7 +42,7 @@ export const _: React.FC<BooleanProps> = React.memo(({ c, checkboxProps, chOnScr
           <FormControl explanation={explanation} title={c.label} disabled={c.disabled} className={className}>
             {({ Explanation }) => (
               <>
-                <Explanation style={{ marginTop: 4 }} />
+                <Explanation visible={c.showExplanation} style={{ marginTop: 4 }} />
                 <FormControlLabel control={<Checkbox onChange={handleChange} checked={typedValue || false} indeterminate={typeof typedValue !== "boolean"} {...checkboxProps} />} label={deriveLabel(c)} />
                 <ErrorComp._>{error?.message || " "}</ErrorComp._>
               </>

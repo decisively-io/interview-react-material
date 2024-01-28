@@ -58,7 +58,7 @@ export const _: React.FC<TimeProps> = React.memo(({ c, timePickerProps, chOnScre
           <FormControl explanation={explanation} title={c.label} className={className}>
             {({ Explanation }) => (
               <>
-                <Explanation />
+                <Explanation visible={c.showExplanation} />
                 <StyledTimePicker
                   label={deriveLabel(c)}
                   error={error !== undefined}
