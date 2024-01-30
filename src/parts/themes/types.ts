@@ -1,7 +1,7 @@
 import type { Theme } from "@material-ui/core/styles/createTheme";
 import React from "react";
 import type { ContentProps } from "../Content";
-import type { IProps as MenuProps } from "../Menu";
+import type { MenuProps } from "../Menu";
 
 export interface ThemedComponentProps {
   menu: MenuProps;

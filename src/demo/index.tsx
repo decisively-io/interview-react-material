@@ -5,7 +5,7 @@ import React, { useCallback, useState } from "react";
 import ReactDom from "react-dom";
 import * as Parts from "../parts";
 import * as TextControlNS from "../parts/Controls/Text";
-import * as FontNS from "../parts/__font";
+import * as FontNS from "../parts/font";
 import { session as dataSession } from "./data";
 import { PWD, provider } from "./interviews";
 

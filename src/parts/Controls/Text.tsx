@@ -3,7 +3,7 @@ import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { IText, deriveLabel } from "../../types/controls";
+import { IText, deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import FormControl from "./FormControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";

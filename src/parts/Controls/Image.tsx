@@ -1,5 +1,5 @@
 import React from "react";
-import { IImage } from "../../types/controls";
+import { IImage } from "../../util/controls";
 import FormControl from "./FormControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 

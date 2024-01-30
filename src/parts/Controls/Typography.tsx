@@ -1,7 +1,7 @@
 import Typography, { TypographyProps as MaterialTypographyProps } from "@material-ui/core/Typography";
 import React from "react";
 import styled from "styled-components";
-import { ITypography } from "../../types/controls";
+import { ITypography } from "../../util/controls";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
 export interface TypographyProps {

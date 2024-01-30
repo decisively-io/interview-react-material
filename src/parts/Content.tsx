@@ -9,7 +9,7 @@ import React, { useContext, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX } from "../constants";
-import { IControlsValue, deriveDefaultControlsValue, generateValidator } from "../types/controls";
+import { IControlsValue, deriveDefaultControlsValue, generateValidator } from "../util/controls";
 import Controls from "./Controls";
 import type { RenderControlProps } from "./Controls/__controlsTypes";
 import { InterviewContext } from "./index";

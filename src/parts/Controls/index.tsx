@@ -1,5 +1,5 @@
 import React from "react";
-import type { Control } from "../../types/controls";
+import type { Control } from "../../util/controls";
 import type { RenderControlProps } from "./__controlsTypes";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 import { RenderControl } from "./__renderControl";

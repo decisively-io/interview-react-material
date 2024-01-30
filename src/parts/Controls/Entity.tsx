@@ -8,7 +8,7 @@ import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { v4 as uuid } from "uuid";
-import { Control, IEntity, deriveDefaultControlsValue, deriveLabel } from "../../types/controls";
+import { Control, IEntity, deriveDefaultControlsValue, deriveLabel } from "../../util/controls";
 import type { RenderControlProps } from "./__controlsTypes";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 
