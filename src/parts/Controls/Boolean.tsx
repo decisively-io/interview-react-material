@@ -3,7 +3,7 @@ import Checkbox, { CheckboxProps } from "@material-ui/core/Checkbox";
 import FormControlLabel, { FormControlLabelProps } from "@material-ui/core/FormControlLabel";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { IBoolean, deriveLabel } from "../../types/controls";
+import { IBoolean, deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import FormControl from "./FormControl";
 import * as ErrorComp from "./__error";

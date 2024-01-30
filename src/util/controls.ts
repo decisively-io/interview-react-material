@@ -130,47 +130,46 @@ export const deriveEntityChildId = (entity: string, indx: number, childIndx: num
 //   )
 // );
 
-export function deriveDefaultControlsValue(cs: Control[]): IControlsValue {
-  return cs.reduce<IControlsValue>(
-    (a, c) =>
-      produce(a, (draft) => {
-        switch (c.type) {
-          case "boolean":
-          case "currency":
-          case "date":
-          case "time":
-          case "datetime":
-          case "options":
-          case "text":
-            draft[c.attribute] = getDefaultControlValue(c);
-            break;
-          case "number_of_instances":
-            draft[c.entity] = getDefaultControlValue(c);
-            break;
+export function deriveDefaultControlsValue(controls: Control[]): IControlsValue {
+  return controls.reduce<IControlsValue>((result, control) => {
+    switch (control.type) {
+      case "boolean":
+      case "currency":
+      case "date":
+      case "time":
+      case "datetime":
+      case "options":
+      case "text":
+        result[control.attribute] = getDefaultControlValue(control);
+        break;
+      case "number_of_instances":
+        result[control.entity] = getDefaultControlValue(control);
+        break;
 
-          case "entity": {
-            const { min, value, template } = c;
-            const values: typeof value = (() => {
-              if (min === undefined) return value || [];
+      case "entity": {
+        const { min, value, template } = control;
 
-              const amountOfItemsToAppend = Math.max(min - (value?.length || 0), 0);
-              return ([] as NonNullable<typeof value>).concat(value || []).concat(
-                new Array(amountOfItemsToAppend).fill(0).map(() => ({
-                  "@id": uuid(),
-                  ...deriveDefaultControlsValue(template),
-                })),
-              );
-            })();
-
-            draft[c.entity] = values;
-            break;
-          }
-
-          default:
+        const entities = [];
+        const entityCount = Math.max(min || 0, value?.length || 0);
+        for (let i = 0; i < entityCount; i++) {
+          const existingEntity = value?.[i];
+          const entityId = existingEntity?.["@id"] || uuid();
+          entities.push({
+            "@id": entityId,
+            ...deriveDefaultControlsValue(template),
+            ...existingEntity,
+          });
         }
-      }),
-    {},
-  );
+
+        result[control.entity] = entities;
+        break;
+      }
+
+      default:
+        break;
+    }
+    return result;
+  }, {});
 }
 
 function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography | IImage | IFile>): yup.AnySchema {

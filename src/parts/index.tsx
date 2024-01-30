@@ -3,11 +3,11 @@ import { AttributeData, IControlsValue, Session } from "@decisively-io/types-int
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { DISPLAY_NAME_PREFIX } from "../constants";
-import { normalizeControlsValue } from "../types";
+import { normalizeControlsValue } from "../util";
 import Content, { ContentProps } from "./Content";
 import type { RenderControlProps } from "./Controls/__controlsTypes";
 import Frame from "./Frame";
-import * as Menu from "./Menu";
+import Menu, { MenuProps } from "./Menu";
 import type { ThemedCompProps, ThemedCompT } from "./themes/types";
 
 export const defaultStep: Session["steps"][0] = {
@@ -238,7 +238,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
       steps,
     });
 
-    const menuProps: ThemedCompProps["menu"] = {
+    const menuProps: MenuProps = {
       status,
       stages: steps,
       progress,
@@ -266,7 +266,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
       // @ts-ignore
       content = <ThemedComp menu={menuProps} content={contentProps} />;
     } else {
-      content = <Frame contentJSX={<Content key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu._ {...menuProps} />} />;
+      content = <Frame contentJSX={<Content key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu {...menuProps} />} />;
     }
 
     return this.renderWrapper(content);
@@ -274,8 +274,8 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
 }
 
 export { default as Frame, type FrameProps } from "./Frame";
-export * as Menu from "./Menu";
-export * as Font from "./__font";
+export { default as Menu, type MenuProps } from "./Menu";
+export * as Font from "./font";
 export { default as Content, type ContentProps } from "./Content";
 export * as Themes from "./themes";
 

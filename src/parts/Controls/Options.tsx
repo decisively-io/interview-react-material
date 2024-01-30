@@ -8,7 +8,7 @@ import Autocomplete, { AutocompleteProps, createFilterOptions } from "@material-
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { IOptions, deriveLabel } from "../../types/controls";
+import { IOptions, deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import FormControl from "./FormControl";
 import * as ErrorComp from "./__error";

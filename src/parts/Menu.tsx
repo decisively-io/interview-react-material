@@ -149,11 +149,11 @@ const Wrap = styled.div`
 `;
 
 export interface IRenderStageProps {
-  s: IProps["stages"][0];
+  s: MenuProps["stages"][0];
   status: Session["status"];
   level?: number;
   index?: number;
-  onClick: (id: IProps["stages"][0]["id"]) => unknown;
+  onClick: (id: MenuProps["stages"][0]["id"]) => unknown;
 }
 
 const RenderStage: React.FC<IRenderStageProps> = React.memo(({ s, status, level = 0, index, onClick }) => {
@@ -206,7 +206,7 @@ const RenderStage: React.FC<IRenderStageProps> = React.memo(({ s, status, level 
 });
 RenderStage.displayName = `${displayName}/RenderStage`;
 
-export interface IProps {
+export interface MenuProps {
   status: Session["status"];
   stages: Session["steps"];
   onClick: IRenderStageProps["onClick"];
@@ -215,26 +215,42 @@ export interface IProps {
   progress?: Progress;
 }
 
-export const _: React.FC<IProps> = React.memo(({ status, stages, className, onClick, progress }) => (
-  <Wrap className={className}>
-    <List className={cls(classes[">list"]._, getCnameForLevel(0))}>{stages.reduce((a, it, i) => a.concat(<RenderStage key={it.id} s={it} status={status} index={i + 1} onClick={onClick} />), [] as JSX.Element[])}</List>
+const Menu = Object.assign(
+  React.memo((props: MenuProps) => {
+    const { status, stages, className, onClick, progress } = props;
+    return (
+      <Wrap className={className}>
+        <List className={cls(classes[">list"]._, getCnameForLevel(0))}>{stages.reduce((a, it, i) => a.concat(<RenderStage key={it.id} s={it} status={status} index={i + 1} onClick={onClick} />), [] as JSX.Element[])}</List>
 
-    {progress && (
-      <div className={classes[">progress"]._}>
-        <BorderLinearProgress className={classes[">progress"][">bar"]} variant="determinate" value={progress.percentage} />
-        <div className={clssPrgrsInfo._}>
-          <Typography variant="caption" className={clssPrgrsInfo[">est"]}>
-            {progress.percentage === 100 ? "Complete" : `Progress ${progress.percentage.toFixed(0)}%`}
-          </Typography>
-          {progress.time > 0 && (
-            <Typography variant="caption" className={clssPrgrsInfo[">summary"]}>
-              &nbsp;
-              {`- ${formatDistanceToNow(addSeconds(Date.now(), progress.time))} left`}
-            </Typography>
-          )}
-        </div>
-      </div>
-    )}
-  </Wrap>
-));
-_.displayName = displayName;
+        {progress && (
+          <div className={classes[">progress"]._}>
+            <BorderLinearProgress className={classes[">progress"][">bar"]} variant="determinate" value={progress.percentage} />
+            <div className={clssPrgrsInfo._}>
+              <Typography variant="caption" className={clssPrgrsInfo[">est"]}>
+                {progress.percentage === 100 ? "Complete" : `Progress ${progress.percentage.toFixed(0)}%`}
+              </Typography>
+              {progress.time > 0 && (
+                <Typography variant="caption" className={clssPrgrsInfo[">summary"]}>
+                  &nbsp;
+                  {`- ${formatDistanceToNow(addSeconds(Date.now(), progress.time))} left`}
+                </Typography>
+              )}
+            </div>
+          </div>
+        )}
+      </Wrap>
+    );
+  }),
+  {
+    /*** @deprecated use Menu directly */
+    _: undefined as any as React.ComponentType<MenuProps>,
+    classes,
+    displayName,
+  },
+);
+Menu.displayName = displayName;
+
+/*** @deprecated use Menu directly */
+export const _ = Menu;
+
+export default Menu;

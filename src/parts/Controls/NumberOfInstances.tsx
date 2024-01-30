@@ -2,7 +2,7 @@ import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { INumberOfInstances, deriveLabel } from "../../types/controls";
+import { INumberOfInstances, deriveLabel } from "../../util/controls";
 import FormControl from "./FormControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
 

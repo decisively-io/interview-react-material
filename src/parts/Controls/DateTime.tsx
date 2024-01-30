@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { DATE_TIME_FORMAT_12, DATE_TIME_FORMAT_24, IDateTime, deriveLabel, resolveNowInDate } from "../../types/controls";
+import { DATE_TIME_FORMAT_12, DATE_TIME_FORMAT_24, IDateTime, deriveLabel, resolveNowInDate } from "../../util/controls";
 import { InterviewContext } from "../index";
 import FormControl from "./FormControl";
 import { DISPLAY_NAME_PREFIX } from "./__prefix";
