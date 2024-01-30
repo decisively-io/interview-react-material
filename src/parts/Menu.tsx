@@ -248,7 +248,7 @@ const Menu = Object.assign(
     displayName,
   },
 );
-Menu.displayName = displayName;
+Menu._ = Menu;
 
 /*** @deprecated use Menu directly */
 export const _ = Menu;
