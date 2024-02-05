@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { DISPLAY_NAME_PREFIX } from "../constants";
+import { DISPLAY_NAME_PREFIX } from "../Constants";
 
 export const classes = {
   ">menu": "menu_aBBc89",
@@ -25,8 +25,8 @@ const Wrap = styled.div`
 `;
 
 export interface FrameProps {
-  menuJSX?: JSX.Element;
-  contentJSX: JSX.Element;
+  menuJSX?: React.ReactNode;
+  contentJSX: React.ReactNode;
   className?: string;
 }
 

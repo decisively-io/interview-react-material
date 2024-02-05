@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { DATE_FORMAT, IDate, deriveLabel, resolveNowInDate } from "../../util/controls";
 import { InterviewContext } from "../index";
 import FormControl from "./FormControl";
-import { DISPLAY_NAME_PREFIX } from "./__prefix";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 export interface DateProps {
   c: IDate & { manualControlsCssOverride?: string };

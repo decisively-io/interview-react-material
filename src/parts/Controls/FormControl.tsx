@@ -3,7 +3,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutline from "@material-ui/icons/HelpOutline";
 import React from "react";
 import styled from "styled-components";
-import { DISPLAY_NAME_PREFIX } from "./__prefix";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 export interface FormControlProps extends BaseFormControlProps {
   explanation?: string;

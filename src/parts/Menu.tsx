@@ -1,17 +1,13 @@
-import { containsCurrentStep } from "@decisively-io/interview-sdk";
-import { Progress, Session } from "@decisively-io/types-interview";
-import Avatar from "@material-ui/core/Avatar";
-import Collapse from "@material-ui/core/Collapse";
+import { Progress, Session, Step } from "@decisively-io/types-interview";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
-import cls from "clsx";
+import clsx from "clsx";
 import { addSeconds, formatDistanceToNow } from "date-fns";
 import React from "react";
 import styled from "styled-components";
-import { DISPLAY_NAME_PREFIX } from "../constants";
+import { DISPLAY_NAME_PREFIX, MENU_CLASS_NAMES } from "../Constants";
+import MenuItem, { getClassNameForLevel, isStepVisibleInMenu, MenuItemProps } from "./MenuItem";
 
 const BorderLinearProgress = styled(LinearProgress)`
   height: 0.5rem;
@@ -25,44 +21,8 @@ const BorderLinearProgress = styled(LinearProgress)`
 
 const displayName = `${DISPLAY_NAME_PREFIX}/Menu`;
 
-/**
- * @param level number (integers, 0,1,2,3,...)
- * @returns string
- */
-export const getCnameForLevel = (level: number): string => `lvl${level}`;
-
-export const classes = {
-  ">list": {
-    _: "list_WlKObv",
-    ">item": {
-      _: "item_9Bq463",
-
-      "&.complete": "complete_KNWPo2",
-      "&.active": "active_QnECa8",
-      "&.visited": "visited_Dles8p",
-      ">avatar": {
-        _: "avatar_3IdtNl",
-        ">T": "typography_wmHqqq",
-      },
-      ">text": "text_KmRP5i",
-    },
-    ">collapse": "collapse_Y0R9FN",
-  },
-  ">progress": {
-    _: "progress_D9jF3j",
-
-    ">bar": "bar_O9bSkR",
-    ">info": {
-      _: "info_l9qs6g",
-
-      ">summary": "summary_tsZ4SR",
-      ">est": "estimate_sItjZq",
-    },
-  },
-};
-
-const clssItem = classes[">list"][">item"];
-const clssPrgrsInfo = classes[">progress"][">info"];
+const clssItem = MENU_CLASS_NAMES[">list"][">item"];
+const clssPrgrsInfo = MENU_CLASS_NAMES[">progress"][">info"];
 
 const Wrap = styled.div`
   display: flex;
@@ -71,7 +31,7 @@ const Wrap = styled.div`
   padding: 1rem 0;
   overflow: auto;
 
-  .${classes[">list"]._} {
+  .${MENU_CLASS_NAMES[">list"]._} {
     flex-grow: 1;
     overflow: auto;
   }
@@ -85,17 +45,23 @@ const Wrap = styled.div`
 
   .${clssItem._}.${clssItem["&.complete"]} {
     opacity: 1;
-    .MuiTypography-root { font-weight: 600; }
+
+    .MuiTypography-root {
+      font-weight: 600;
+    }
   }
 
   .${clssItem._}.${clssItem["&.active"]} {
-    &>.${clssItem[">avatar"]._} {
+    & > .${clssItem[">avatar"]._} {
       background-color: #0A0A0A;
       border: none;
-      .MuiTypography-root { color: #ffffff; }
+
+      .MuiTypography-root {
+        color: #ffffff;
+      }
     }
 
-    &>.${clssItem[">text"]} .MuiTypography-root {
+    & > .${clssItem[">text"]} .MuiTypography-root {
       color: #0A0A0A;
     }
   }
@@ -104,6 +70,7 @@ const Wrap = styled.div`
     .MuiTypography-root {
       color: #0A0A0A;
     }
+
     .${clssItem[">avatar"]._} {
       border: 1px solid #0A0A0A;
     }
@@ -116,7 +83,7 @@ const Wrap = styled.div`
     background-color: #ffffff;
 
 
-    &.${getCnameForLevel(1)} {
+    &.${getClassNameForLevel(1)} {
       opacity: 0;
     }
 
@@ -128,7 +95,7 @@ const Wrap = styled.div`
     }
   }
 
-  .${classes[">progress"]._}, .${classes[">list"][">item"]._} {
+  .${MENU_CLASS_NAMES[">progress"]._}, .${MENU_CLASS_NAMES[">list"][">item"]._} {
     padding: 0.5rem 1.5rem;
   }
 
@@ -148,68 +115,10 @@ const Wrap = styled.div`
   }
 `;
 
-export interface IRenderStageProps {
-  s: MenuProps["stages"][0];
-  status: Session["status"];
-  level?: number;
-  index?: number;
-  onClick: (id: MenuProps["stages"][0]["id"]) => unknown;
-}
-
-const RenderStage: React.FC<IRenderStageProps> = React.memo(({ s, status, level = 0, index, onClick }) => {
-  const clickOnItem = React.useCallback(() => {
-    // do nothing if current step
-    if (!s.current) {
-      onClick(s.id);
-    }
-  }, [s, onClick]);
-
-  const cNameForLevel = getCnameForLevel(level);
-  const AvatarJSX = React.useMemo(
-    () => (
-      <Avatar className={cls(clssItem[">avatar"]._, cNameForLevel)}>
-        <Typography className={clssItem[">avatar"][">T"]} variant="h4">
-          {index || "-"}
-        </Typography>
-      </Avatar>
-    ),
-    [index, cNameForLevel],
-  );
-
-  const open = React.useMemo(() => containsCurrentStep(s), [s]);
-
-  const itemCName = cls(clssItem._, cNameForLevel, open && clssItem["&.active"], s.complete && !s.skipped && clssItem["&.complete"], s.visited && clssItem["&.visited"]);
-  const textCName = cls(clssItem[">text"], cNameForLevel);
-  const collapseCName = cls(classes[">list"][">collapse"], cNameForLevel);
-  const listCName = cls(classes[">list"]._, getCnameForLevel(level + 1));
-
-  const canNavigate = s.complete || s.visited || s.current;
-  const disableNavigation = !canNavigate || s.skipped;
-
-  return (
-    <>
-      <ListItem onClick={clickOnItem} disabled={disableNavigation} button className={itemCName}>
-        {AvatarJSX}
-        <ListItemText primary={s.title} className={textCName} />
-      </ListItem>
-      {s.steps === undefined || s.steps.length === 0 ? null : (
-        <Collapse in={open} timeout="auto" className={collapseCName}>
-          <List className={listCName}>
-            {s.steps.map((it) => (
-              <RenderStage key={it.id} s={it} status={status} level={level + 1} onClick={onClick} />
-            ))}
-          </List>
-        </Collapse>
-      )}
-    </>
-  );
-});
-RenderStage.displayName = `${displayName}/RenderStage`;
-
 export interface MenuProps {
   status: Session["status"];
-  stages: Session["steps"];
-  onClick: IRenderStageProps["onClick"];
+  stages: Step[];
+  onClick: MenuItemProps["onClick"];
   className?: string;
   /** The interviews progress, percent complete and time remaining */
   progress?: Progress;
@@ -218,13 +127,23 @@ export interface MenuProps {
 const Menu = Object.assign(
   React.memo((props: MenuProps) => {
     const { status, stages, className, onClick, progress } = props;
+
+    const menuItems: React.ReactNode[] = [];
+    let visibleIndex = 0;
+    for (const step of stages) {
+      if (isStepVisibleInMenu(step)) {
+        visibleIndex++;
+      }
+      menuItems.push(<MenuItem key={step.id} step={step} status={status} avatarContent={visibleIndex} onClick={onClick} />);
+    }
+
     return (
       <Wrap className={className}>
-        <List className={cls(classes[">list"]._, getCnameForLevel(0))}>{stages.reduce((a, it, i) => a.concat(<RenderStage key={it.id} s={it} status={status} index={i + 1} onClick={onClick} />), [] as JSX.Element[])}</List>
+        <List className={`${MENU_CLASS_NAMES[">list"]._} ${getClassNameForLevel(0)}`}>{menuItems}</List>
 
         {progress && (
-          <div className={classes[">progress"]._}>
-            <BorderLinearProgress className={classes[">progress"][">bar"]} variant="determinate" value={progress.percentage} />
+          <div className={MENU_CLASS_NAMES[">progress"]._}>
+            <BorderLinearProgress className={MENU_CLASS_NAMES[">progress"][">bar"]} variant="determinate" value={progress.percentage} />
             <div className={clssPrgrsInfo._}>
               <Typography variant="caption" className={clssPrgrsInfo[">est"]}>
                 {progress.percentage === 100 ? "Complete" : `Progress ${progress.percentage.toFixed(0)}%`}
@@ -244,7 +163,7 @@ const Menu = Object.assign(
   {
     /*** @deprecated use Menu directly */
     _: undefined as any as React.ComponentType<MenuProps>,
-    classes,
+    classes: MENU_CLASS_NAMES,
     displayName,
   },
 );
@@ -252,5 +171,7 @@ Menu._ = Menu;
 
 /*** @deprecated use Menu directly */
 export const _ = Menu;
+
+export const classes = MENU_CLASS_NAMES;
 
 export default Menu;

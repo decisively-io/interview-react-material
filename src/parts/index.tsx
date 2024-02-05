@@ -2,7 +2,7 @@ import { getCurrentStep } from "@decisively-io/interview-sdk";
 import { AttributeData, IControlsValue, Session } from "@decisively-io/types-interview";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { DISPLAY_NAME_PREFIX } from "../constants";
+import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { normalizeControlsValue } from "../util";
 import Content, { ContentProps } from "./Content";
 import type { RenderControlProps } from "./Controls/__controlsTypes";

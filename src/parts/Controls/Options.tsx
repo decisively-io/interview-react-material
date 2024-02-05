@@ -12,7 +12,7 @@ import { IOptions, deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import FormControl from "./FormControl";
 import * as ErrorComp from "./__error";
-import { DISPLAY_NAME_PREFIX } from "./__prefix";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 const filter = createFilterOptions<IOptions["options"][0]>();
 export const asRadioClsnm = "asRadio_udecnm";

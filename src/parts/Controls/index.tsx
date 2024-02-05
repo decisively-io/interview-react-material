@@ -1,7 +1,7 @@
 import React from "react";
 import type { Control } from "../../util/controls";
 import type { RenderControlProps } from "./__controlsTypes";
-import { DISPLAY_NAME_PREFIX } from "./__prefix";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import { RenderControl } from "./__renderControl";
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: for the public interface of the library

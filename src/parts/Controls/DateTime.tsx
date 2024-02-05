@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { DATE_TIME_FORMAT_12, DATE_TIME_FORMAT_24, IDateTime, deriveLabel, resolveNowInDate } from "../../util/controls";
 import { InterviewContext } from "../index";
 import FormControl from "./FormControl";
-import { DISPLAY_NAME_PREFIX } from "./__prefix";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 export interface DateTimeProps {
   c: IDateTime;

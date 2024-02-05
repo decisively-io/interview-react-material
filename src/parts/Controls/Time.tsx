@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { ITime, TIME_FORMAT_12, TIME_FORMAT_24, deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import FormControl from "./FormControl";
-import { DISPLAY_NAME_PREFIX } from "./__prefix";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 export interface TimeProps {
   c: ITime;

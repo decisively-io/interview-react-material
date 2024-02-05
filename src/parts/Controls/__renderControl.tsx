@@ -11,7 +11,7 @@ import * as TextNS from "./Text";
 import * as TimeNS from "./Time";
 import * as TypographyNS from "./Typography";
 import type { RenderControlProps } from "./__controlsTypes";
-import { DISPLAY_NAME_PREFIX } from "./__prefix";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 export const RenderControl: React.FC<RenderControlProps> = React.memo(({ c, controlComponents, chOnScreenData }) => {
   const {

@@ -8,7 +8,7 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import React, { useContext, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
-import { DISPLAY_NAME_PREFIX } from "../constants";
+import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { IControlsValue, deriveDefaultControlsValue, generateValidator } from "../util/controls";
 import Controls from "./Controls";
 import type { RenderControlProps } from "./Controls/__controlsTypes";
@@ -192,13 +192,13 @@ const Content = Object.assign(
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Content`,
     classes,
-    /*** @deprecated use Content directly */
+    /*** @deprecated use `Content` directly */
     _: undefined as any as React.ComponentType<ContentRootProps>,
   },
 );
 Content._ = Content;
 
-/*** @deprecated use Content directly */
+/*** @deprecated use `Content` directly */
 export const _ = Content;
 
 export default Content;

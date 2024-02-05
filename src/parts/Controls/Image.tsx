@@ -1,7 +1,7 @@
 import React from "react";
 import { IImage } from "../../util/controls";
 import FormControl from "./FormControl";
-import { DISPLAY_NAME_PREFIX } from "./__prefix";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 export interface ImageProps {
   c: IImage;
