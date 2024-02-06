@@ -1,5 +1,6 @@
 import React from "react";
 import * as BooleanNS from "./Boolean";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import * as CurrencyNS from "./Currency";
 import * as DateNS from "./Date";
 import * as DateTimeNS from "./DateTime";
@@ -11,7 +12,6 @@ import * as TextNS from "./Text";
 import * as TimeNS from "./Time";
 import * as TypographyNS from "./Typography";
 import type { RenderControlProps } from "./__controlsTypes";
-import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 export const RenderControl: React.FC<RenderControlProps> = React.memo(({ c, controlComponents, chOnScreenData }) => {
   const {

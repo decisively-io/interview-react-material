@@ -147,15 +147,15 @@ export function deriveDefaultControlsValue(controls: Control[]): IControlsValue 
         break;
 
       case "entity": {
-        const { min, value, template } = control;
+        const { min, value, template, entityId } = control;
 
         const entities = [];
         const entityCount = Math.max(min || 0, value?.length || 0);
         for (let i = 0; i < entityCount; i++) {
           const existingEntity = value?.[i];
-          const entityId = existingEntity?.["@id"] || uuid();
+          const resolveEntityId = existingEntity?.["@id"] || entityId || uuid();
           entities.push({
-            "@id": entityId,
+            "@id": resolveEntityId,
             ...deriveDefaultControlsValue(template),
             ...existingEntity,
           });

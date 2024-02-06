@@ -3,8 +3,8 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { INumberOfInstances, deriveLabel } from "../../util/controls";
-import FormControl from "./FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
+import FormControl from "./FormControl";
 
 export interface NumberOfInstancesProps {
   c: INumberOfInstances;

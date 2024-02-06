@@ -1,6 +1,6 @@
 {
   "name": "@decisively-io/interview-react-material",
-  "version": "0.1.10",
+  "version": "0.1.13",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
-    "@decisively-io/types-interview": "^0.1.34",
+    "@decisively-io/types-interview": "^0.1.35",
     "clsx": "^2.0.0",
     "date-fns": "^2.28.0",
     "immer": "^9.0.12",

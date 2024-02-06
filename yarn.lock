@@ -327,10 +327,10 @@
     rxjs "^7.5.5"
     uuid "^8.3.2"
 
-"@decisively-io/types-interview@^0.1.34":
-  version "0.1.34"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/types-interview/0.1.34/1c883d193537d7769a7b902e214d491264a3279c"
-  integrity sha512-itkH9YlGXdmWX6p06wIZQu1srRjBglOcqMpKI7IsEE3TsguTAo0NVIXra2wL05+pqEDeJWA3XRKs+OFGPKs+xA==
+"@decisively-io/types-interview@^0.1.34", "@decisively-io/types-interview@^0.1.35":
+  version "0.1.35"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/types-interview/0.1.35/c354bd5fa9a69ce15574b8620d86bd6bc8123384"
+  integrity sha512-JL8RsrwKubSdEdJ9od0hhoUyn9P+4Q2ezGXnIiR3TRUTJL2zkrA2JI16hqyWhaZ6WXKMeGM5zz6gVnS3NA/fSQ==
 
 "@emotion/hash@^0.8.0":
   version "0.8.0"

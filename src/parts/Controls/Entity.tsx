@@ -9,8 +9,8 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { v4 as uuid } from "uuid";
 import { Control, IEntity, deriveDefaultControlsValue, deriveLabel } from "../../util/controls";
-import type { RenderControlProps } from "./__controlsTypes";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
+import type { RenderControlProps } from "./__controlsTypes";
 
 export const classes = {
   ">h": "heading_jQlatn",
@@ -95,7 +95,7 @@ export const _: React.FC<EntityProps> = React.memo(({ c, RenderControl, controlC
 
       <Grid className={fieldGrpsClss._} container direction="column">
         {fields.map((field, index) => (
-          <Grid item container key={field.id} alignItems="flex-start" justifyContent="space-between" className={fieldGrpClss._}>
+          <Grid item container key={(field as any)["@id"] || field.id} alignItems="flex-start" justifyContent="space-between" className={fieldGrpClss._}>
             <Grid className={fieldGrpClss[">fieldControls"]} item xs={10}>
               {template.map((value, controlIndex) => {
                 if (value.type === "typography") {

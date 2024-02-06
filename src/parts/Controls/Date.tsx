@@ -11,8 +11,8 @@ import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { DATE_FORMAT, IDate, deriveLabel, resolveNowInDate } from "../../util/controls";
 import { InterviewContext } from "../index";
-import FormControl from "./FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
+import FormControl from "./FormControl";
 
 export interface DateProps {
   c: IDate & { manualControlsCssOverride?: string };
