@@ -125,7 +125,7 @@ export const _: React.FC<OptionsProps> = React.memo((p) => {
                     clearOnBlur
                     handleHomeEndKeys
                     options={options}
-                    getOptionLabel={(option) => option.label}
+                    getOptionLabel={(option) => option.label?.toString()}
                     renderOption={(option) => option.label}
                     freeSolo={allow_other}
                     renderInput={(params) => <TextField {...params} label={Label} error={Boolean(error)} helperText={error?.message || " "} variant="outlined" {...autocompleteTextFieldProps} />}
