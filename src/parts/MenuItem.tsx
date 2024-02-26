@@ -29,7 +29,7 @@ export const isStepVisibleInMenu = (step: Step): boolean => {
     return true;
   }
 
-  return step.visitable === false || step.visited || step.current;
+  return step.visited || step.current;
 };
 
 const clssItem = MENU_CLASS_NAMES[">list"][">item"];
