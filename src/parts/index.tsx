@@ -1,13 +1,13 @@
-import { getCurrentStep } from "@decisively-io/interview-sdk";
-import { AttributeData, IControlsValue, Session } from "@decisively-io/types-interview";
+import { ControlsValue, getCurrentStep } from "@decisively-io/interview-sdk";
+import { AttributeData, Session } from "@decisively-io/interview-sdk";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { normalizeControlsValue } from "../util";
 import Content, { ContentProps } from "./Content";
-import type { RenderControlProps } from "./Controls/__controlsTypes";
 import Frame from "./Frame";
 import Menu, { MenuProps } from "./Menu";
+import { ControlComponents } from "./controls";
 import type { ThemedCompProps, ThemedCompT } from "./themes/types";
 
 export const defaultStep: Session["steps"][0] = {
@@ -35,10 +35,10 @@ export const defaultSession: Session = {
   steps: [],
 };
 
-export interface RootProps extends Pick<RenderControlProps, "controlComponents"> {
+export interface RootProps {
   getSession: () => Promise<Session>;
-  next: (s: Session, d: IControlsValue) => Promise<typeof s>;
-  back: (s: Session, d: IControlsValue) => Promise<typeof s>;
+  next: (s: Session, d: ControlsValue) => Promise<typeof s>;
+  back: (s: Session, d: ControlsValue) => Promise<typeof s>;
   navigateTo: (s: Session, stepId: Session["steps"][0]["id"]) => Promise<typeof s>;
   // callback to notify external component that data has been updated
   chOnScreenData?: (data: AttributeData) => void;
@@ -46,6 +46,7 @@ export interface RootProps extends Pick<RenderControlProps, "controlComponents">
   // flag to indicate that the component is loading data from an external source
   externalLoading?: boolean;
   ThemedComp?: ThemedCompT;
+  controlComponents: ControlComponents;
 }
 
 export interface RootState {
@@ -57,7 +58,7 @@ export interface RootState {
 }
 
 export interface InterviewContextState {
-  registerFormMethods: (methods: UseFormReturn<IControlsValue>) => void;
+  registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;
   getExplanation: (attribute: string) => string | undefined;
   state: {
     session: Session;
@@ -72,7 +73,7 @@ export const InterviewContext = React.createContext<InterviewContextState>({
 
 export class Root<P extends RootProps = RootProps> extends React.PureComponent<P, RootState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Root`;
-  private formMethods: UseFormReturn<IControlsValue> | undefined;
+  private formMethods: UseFormReturn<ControlsValue> | undefined;
 
   constructor(props: P) {
     super(props);
@@ -130,7 +131,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
     if (prevProps.getSession !== this.props.getSession) this.__getSession();
   }
 
-  setFormValues = (values: IControlsValue): void => {
+  setFormValues = (values: ControlsValue): void => {
     this.formMethods?.reset(values);
   };
 
@@ -212,7 +213,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
     return false;
   };
 
-  registerFormMethods(formMethods: UseFormReturn<IControlsValue>) {
+  registerFormMethods(formMethods: UseFormReturn<ControlsValue>) {
     this.formMethods = formMethods;
   }
 

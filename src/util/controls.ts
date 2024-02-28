@@ -4,11 +4,9 @@ import produce from "immer";
 import { v4 as uuid } from "uuid";
 import * as yup from "yup";
 
-import { Control, DATE_FORMAT, IControlsValue, IEntity, IFile, IImage, ITypography, Screen, TIME_FORMAT_12, TIME_FORMAT_24 } from "@decisively-io/types-interview";
+import { Control, ControlsValue, DATE_FORMAT, IControlsValue, IEntity, IFile, IImage, ITypography, RenderableControl, Screen, TIME_FORMAT_12, TIME_FORMAT_24 } from "@decisively-io/interview-sdk";
 
 const DATE_FNS = new DateFns();
-
-export * from "@decisively-io/types-interview/dist/controls";
 
 export const VALUE_ROWS_CONST = "valueRows";
 
@@ -43,7 +41,7 @@ const __innerDeriveLabel = (label?: string, desiredLength?: number, required?: t
   return `${labelWithRequired.slice(0, finalLength)}…${required ? "*" : ""}`;
 };
 
-export const deriveLabel = (c: Control): string | undefined => {
+export const deriveLabel = (c: RenderableControl): string | undefined => {
   switch (c.type) {
     case "boolean":
     case "currency":
@@ -393,9 +391,9 @@ export function normalizeControlValue(c: Control, v: any): typeof v {
   return v === undefined ? null : v;
 }
 
-export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen["controls"]): typeof controlsValue {
+export function normalizeControlsValue(controlsValue: ControlsValue, cs: Screen["controls"]): typeof controlsValue {
   return produce({}, (draft) =>
-    cs.reduce<IControlsValue>((a, c) => {
+    cs.reduce<ControlsValue>((a, c) => {
       if (c.type === "typography" || c.type === "file" || c.type === "image") {
         return a;
       }
@@ -414,7 +412,7 @@ export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen
         }
         if (controlValue.some((it) => typeof it !== "object" || it === null)) return a;
 
-        const entityValue = controlValue as IControlsValue[];
+        const entityValue = controlValue as ControlsValue[];
 
         const reduced = entityValue.reduce<typeof entityValue>((a, singleEntity) => {
           if (typeof singleEntity !== "object" || singleEntity === null) return a;
@@ -429,7 +427,7 @@ export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen
               return innerA;
             }
 
-            if ("attribute" in t) {
+            if (t.attribute) {
               innerA[t.attribute] = normalizeControlValue(t, singleEntity[t.attribute]);
             }
             return innerA;
@@ -447,7 +445,9 @@ export function normalizeControlsValue(controlsValue: IControlsValue, cs: Screen
         return a;
       }
 
-      a[c.attribute] = normalizeControlValue(c, controlsValue[c.attribute]);
+      if (c.attribute) {
+        a[c.attribute] = normalizeControlValue(c, controlsValue[c.attribute]);
+      }
       return a;
     }, draft),
   );

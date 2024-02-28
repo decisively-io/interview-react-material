@@ -1,4 +1,4 @@
-import { Session } from "@decisively-io/types-interview";
+import { Session } from "@decisively-io/interview-sdk";
 import { defaultStep } from "../parts";
 
 export const session: Session = {
@@ -161,6 +161,7 @@ export const session: Session = {
         label: "Number of instances 1",
         min: 1,
         disabled: true,
+        required: true,
         // max: 10,
         // default: 5,
         // value: null,

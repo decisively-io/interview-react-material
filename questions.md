@@ -70,7 +70,7 @@
   timeMax '22:00:00' - which one is the source of truth? '2021-10-20 23:00:00' - invalid
   both components are merged
   dateMax 'now' - only date component
-- Time/DateTime seconds_increment kinda not achievable
+- Time/DateTimeInput seconds_increment kinda not achievable
   allow seconds + change all ?: boolean to ?: true
 - options: has no required as props,
   (does null mean absent) yes
