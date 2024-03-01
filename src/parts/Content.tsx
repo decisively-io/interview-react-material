@@ -1,6 +1,5 @@
 import DateFnsUtils from "@date-io/date-fns";
-import { AttributeData, Screen, Step } from "@decisively-io/types-interview";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { AttributeData, ControlsValue, Screen, Step } from "@decisively-io/interview-sdk";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -9,9 +8,9 @@ import React, { useContext, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
-import { IControlsValue, deriveDefaultControlsValue, generateValidator } from "../util/controls";
-import Controls from "./Controls";
-import type { RenderControlProps } from "./Controls/__controlsTypes";
+import { generateValidator } from "../util/Validation";
+import { deriveDefaultControlsValue } from "../util/controls";
+import Controls, { ControlComponents } from "./controls";
 import { InterviewContext } from "./index";
 
 export const classes = {
@@ -93,12 +92,13 @@ export const StyledControlsWrap = styled.div`
   }
 `;
 
-export interface ContentRootProps extends Pick<RenderControlProps, "controlComponents"> {
+export interface ContentRootProps {
+  controlComponents?: ControlComponents;
   className?: string;
   step: Step | null;
   screen: Screen | null;
-  next?: (data: IControlsValue, reset: () => unknown) => unknown;
-  back?: (data: IControlsValue, reset: () => unknown) => unknown;
+  next?: (data: ControlsValue, reset: () => unknown) => unknown;
+  back?: (data: ControlsValue, reset: () => unknown) => unknown;
   backDisabled?: boolean;
   nextDisabled?: boolean;
   isSubmitting?: boolean;
@@ -111,7 +111,7 @@ const Content = Object.assign(
     const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData, onDataChange } = props;
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
-    const resolver = yupResolver(generateValidator(controls));
+    const resolver = generateValidator(controls);
 
     const interviewContext = useContext(InterviewContext);
 
@@ -124,7 +124,7 @@ const Content = Object.assign(
     const { getValues, reset, watch } = methods;
 
     const onSubmit = React.useCallback(
-      (data: IControlsValue) => {
+      (data: ControlsValue) => {
         if (next) {
           next(data, reset);
         }
@@ -177,7 +177,7 @@ const Content = Object.assign(
                 {next && (
                   <div className={submitClss._}>
                     {isSubmitting && <CircularProgress size="2rem" />}
-                    <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled} className={submitClss[">next"]}>
+                    <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled || !methods.formState.isValid} className={submitClss[">next"]}>
                       <Typography>Next</Typography>
                     </Button>
                   </div>

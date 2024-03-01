@@ -1,10 +1,10 @@
 import { SessionInstance, transformResponse } from "@decisively-io/interview-sdk";
-import { ResponseData, Session } from "@decisively-io/types-interview";
+import { ResponseData, Session } from "@decisively-io/interview-sdk";
 import { CssBaseline, ThemeProvider, createTheme } from "@material-ui/core";
 import React, { useCallback, useState } from "react";
 import ReactDom from "react-dom";
 import * as Parts from "../parts";
-import * as TextControlNS from "../parts/Controls/Text";
+import TextControlRender from "../parts/controls/TextControlWidget";
 import * as FontNS from "../parts/font";
 import { session as dataSession } from "./data";
 import { PWD, provider } from "./interviews";
@@ -117,8 +117,8 @@ const App = () => {
           // Text() {
           //   return <h5>Hello there</h5>;
           // },
-          Text({ c }) {
-            return <TextControlNS._ {...{ c, textFieldProps: { size: "small" } }} />;
+          Text({ control }) {
+            return <TextControlRender {...{ control, textFieldProps: { size: "small" } }} />;
           },
         }}
       />
