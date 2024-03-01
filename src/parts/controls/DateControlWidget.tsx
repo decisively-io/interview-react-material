@@ -12,10 +12,10 @@ import styled from "styled-components";
 import { deriveLabel, resolveNowInDate } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
-export interface DateControlRenderProps extends ControlRenderProps<DateControl & { manualControlsCssOverride?: string }> {
+export interface DateControlWidgetProps extends ControlWidgetProps<DateControl & { manualControlsCssOverride?: string }> {
   datePickerProps?: Partial<DatePickerProps>;
   className?: string;
 }
@@ -24,8 +24,8 @@ const ManualControlsWrap = styled(Box)<{ $cssOverride?: string }>`
   ${(p) => p.$cssOverride};
 `;
 
-const DateControlRender = Object.assign(
-  React.memo((props: DateControlRenderProps) => {
+const DateControlWidget = Object.assign(
+  React.memo((props: DateControlWidgetProps) => {
     const { control, chOnScreenData, datePickerProps, className } = props;
     const { control: formControl } = useFormContext();
     const { attribute, max, min, allowManual, manualControlsCssOverride, disabled } = control;
@@ -133,11 +133,11 @@ const DateControlRender = Object.assign(
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Date`,
     /*** @deprecated use `DateInput` directly instead */
-    _: null as any as React.ComponentType<DateControlRenderProps>,
+    _: null as any as React.ComponentType<DateControlWidgetProps>,
   },
 );
-DateControlRender._ = DateControlRender;
+DateControlWidget._ = DateControlWidget;
 
-export const _ = DateControlRender;
+export const _ = DateControlWidget;
 
-export default DateControlRender;
+export default DateControlWidget;

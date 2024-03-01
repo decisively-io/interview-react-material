@@ -3,9 +3,9 @@ import MuiTypography, { TypographyProps as MuiTypographyProps } from "@material-
 import React from "react";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 
-export interface TypographyControlRenderProps extends ControlRenderProps<TypographyControl> {
+export interface TypographyControlWidgetProps extends ControlWidgetProps<TypographyControl> {
   typographyProps?: MuiTypographyProps;
   className?: string;
 }
@@ -51,8 +51,8 @@ const Banner: React.FC<{ text: string; style: BannerStyle; emoji?: TypographyCon
 });
 Banner.displayName = `${DISPLAY_NAME}/BannerComp`;
 
-export const TypographyControlRender = Object.assign(
-  React.memo((props: TypographyControlRenderProps) => {
+export const TypographyControlWidget = Object.assign(
+  React.memo((props: TypographyControlWidgetProps) => {
     const { className, control, typographyProps } = props;
     const { style, emoji } = control;
     const text = control.text ?? "Error: missing value 'text'";
@@ -91,12 +91,12 @@ export const TypographyControlRender = Object.assign(
   {
     displayName: DISPLAY_NAME,
     /*** @deprecated use `Typography` directly instead */
-    _: null as any as React.ComponentType<TypographyControlRenderProps>,
+    _: null as any as React.ComponentType<TypographyControlWidgetProps>,
   },
 );
-TypographyControlRender._ = TypographyControlRender;
+TypographyControlWidget._ = TypographyControlWidget;
 
 /*** @deprecated use `Typography` directly instead */
-export const _ = TypographyControlRender;
+export const _ = TypographyControlWidget;
 
-export default TypographyControlRender;
+export default TypographyControlWidget;

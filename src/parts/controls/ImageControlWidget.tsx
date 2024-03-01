@@ -1,13 +1,13 @@
 import { ImageControl } from "@decisively-io/interview-sdk";
 import React from "react";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
-export interface ImageControlRenderProps extends ControlRenderProps<ImageControl> {}
+export interface ImageControlWidgetProps extends ControlWidgetProps<ImageControl> {}
 
-export const ImageControlRender = Object.assign(
-  React.memo((props: ImageControlRenderProps) => {
+export const ImageControlWidget = Object.assign(
+  React.memo((props: ImageControlWidgetProps) => {
     const { control } = props;
     const { data } = control;
 
@@ -20,12 +20,12 @@ export const ImageControlRender = Object.assign(
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Image`,
     /*** @deprecated use `ImageInput` directly */
-    _: null as any as React.ComponentType<ImageControlRenderProps>,
+    _: null as any as React.ComponentType<ImageControlWidgetProps>,
   },
 );
-ImageControlRender._ = ImageControlRender;
+ImageControlWidget._ = ImageControlWidget;
 
 /*** @deprecated use `ImageInput` directly */
-export const _ = ImageControlRender;
+export const _ = ImageControlWidget;
 
-export default ImageControlRender;
+export default ImageControlWidget;

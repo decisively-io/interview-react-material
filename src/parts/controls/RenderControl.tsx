@@ -1,9 +1,9 @@
-import { Control } from "@decisively-io/interview-sdk";
+import { Control, RenderableControlType } from "@decisively-io/interview-sdk";
 import React from "react";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 import { ControlComponents } from "./index";
 
-const NAME_MAP: Record<string, keyof ControlComponents> = {
+const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "file"> = {
   boolean: "Boolean",
   currency: "Currency",
   date: "Date",
@@ -15,14 +15,16 @@ const NAME_MAP: Record<string, keyof ControlComponents> = {
   text: "Text",
   time: "Time",
   typography: "Typography",
+  conditional_container: "ConditionalContainer",
 };
 
-export interface RenderControlProps extends ControlRenderProps<Control> {
+export interface RenderControlProps extends ControlWidgetProps<Control> {
   controlComponents: ControlComponents;
 }
 
 const RenderControl = (props: RenderControlProps) => {
   const { control, chOnScreenData, controlComponents } = props;
+  // @ts-ignore
   const component = controlComponents[NAME_MAP[control.type]];
   if (!component) {
     console.error(`[@decisively-io/interview-react-material] Control type "${control.type}" is not supported`);

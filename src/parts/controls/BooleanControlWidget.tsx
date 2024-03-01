@@ -7,18 +7,18 @@ import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
-export interface BooleanControlRenderProps extends ControlRenderProps<BooleanControl> {
+export interface BooleanControlWidgetProps extends ControlWidgetProps<BooleanControl> {
   checkboxProps?: CheckboxProps;
   formControlLabelProps?: FormControlLabelProps;
   chOnScreenData?: (data: AttributeData) => void;
   className?: string;
 }
 
-const BooleanControlRender = Object.assign(
-  React.memo((props: BooleanControlRenderProps) => {
+const BooleanControlWidget = Object.assign(
+  React.memo((props: BooleanControlWidgetProps) => {
     const { control, checkboxProps, chOnScreenData, className } = props;
     const { control: formControl } = useFormContext();
     const { attribute } = control;
@@ -58,12 +58,12 @@ const BooleanControlRender = Object.assign(
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Boolean`,
     /*** @deprecated use `Boolean` directly */
-    _: undefined as any as React.ComponentType<BooleanControlRenderProps>,
+    _: undefined as any as React.ComponentType<BooleanControlWidgetProps>,
   },
 );
-BooleanControlRender._ = BooleanControlRender;
+BooleanControlWidget._ = BooleanControlWidget;
 
 /*** @deprecated use `Boolean` directly */
-export const _ = BooleanControlRender;
+export const _ = BooleanControlWidget;
 
-export default BooleanControlRender;
+export default BooleanControlWidget;

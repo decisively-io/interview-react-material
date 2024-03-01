@@ -11,7 +11,7 @@ import styled from "styled-components";
 import { v4 as uuid } from "uuid";
 import { deriveDefaultControlsValue, deriveLabel } from "../../util/controls";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
 import { ControlComponents } from "./index";
 
@@ -54,7 +54,7 @@ const Wrap = styled.div`
   }
 `;
 
-export interface EntityControlRenderProps extends ControlRenderProps<EntityControl> {
+export interface EntityControlWidgetProps extends ControlWidgetProps<EntityControl> {
   controlComponents: ControlComponents;
   className?: string;
 }
@@ -69,8 +69,8 @@ export interface EntityControlRenderProps extends ControlRenderProps<EntityContr
 //   return null;
 // };
 
-const EntityControlRender = Object.assign(
-  React.memo((props: EntityControlRenderProps) => {
+const EntityControlWidget = Object.assign(
+  React.memo((props: EntityControlWidgetProps) => {
     const { control, chOnScreenData, controlComponents, className } = props;
     const { entity, template } = control;
     const { control: formControl } = useFormContext();
@@ -152,12 +152,12 @@ const EntityControlRender = Object.assign(
     displayName: `${DISPLAY_NAME_PREFIX}/EntityInput`,
     classes,
     /*** @deprecated use `EntityInput` directly */
-    _: null as any as React.ComponentType<EntityControlRenderProps>,
+    _: null as any as React.ComponentType<EntityControlWidgetProps>,
   },
 );
-EntityControlRender._ = EntityControlRender;
+EntityControlWidget._ = EntityControlWidget;
 
 /*** @deprecated use `EntityInput` directly */
-export const _ = EntityControlRender;
+export const _ = EntityControlWidget;
 
-export default EntityControlRender;
+export default EntityControlWidget;

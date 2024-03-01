@@ -8,10 +8,10 @@ import styled from "styled-components";
 import { deriveLabel, resolveNowInDate } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
-export interface DateTimeControlRenderProps extends ControlRenderProps<DateTimeControl> {
+export interface DateTimeControlWidgetProps extends ControlWidgetProps<DateTimeControl> {
   dateTimePickerProps?: Partial<DateTimePickerProps>;
   className?: string;
 }
@@ -20,8 +20,8 @@ const StyledDateTimePicker = styled(DateTimePicker)`
   flex: 1;
 )`;
 
-const DateTimeControlRender = Object.assign(
-  React.memo((props: DateTimeControlRenderProps) => {
+const DateTimeControlWidget = Object.assign(
+  React.memo((props: DateTimeControlWidgetProps) => {
     const { control, className, chOnScreenData, dateTimePickerProps } = props;
     const { control: formControl } = useFormContext();
     const { date_max, date_min, minutes_increment, amPmFormat, attribute } = control;
@@ -86,12 +86,12 @@ const DateTimeControlRender = Object.assign(
   {
     displayName: `${DISPLAY_NAME_PREFIX}/DateTimeInput`,
     /*** @deprecated use `DateTimeInput` directly */
-    _: null as any as React.ComponentType<DateTimeControlRenderProps>,
+    _: null as any as React.ComponentType<DateTimeControlWidgetProps>,
   },
 );
-DateTimeControlRender._ = DateTimeControlRender;
+DateTimeControlWidget._ = DateTimeControlWidget;
 
 /*** @deprecated use `DateTimeInput` directly */
-export const _ = DateTimeControlRender;
+export const _ = DateTimeControlWidget;
 
-export default DateTimeControlRender;
+export default DateTimeControlWidget;

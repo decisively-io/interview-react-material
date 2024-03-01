@@ -5,17 +5,17 @@ import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { deriveLabel } from "../../util/controls";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
-export interface NumberOfInstancesControlRenderProps extends ControlRenderProps<NumberOfInstancesControl> {
+export interface NumberOfInstancesControlWidgetProps extends ControlWidgetProps<NumberOfInstancesControl> {
   textFieldProps?: Omit<TextFieldProps, "value">;
   className?: string;
 }
 
 type Value = number | null | undefined;
 
-type IArg = { value: Value } & NonNullable<NumberOfInstancesControlRenderProps["textFieldProps"]>;
+type IArg = { value: Value } & NonNullable<NumberOfInstancesControlWidgetProps["textFieldProps"]>;
 
 const StyledTextField = styled(TextField)`
   flex: 1;
@@ -23,8 +23,8 @@ const StyledTextField = styled(TextField)`
 
 const withFallback = (arg: IArg) => (arg.value === undefined || arg.value === null ? <StyledTextField {...arg} value="" /> : <StyledTextField {...arg} />);
 
-const NumberOfInstancesControlRender = Object.assign(
-  React.memo((props: NumberOfInstancesControlRenderProps) => {
+const NumberOfInstancesControlWidget = Object.assign(
+  React.memo((props: NumberOfInstancesControlWidgetProps) => {
     const { control, textFieldProps, className } = props;
     const { control: formControl } = useFormContext();
     const { entity } = control;
@@ -57,12 +57,12 @@ const NumberOfInstancesControlRender = Object.assign(
   {
     displayName: `${DISPLAY_NAME_PREFIX}/NumberOfInstancesInput`,
     /*** @deprecated use `NumberOfInstancesInput` directly */
-    _: null as any as React.ComponentType<NumberOfInstancesControlRenderProps>,
+    _: null as any as React.ComponentType<NumberOfInstancesControlWidgetProps>,
   },
 );
-NumberOfInstancesControlRender._ = NumberOfInstancesControlRender;
+NumberOfInstancesControlWidget._ = NumberOfInstancesControlWidget;
 
 /*** @deprecated use `NumberOfInstancesInput` directly */
-export const _ = NumberOfInstancesControlRender;
+export const _ = NumberOfInstancesControlWidget;
 
-export default NumberOfInstancesControlRender;
+export default NumberOfInstancesControlWidget;

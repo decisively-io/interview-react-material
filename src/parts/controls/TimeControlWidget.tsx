@@ -8,10 +8,10 @@ import styled from "styled-components";
 import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
-export interface TimeControlRenderProps extends ControlRenderProps<TimeControl> {
+export interface TimeControlWidgetProps extends ControlWidgetProps<TimeControl> {
   timePickerProps?: Partial<TimePickerProps>;
   className?: string;
 }
@@ -23,8 +23,8 @@ const StyledTimePicker = styled(TimePicker)`
 export const secondLessViews: React.ComponentProps<typeof TimePicker>["views"] = ["hours", "minutes"];
 export const allViews: React.ComponentProps<typeof TimePicker>["views"] = ["hours", "minutes", "seconds"];
 
-const TimeControlRender = Object.assign(
-  React.memo((props: TimeControlRenderProps) => {
+const TimeControlWidget = Object.assign(
+  React.memo((props: TimeControlWidgetProps) => {
     const { control, timePickerProps, chOnScreenData, className } = props;
     const { control: formControl } = useFormContext();
     const { attribute, amPmFormat, minutes_increment, allowSeconds } = control;
@@ -85,12 +85,12 @@ const TimeControlRender = Object.assign(
   {
     displayName: `${DISPLAY_NAME_PREFIX}/TimeInput`,
     /*** @deprecated use `TimeInput` directly */
-    _: null as any as React.ComponentType<TimeControlRenderProps>,
+    _: null as any as React.ComponentType<TimeControlWidgetProps>,
   },
 );
-TimeControlRender._ = TimeControlRender;
+TimeControlWidget._ = TimeControlWidget;
 
 /*** @deprecated use `TimeInput` directly */
-export const _ = TimeControlRender;
+export const _ = TimeControlWidget;
 
-export default TimeControlRender;
+export default TimeControlWidget;

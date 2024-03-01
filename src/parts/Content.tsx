@@ -1,6 +1,5 @@
 import DateFnsUtils from "@date-io/date-fns";
 import { AttributeData, ControlsValue, Screen, Step } from "@decisively-io/interview-sdk";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -9,7 +8,8 @@ import React, { useContext, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
-import { deriveDefaultControlsValue, generateValidator } from "../util/controls";
+import { generateValidator } from "../util/Validation";
+import { deriveDefaultControlsValue } from "../util/controls";
 import Controls, { ControlComponents } from "./controls";
 import { InterviewContext } from "./index";
 
@@ -111,7 +111,7 @@ const Content = Object.assign(
     const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData, onDataChange } = props;
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
-    const resolver = yupResolver(generateValidator(controls));
+    const resolver = generateValidator(controls);
 
     const interviewContext = useContext(InterviewContext);
 
@@ -177,7 +177,7 @@ const Content = Object.assign(
                 {next && (
                   <div className={submitClss._}>
                     {isSubmitting && <CircularProgress size="2rem" />}
-                    <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled} className={submitClss[">next"]}>
+                    <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled || !methods.formState.isValid} className={submitClss[">next"]}>
                       <Typography>Next</Typography>
                     </Button>
                   </div>

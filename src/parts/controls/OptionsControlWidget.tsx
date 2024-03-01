@@ -12,14 +12,14 @@ import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
-import { ControlRenderProps } from "./ControlRenderTypes";
+import { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 const filter = createFilterOptions<Option>();
 export const asRadioClsnm = "asRadio_udecnm";
 export const autocompleteClsnm = "autocomplete_n5JJ8qT";
 
-export interface OptionsControlRenderProps extends ControlRenderProps<OptionsControl> {
+export interface OptionsControlWidgetProps extends ControlWidgetProps<OptionsControl> {
   autocompleteProps?: AutocompleteProps<Option, false, false, true>;
   autocompleteTextFieldProps?: TextFieldProps;
   className?: string;
@@ -31,8 +31,8 @@ const StyledAutoComplete = styled(Autocomplete)`
 
 const RadioControl = <Radio />;
 
-const OptionsControlRender = Object.assign(
-  React.memo((props: OptionsControlRenderProps) => {
+const OptionsControlWidget = Object.assign(
+  React.memo((props: OptionsControlWidgetProps) => {
     const { control, autocompleteProps, autocompleteTextFieldProps, chOnScreenData, className } = props;
 
     const { control: formControl } = useFormContext();
@@ -145,12 +145,12 @@ const OptionsControlRender = Object.assign(
   {
     displayName: `${DISPLAY_NAME_PREFIX}/OptionsInput`,
     /*** @deprecated use `OptionsInput` directly */
-    _: null as any as React.ComponentType<OptionsControlRenderProps>,
+    _: null as any as React.ComponentType<OptionsControlWidgetProps>,
   },
 );
-OptionsControlRender._ = OptionsControlRender;
+OptionsControlWidget._ = OptionsControlWidget;
 
 /*** @deprecated use `OptionsInput` directly */
-export const _ = OptionsControlRender;
+export const _ = OptionsControlWidget;
 
-export default OptionsControlRender;
+export default OptionsControlWidget;

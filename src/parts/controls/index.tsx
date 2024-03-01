@@ -2,18 +2,19 @@ import React from "react";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 import { Control } from "@decisively-io/interview-sdk";
-import BooleanControlRender, { BooleanControlRenderProps } from "./BooleanControlRender";
-import CurrencyControlRender, { CurrencyControlRenderProps } from "./CurrencyControlRender";
-import DateControlRender, { DateControlRenderProps } from "./DateControlRender";
-import DateTimeControlRender, { DateTimeControlRenderProps } from "./DateTimeControlRender";
-import EntityControlRender, { EntityControlRenderProps } from "./EntityControlRender";
-import ImageControlRender, { ImageControlRenderProps } from "./ImageControlRender";
-import NumberOfInstancesControlRender, { NumberOfInstancesControlRenderProps } from "./NumberOfInstancesControlRender";
-import OptionsControlRender, { OptionsControlRenderProps } from "./OptionsControlRender";
+import BooleanControlWidget, { BooleanControlWidgetProps } from "./BooleanControlWidget";
+import ConditionalContainerWidget, { ConditionalContainerControlWidgetProps } from "./ConditionalContainerWidget";
+import CurrencyControlWidget, { CurrencyControlWidgetProps } from "./CurrencyControlWidget";
+import DateControlWidget, { DateControlWidgetProps } from "./DateControlWidget";
+import DateTimeControlWidget, { DateTimeControlWidgetProps } from "./DateTimeControlWidget";
+import EntityControlWidget, { EntityControlWidgetProps } from "./EntityControlWidget";
+import ImageControlWidget, { ImageControlWidgetProps } from "./ImageControlWidget";
+import NumberOfInstancesControlWidget, { NumberOfInstancesControlWidgetProps } from "./NumberOfInstancesControlWidget";
+import OptionsControlWidget, { OptionsControlWidgetProps } from "./OptionsControlWidget";
 import RenderControl from "./RenderControl";
-import TextControlRender, { TextControlRenderProps } from "./TextControlRender";
-import TimeControlRender, { TimeControlRenderProps } from "./TimeControlRender";
-import TypographyControlRender, { TypographyControlRenderProps } from "./TypographyControlRender";
+import TextControlWidget, { TextControlWidgetProps } from "./TextControlWidget";
+import TimeControlWidget, { TimeControlWidgetProps } from "./TimeControlWidget";
+import TypographyControlWidget, { TypographyControlWidgetProps } from "./TypographyControlWidget";
 
 export interface ControlsProps {
   controls: Control[];
@@ -22,31 +23,33 @@ export interface ControlsProps {
 }
 
 export interface ControlComponents {
-  Boolean?: React.ComponentType<BooleanControlRenderProps>;
-  Currency?: React.ComponentType<CurrencyControlRenderProps>;
-  Date?: React.ComponentType<DateControlRenderProps>;
-  DateTime?: React.ComponentType<DateTimeControlRenderProps>;
-  Entity?: React.ComponentType<EntityControlRenderProps>;
-  Image?: React.ComponentType<ImageControlRenderProps>;
-  NumberOfInstances?: React.ComponentType<NumberOfInstancesControlRenderProps>;
-  Options?: React.ComponentType<OptionsControlRenderProps>;
-  Text?: React.ComponentType<TextControlRenderProps>;
-  Time?: React.ComponentType<TimeControlRenderProps>;
-  Typography?: React.ComponentType<TypographyControlRenderProps>;
+  Boolean?: React.ComponentType<BooleanControlWidgetProps>;
+  Currency?: React.ComponentType<CurrencyControlWidgetProps>;
+  Date?: React.ComponentType<DateControlWidgetProps>;
+  DateTime?: React.ComponentType<DateTimeControlWidgetProps>;
+  Entity?: React.ComponentType<EntityControlWidgetProps>;
+  Image?: React.ComponentType<ImageControlWidgetProps>;
+  NumberOfInstances?: React.ComponentType<NumberOfInstancesControlWidgetProps>;
+  Options?: React.ComponentType<OptionsControlWidgetProps>;
+  Text?: React.ComponentType<TextControlWidgetProps>;
+  Time?: React.ComponentType<TimeControlWidgetProps>;
+  Typography?: React.ComponentType<TypographyControlWidgetProps>;
+  ConditionalContainer?: React.ComponentType<ConditionalContainerControlWidgetProps>;
 }
 
 const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
-  Boolean: BooleanControlRender,
-  Currency: CurrencyControlRender,
-  Date: DateControlRender,
-  DateTime: DateTimeControlRender,
-  Entity: EntityControlRender,
-  Image: ImageControlRender,
-  NumberOfInstances: NumberOfInstancesControlRender,
-  Options: OptionsControlRender,
-  Text: TextControlRender,
-  Time: TimeControlRender,
-  Typography: TypographyControlRender,
+  Boolean: BooleanControlWidget,
+  Currency: CurrencyControlWidget,
+  Date: DateControlWidget,
+  DateTime: DateTimeControlWidget,
+  Entity: EntityControlWidget,
+  Image: ImageControlWidget,
+  NumberOfInstances: NumberOfInstancesControlWidget,
+  Options: OptionsControlWidget,
+  Text: TextControlWidget,
+  Time: TimeControlWidget,
+  Typography: TypographyControlWidget,
+  ConditionalContainer: ConditionalContainerWidget,
 };
 
 const Controls = React.memo((props: ControlsProps) => {
