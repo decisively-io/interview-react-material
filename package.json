@@ -1,6 +1,6 @@
 {
   "name": "@decisively-io/interview-react-material",
-  "version": "0.2.0",
+  "version": "0.3.0-alpha.7",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -61,7 +61,7 @@
     "yup": "^0.32.11"
   },
   "peerDependencies": {
-    "@decisively-io/interview-sdk": "^0.5.0",
+    "@decisively-io/interview-sdk": "^0.6.0-alpha.6",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.60",
