@@ -1,4 +1,5 @@
-import BaseFormControl, { FormControlProps as BaseFormControlProps } from "@material-ui/core/FormControl";
+import { RenderableControl } from "@decisively-io/interview-sdk";
+import BaseFormControl, { type FormControlProps as BaseFormControlProps } from "@material-ui/core/FormControl";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutline from "@material-ui/icons/HelpOutline";
 import React from "react";

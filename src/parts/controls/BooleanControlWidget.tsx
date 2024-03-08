@@ -1,13 +1,13 @@
-import { AttributeData, BooleanControl } from "@decisively-io/interview-sdk";
-import Checkbox, { CheckboxProps } from "@material-ui/core/Checkbox";
-import FormControlLabel, { FormControlLabelProps } from "@material-ui/core/FormControlLabel";
+import type { AttributeData, BooleanControl } from "@decisively-io/interview-sdk";
+import Checkbox, { type CheckboxProps } from "@material-ui/core/Checkbox";
+import FormControlLabel, { type FormControlLabelProps } from "@material-ui/core/FormControlLabel";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 export interface BooleanControlWidgetProps extends ControlWidgetProps<BooleanControl> {

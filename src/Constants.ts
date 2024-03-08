@@ -1,3 +1,5 @@
+import { css, keyframes } from "styled-components";
+
 export const DISPLAY_NAME_PREFIX = "Decisively/Interview";
 export const SHOW_UNVISITED_MENU_ITEMS = false;
 
@@ -30,3 +32,28 @@ export const MENU_CLASS_NAMES = {
     },
   },
 };
+
+const loadingAnimation = keyframes`
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: opacity 1;
+  }
+`;
+
+export const LOADING_ANIMATION_CSS = css`
+  &[data-loading="true"] {
+    cursor: wait;
+    animation: ${loadingAnimation} 1s infinite;
+
+    > * {
+      pointer-events: none;
+    }
+  }
+`;

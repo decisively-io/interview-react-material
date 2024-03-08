@@ -1,6 +1,6 @@
 {
   "name": "@decisively-io/interview-react-material",
-  "version": "0.3.0-alpha.7",
+  "version": "0.3.0",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,7 +9,7 @@
     "test": "jest",
     "prepublishOnly": "npm run check:fix && npm run test && npm run build",
     "dev": "tsc --watch",
-    "build": "rimraf dist && tsc && rimraf ./dist/test",
+    "build": "rimraf dist && tsc",
     "check:fix": "tsc --noEmit --project tsconfig.json && npx @biomejs/biome check --apply-unsafe .",
     "check": "tsc --noEmit --project tsconfig.json && npx @biomejs/biome check .",
     "prepare": "install-peers",
@@ -61,7 +61,7 @@
     "yup": "^0.32.11"
   },
   "peerDependencies": {
-    "@decisively-io/interview-sdk": "^0.6.0-alpha.6",
+    "@decisively-io/interview-sdk": "^0.6.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.60",

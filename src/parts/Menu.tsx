@@ -1,4 +1,4 @@
-import { Progress, Session, Step } from "@decisively-io/interview-sdk";
+import type { Progress, Session, Step } from "@decisively-io/interview-sdk";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
@@ -7,7 +7,7 @@ import { addSeconds, formatDistanceToNow } from "date-fns";
 import React from "react";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, MENU_CLASS_NAMES } from "../Constants";
-import MenuItem, { getClassNameForLevel, isStepVisibleInMenu, MenuItemProps } from "./MenuItem";
+import MenuItem, { getClassNameForLevel, isStepVisibleInMenu, type MenuItemProps } from "./MenuItem";
 
 const BorderLinearProgress = styled(LinearProgress)`
   height: 0.5rem;

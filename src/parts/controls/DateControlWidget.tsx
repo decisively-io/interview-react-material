@@ -1,10 +1,10 @@
-import { AttributeData, DATE_FORMAT, DateControl } from "@decisively-io/interview-sdk";
+import { AttributeData, DATE_FORMAT, type DateControl } from "@decisively-io/interview-sdk";
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import { DatePicker, DatePickerProps } from "@material-ui/pickers";
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import { DatePicker, type DatePickerProps } from "@material-ui/pickers";
+import type { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { format } from "date-fns";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { deriveLabel, resolveNowInDate } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 export interface DateControlWidgetProps extends ControlWidgetProps<DateControl & { manualControlsCssOverride?: string }> {
@@ -132,7 +132,7 @@ const DateControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Date`,
-    /*** @deprecated use `DateInput` directly instead */
+    /*** @deprecated use `DateControlWidget` directly instead */
     _: null as any as React.ComponentType<DateControlWidgetProps>,
   },
 );

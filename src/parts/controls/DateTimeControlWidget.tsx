@@ -1,6 +1,6 @@
-import { AttributeData, DATE_TIME_FORMAT_12, DATE_TIME_FORMAT_24, DateTimeControl } from "@decisively-io/interview-sdk";
-import { DateTimePicker, DateTimePickerProps } from "@material-ui/pickers";
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import { AttributeData, DATE_TIME_FORMAT_12, DATE_TIME_FORMAT_24, type DateTimeControl } from "@decisively-io/interview-sdk";
+import { DateTimePicker, type DateTimePickerProps } from "@material-ui/pickers";
+import type { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { format } from "date-fns";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { deriveLabel, resolveNowInDate } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 export interface DateTimeControlWidgetProps extends ControlWidgetProps<DateTimeControl> {
@@ -84,14 +84,14 @@ const DateTimeControlWidget = Object.assign(
     );
   }),
   {
-    displayName: `${DISPLAY_NAME_PREFIX}/DateTimeInput`,
-    /*** @deprecated use `DateTimeInput` directly */
+    displayName: `${DISPLAY_NAME_PREFIX}/DateTimeControlWidget`,
+    /*** @deprecated use `DateTimeControlWidget` directly */
     _: null as any as React.ComponentType<DateTimeControlWidgetProps>,
   },
 );
 DateTimeControlWidget._ = DateTimeControlWidget;
 
-/*** @deprecated use `DateTimeInput` directly */
+/*** @deprecated use `DateTimeControlWidget` directly */
 export const _ = DateTimeControlWidget;
 
 export default DateTimeControlWidget;

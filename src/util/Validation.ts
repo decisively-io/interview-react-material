@@ -1,9 +1,8 @@
-import { Control, DATE_FORMAT, IEntity, IFile, IImage, ITypography, TIME_FORMAT_12, TIME_FORMAT_24 } from "@decisively-io/interview-sdk";
+import { type Control, DATE_FORMAT, type IEntity, type IFile, type IImage, type ITypography, type RenderableControl, TIME_FORMAT_12, TIME_FORMAT_24 } from "@decisively-io/interview-sdk";
 import { format } from "date-fns";
-import { Field, FieldError, FieldErrors, FieldValues, InternalFieldName, Ref, ResolverOptions, ResolverResult, appendErrors, get, set } from "react-hook-form";
-import * as Yup from "yup";
+import { type Field, type FieldError, type FieldErrors, type FieldValues, type InternalFieldName, type Ref, type ResolverOptions, type ResolverResult, appendErrors, get, set } from "react-hook-form";
+import type * as Yup from "yup";
 import * as yup from "yup";
-import { resolveCondition } from "./Conditions";
 import { deriveDateFromTimeComponent, requiredErrStr, resolveNowInDate } from "./controls";
 
 const setCustomValidity = (ref: Ref, fieldPath: string, errors: FieldErrors) => {
@@ -54,7 +53,7 @@ export const toNestErrors = <TFieldValues extends FieldValues>(errors: FieldErro
 
 const isNameInFieldArray = (names: InternalFieldName[], name: InternalFieldName) => names.some((n) => n.startsWith(`${name}.`));
 
-const generateValidatorsForControls = (controls: Control[], values: any): Record<string, yup.AnySchema> => {
+const generateValidatorsForControls = (controls: RenderableControl[], values: any): Record<string, yup.AnySchema> => {
   return controls.reduce((a, c) => {
     switch (c.type) {
       case "boolean":
@@ -67,10 +66,9 @@ const generateValidatorsForControls = (controls: Control[], values: any): Record
         a[c.attribute] = generateValidatorForControl(c);
         return a;
       }
-      case "conditional_container": {
-        const visible = c.condition && resolveCondition(c.condition, values);
-        if (!visible) return a;
-        return Object.assign(a, generateValidatorsForControls(c.controls, values));
+      case "switch_container": {
+        const controls = c.branch === "true" ? c.outcome_true : c.outcome_false;
+        return Object.assign(a, generateValidatorsForControls(controls, values));
       }
 
       case "number_of_instances": {
@@ -128,7 +126,7 @@ const parseErrorSchema = (error: Yup.ValidationError, validateAllFieldCriteria: 
 };
 
 export const generateValidator =
-  (controls: Control[]): Resolver =>
+  (controls: RenderableControl[]): Resolver =>
   async (values, context, options) => {
     try {
       const shape = generateValidatorsForControls(controls, values);

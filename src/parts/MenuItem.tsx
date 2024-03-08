@@ -1,5 +1,5 @@
 import { containsCurrentStep } from "@decisively-io/interview-sdk";
-import { Session, Step } from "@decisively-io/interview-sdk";
+import type { Session, Step } from "@decisively-io/interview-sdk";
 import Avatar from "@material-ui/core/Avatar";
 import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List";

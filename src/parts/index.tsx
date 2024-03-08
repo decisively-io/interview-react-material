@@ -1,14 +1,15 @@
-import { ControlsValue, getCurrentStep } from "@decisively-io/interview-sdk";
-import { AttributeData, Session } from "@decisively-io/interview-sdk";
+import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
+import type { AttributeData, Session } from "@decisively-io/interview-sdk";
 import React from "react";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
+import { boolean } from "yup";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { normalizeControlsValue } from "../util";
-import Content, { ContentProps } from "./Content";
+import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
-import Menu, { MenuProps } from "./Menu";
-import { ControlComponents } from "./controls";
-import type { ThemedCompProps, ThemedCompT } from "./themes/types";
+import Menu, { type MenuProps } from "./Menu";
+import type { ControlComponents } from "./controls";
+import type { ThemedCompProps, ThemedCompT, ThemedComponent } from "./themes/types";
 
 export const defaultStep: Session["steps"][0] = {
   complete: false,
@@ -22,56 +23,36 @@ export const defaultStep: Session["steps"][0] = {
   steps: [],
 };
 
-export const defaultSession: Session = {
-  data: { "@parent": "" } as any,
-  screen: {
-    controls: [],
-    id: "",
-    title: "",
-  },
-  context: { entity: "" },
-  sessionId: "",
-  status: "in-progress",
-  steps: [],
-};
-
 export interface RootProps {
-  getSession: () => Promise<Session>;
-  next: (s: Session, d: ControlsValue) => Promise<typeof s>;
-  back: (s: Session, d: ControlsValue) => Promise<typeof s>;
-  navigateTo: (s: Session, stepId: Session["steps"][0]["id"]) => Promise<typeof s>;
-  // callback to notify external component that data has been updated
-  chOnScreenData?: (data: AttributeData) => void;
+  session: SessionInstance;
   onDataChange?: (data: AttributeData, name: string | undefined) => void;
   // flag to indicate that the component is loading data from an external source
   externalLoading?: boolean;
-  ThemedComp?: ThemedCompT;
-  controlComponents: ControlComponents;
+  ThemedComp?: ThemedComponent;
+  controlComponents?: ControlComponents;
 }
 
 export interface RootState {
-  session: Session;
   backDisabled: boolean;
   isSubmitting: boolean;
   isRequestPending: boolean;
+  renderAt?: number;
   nextDisabled: boolean;
 }
 
 export interface InterviewContextState {
   registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;
   getExplanation: (attribute: string) => string | undefined;
-  state: {
-    session: Session;
-  };
+  session: Session;
 }
 
 export const InterviewContext = React.createContext<InterviewContextState>({
   registerFormMethods: () => {},
-  state: {} as any,
+  session: {} as Session,
   getExplanation: () => undefined,
 });
 
-export class Root<P extends RootProps = RootProps> extends React.PureComponent<P, RootState> {
+export class Root<P extends RootProps = RootProps> extends React.Component<P, RootState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Root`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
 
@@ -79,7 +60,6 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
     super(props);
 
     this.state = {
-      session: defaultSession,
       backDisabled: false,
       isSubmitting: false,
       isRequestPending: false,
@@ -89,69 +69,42 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
 
   // ===================================================================================
 
-  getExplanation = (attribute: string): string | undefined => {
-    const {
-      state: { session },
-    } = this;
-    const id = attribute.split(".").pop();
-    return id && session.explanations?.[id];
-  };
+  get session(): SessionInstance {
+    return this.props.session;
+  }
 
-  ___setSession = (s: Session): void => {
-    this.setState({ session: s });
+  getExplanation = (attribute: string): string | undefined => {
+    const id = attribute.split(".").pop();
+    return id && this.session.explanations?.[id];
   };
 
   __setCurrentStep = (stepId: Session["steps"][0]["id"]): void => {
-    const {
-      props: { navigateTo },
-      state: { session },
-    } = this;
-
-    this.setState({ isRequestPending: true });
-    navigateTo(session, stepId)
-      .then((s) => this.setState({ session: s }))
-      .finally(() => {
-        this.setState({ isRequestPending: false });
-      });
+    this.session.navigate(stepId);
   };
-
-  __getSession = (): void => {
-    const { getSession } = this.props;
-
-    getSession().then((s) => {
-      this.___setSession(s);
-    });
-  };
-
-  componentDidMount(): void {
-    this.__getSession();
-  }
-
-  componentDidUpdate(prevProps: Root["props"]): void {
-    if (prevProps.getSession !== this.props.getSession) this.__getSession();
-  }
 
   setFormValues = (values: ControlsValue): void => {
     this.formMethods?.reset(values);
   };
 
+  shouldComponentUpdate(nextProps: Readonly<P>, nextState: Readonly<RootState>, nextContext: any): boolean {
+    if (nextProps.session?.renderAt !== this.state.renderAt) {
+      this.setState({ renderAt: nextProps.session?.renderAt });
+      return true;
+    }
+    return false;
+  }
+
   // ===================================================================================
 
   __back: ContentProps["back"] = (_, reset) => {
-    const {
-      props: { back },
-      state: { session: s },
-    } = this;
-
     this.setState({
       backDisabled: true,
       isRequestPending: true,
     });
 
-    back(s, {}).then((s) => {
+    this.session.back().then((s) => {
       reset?.();
       console.log("back success, setting new session data", s);
-      this.___setSession(s);
       this.setState({
         backDisabled: false,
         isRequestPending: false,
@@ -161,26 +114,20 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
 
   __next: ContentProps["next"] = (data, reset) => {
     const parentPropName = "@parent";
-    const {
-      props: { next },
-      state: { session: s },
-    } = this;
-
     this.setState({
       nextDisabled: true,
       isRequestPending: true,
       isSubmitting: true,
     });
 
-    const normalized = normalizeControlsValue(data, s.screen.controls);
+    const normalized = normalizeControlsValue(data, this.session.screen.controls);
 
     if (data[parentPropName]) normalized[parentPropName] = data[parentPropName];
 
-    next(s, normalized).then((s) => {
+    this.session.save(normalized).then((s) => {
       console.log("next success, resetting");
       reset?.();
       console.log("next success, setting new session data", s);
-      this.___setSession(s);
       this.setState({
         nextDisabled: false,
         isRequestPending: false,
@@ -225,15 +172,16 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
 
   render() {
     const {
-      state: { session, backDisabled, isSubmitting, nextDisabled, isRequestPending },
+      state: { backDisabled, isSubmitting, nextDisabled, isRequestPending },
       props: { controlComponents, onDataChange, ThemedComp },
       __setCurrentStep,
       __back,
       __next,
     } = this;
 
+    const session = this.session;
     const { steps, screen, progress, status } = session;
-    const { chOnScreenData, externalLoading } = this.props;
+    const { externalLoading } = this.props;
     const currentStep = getCurrentStep({
       ...defaultStep,
       steps,
@@ -256,10 +204,10 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
       controlComponents,
       next: lastStep ? undefined : __next,
       back: __back,
-      backDisabled: isRequestPending || backDisabled || this.isFirstStep(steps, screen?.id) || externalLoading,
-      isSubmitting: isSubmitting || externalLoading,
-      nextDisabled: isRequestPending || nextDisabled || externalLoading || lastStep,
-      chOnScreenData,
+      backDisabled: isRequestPending || backDisabled || this.isFirstStep(steps, screen?.id) || externalLoading || session.externalLoading,
+      isSubmitting: isSubmitting || externalLoading || session.externalLoading,
+      nextDisabled: isRequestPending || nextDisabled || externalLoading || lastStep || session.externalLoading,
+      chOnScreenData: this.session.chOnScreenData,
     };
 
     let content: React.ReactNode;

@@ -1,12 +1,12 @@
-import { AttributeData, TextControl } from "@decisively-io/interview-sdk";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import { AttributeData, type TextControl } from "@decisively-io/interview-sdk";
+import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 export interface TextControlWidgetProps extends ControlWidgetProps<TextControl> {
@@ -86,13 +86,13 @@ const TextControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Text`,
-    /*** @deprecated use `TextInput` directly */
+    /*** @deprecated use `TextControlWidget` directly */
     _: null as any as React.ComponentType<TextControlWidgetProps>,
   },
 );
 TextControlWidget._ = TextControlWidget;
 
-/*** @deprecated use `TextInput` directly */
+/*** @deprecated use `TextControlWidget` directly */
 export const _ = TextControlWidget;
 
 export default TextControlWidget;

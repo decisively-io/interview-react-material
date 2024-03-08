@@ -1,11 +1,11 @@
-import { NumberOfInstancesControl } from "@decisively-io/interview-sdk";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import type { NumberOfInstancesControl } from "@decisively-io/interview-sdk";
+import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { deriveLabel } from "../../util/controls";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 export interface NumberOfInstancesControlWidgetProps extends ControlWidgetProps<NumberOfInstancesControl> {
@@ -55,14 +55,14 @@ const NumberOfInstancesControlWidget = Object.assign(
     );
   }),
   {
-    displayName: `${DISPLAY_NAME_PREFIX}/NumberOfInstancesInput`,
-    /*** @deprecated use `NumberOfInstancesInput` directly */
+    displayName: `${DISPLAY_NAME_PREFIX}/NumberOfInstancesControlWidget`,
+    /*** @deprecated use `NumberOfInstancesControlWidget` directly */
     _: null as any as React.ComponentType<NumberOfInstancesControlWidgetProps>,
   },
 );
 NumberOfInstancesControlWidget._ = NumberOfInstancesControlWidget;
 
-/*** @deprecated use `NumberOfInstancesInput` directly */
+/*** @deprecated use `NumberOfInstancesControlWidget` directly */
 export const _ = NumberOfInstancesControlWidget;
 
 export default NumberOfInstancesControlWidget;

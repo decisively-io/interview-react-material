@@ -1,5 +1,5 @@
 import type { Theme } from "@material-ui/core/styles/createTheme";
-import React from "react";
+import type React from "react";
 import type { ContentProps } from "../Content";
 import type { MenuProps } from "../Menu";
 

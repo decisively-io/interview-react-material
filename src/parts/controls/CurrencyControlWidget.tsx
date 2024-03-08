@@ -1,13 +1,13 @@
-import { AttributeData, CurrencyControl } from "@decisively-io/interview-sdk";
+import { AttributeData, type CurrencyControl } from "@decisively-io/interview-sdk";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 export interface CurrencyControlWidgetProps extends ControlWidgetProps<CurrencyControl> {

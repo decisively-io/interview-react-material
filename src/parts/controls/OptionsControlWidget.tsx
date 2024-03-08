@@ -1,10 +1,10 @@
-import { AttributeData, Option, OptionsControl } from "@decisively-io/interview-sdk";
+import { AttributeData, type Option, type OptionsControl } from "@decisively-io/interview-sdk";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
-import Autocomplete, { AutocompleteProps, createFilterOptions } from "@material-ui/lab/Autocomplete";
+import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
+import Autocomplete, { type AutocompleteProps, createFilterOptions } from "@material-ui/lab/Autocomplete";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
@@ -12,7 +12,7 @@ import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 const filter = createFilterOptions<Option>();
@@ -143,14 +143,14 @@ const OptionsControlWidget = Object.assign(
     );
   }),
   {
-    displayName: `${DISPLAY_NAME_PREFIX}/OptionsInput`,
-    /*** @deprecated use `OptionsInput` directly */
+    displayName: `${DISPLAY_NAME_PREFIX}/OptionsControlWidget`,
+    /*** @deprecated use `OptionsControlWidget` directly */
     _: null as any as React.ComponentType<OptionsControlWidgetProps>,
   },
 );
 OptionsControlWidget._ = OptionsControlWidget;
 
-/*** @deprecated use `OptionsInput` directly */
+/*** @deprecated use `OptionsControlWidget` directly */
 export const _ = OptionsControlWidget;
 
 export default OptionsControlWidget;

@@ -1,46 +1,34 @@
-import { ConditionExpression, ConditionValue, ConditionalContainerControl } from "@decisively-io/interview-sdk";
+import type { RenderableSwitchContainerControl } from "@decisively-io/interview-sdk";
 import React, { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
-import { resolveCondition } from "../../util/Conditions";
+import styled from "styled-components";
+import { LOADING_ANIMATION_CSS } from "../../Constants";
+import { StyledControlsWrap } from "../Content";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import EntityControlWidget from "./EntityControlWidget";
 import RenderControl from "./RenderControl";
-import { ControlComponents } from "./index";
+import type { ControlComponents } from "./index";
 
-export interface ConditionalContainerControlWidgetProps extends ControlWidgetProps<ConditionalContainerControl> {
+export interface SwitchContainerControlWidgetProps extends ControlWidgetProps<RenderableSwitchContainerControl> {
   controlComponents: ControlComponents;
   className?: string;
 }
 
-const ConditionalContainerControlWidget = React.memo((props: ConditionalContainerControlWidgetProps) => {
+const SwitchContainerControlWidget = React.memo((props: SwitchContainerControlWidgetProps) => {
   const { control, chOnScreenData, controlComponents, className } = props;
-  const { controls, condition } = control;
-  const [visible, setVisible] = useState(false);
+  const { outcome_true, outcome_false, branch, condition } = control;
 
-  const { watch, getValues } = useFormContext();
-  useEffect(() => {
-    const updateVisibility = (values: any) => {
-      const visible = condition && resolveCondition(condition, values);
-      setVisible(Boolean(visible));
-    };
-    const subscription = watch(updateVisibility);
-    updateVisibility(getValues());
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  const controls = branch === "true" ? outcome_true : outcome_false;
 
   return (
-    <>
-      {visible
-        ? controls.map((value, controlIndex) => {
-            return <RenderControl chOnScreenData={chOnScreenData} key={controlIndex} control={value} controlComponents={controlComponents} />;
-          })
-        : null}
-    </>
+    <StyledControlsWrap data-id={control} data-loading={(control as any).loading ? "true" : undefined}>
+      {controls?.map((value, controlIndex) => {
+        return <RenderControl chOnScreenData={chOnScreenData} key={controlIndex} control={value} controlComponents={controlComponents} />;
+      })}
+    </StyledControlsWrap>
   );
 });
 
-ConditionalContainerControlWidget.displayName = `${DISPLAY_NAME_PREFIX}/ConditionalContainer`;
+SwitchContainerControlWidget.displayName = `${DISPLAY_NAME_PREFIX}/SwitchContainer`;
 
-export default ConditionalContainerControlWidget;
+export default SwitchContainerControlWidget;

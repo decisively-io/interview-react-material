@@ -1,7 +1,7 @@
-import { Control, RenderableControlType } from "@decisively-io/interview-sdk";
+import type { Control, RenderableControlType } from "@decisively-io/interview-sdk";
 import React from "react";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
-import { ControlComponents } from "./index";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlComponents } from "./index";
 
 const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "file"> = {
   boolean: "Boolean",
@@ -15,7 +15,7 @@ const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "fi
   text: "Text",
   time: "Time",
   typography: "Typography",
-  conditional_container: "ConditionalContainer",
+  switch_container: "SwitchContainer",
 };
 
 export interface RenderControlProps extends ControlWidgetProps<Control> {

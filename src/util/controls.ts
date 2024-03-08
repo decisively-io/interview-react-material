@@ -2,7 +2,7 @@ import DateFns from "@date-io/date-fns";
 import { format } from "date-fns";
 import { v4 as uuid } from "uuid";
 
-import { Control, ControlsValue, DATE_FORMAT, IControlsValue, IEntity, IFile, IImage, ITypography, RenderableControl, Screen } from "@decisively-io/interview-sdk";
+import { type Control, type ControlsValue, DATE_FORMAT, type IControlsValue, type IEntity, type IFile, type IImage, type ITypography, type RenderableControl, type Screen } from "@decisively-io/interview-sdk";
 
 const DATE_FNS = new DateFns();
 
@@ -126,8 +126,8 @@ export const deriveEntityChildId = (entity: string, indx: number, childIndx: num
 //   )
 // );
 
-export function deriveDefaultControlsValue(controls: Control[]): IControlsValue {
-  return controls.reduce<IControlsValue>((result, control) => {
+export function deriveDefaultControlsValue(controls: RenderableControl[]): ControlsValue {
+  return controls.reduce((result, control) => {
     switch (control.type) {
       case "boolean":
       case "currency":
@@ -161,15 +161,19 @@ export function deriveDefaultControlsValue(controls: Control[]): IControlsValue 
         break;
       }
 
-      case "conditional_container":
-        Object.assign(result, deriveDefaultControlsValue(control.controls));
+      case "switch_container": {
+        const controls = control.branch === "true" ? control.outcome_true : control.outcome_false;
+        if (controls) {
+          Object.assign(result, deriveDefaultControlsValue(controls));
+        }
         break;
+      }
 
       default:
         break;
     }
     return result;
-  }, {});
+  }, {} as ControlsValue);
 }
 
 export const getEntityValueIndx = (path: string): number => {
@@ -192,25 +196,25 @@ export function normalizeControlValue(c: Control, v: any): typeof v {
   return v === undefined ? null : v;
 }
 
-export function normalizeControlsValue(controlsValue: ControlsValue, cs: Screen["controls"]): typeof controlsValue {
-  return cs.reduce<ControlsValue>((a, c) => {
-    if (c.type === "typography" || c.type === "file" || c.type === "image") {
+export function normalizeControlsValue(controlsValue: ControlsValue, controls: Screen["controls"]): typeof controlsValue {
+  return controls.reduce<ControlsValue>((a, control) => {
+    if (control.type === "typography" || control.type === "file" || control.type === "image") {
       return a;
     }
 
-    if (c.type === "conditional_container") {
-      return Object.assign(a, normalizeControlsValue(controlsValue, c.controls));
+    if (control.type === "switch_container") {
+      return Object.assign(a, normalizeControlsValue(controlsValue, control.branch === "true" ? control.outcome_true : control.outcome_false));
     }
 
-    if (c.type === "number_of_instances") {
-      a[c.entity] = normalizeControlValue(c, controlsValue[c.entity]);
+    if (control.type === "number_of_instances") {
+      a[control.entity] = normalizeControlValue(control, controlsValue[control.entity]);
       return a;
     }
 
-    if (c.type === "entity") {
-      const controlValue = controlsValue[c.entity];
+    if (control.type === "entity") {
+      const controlValue = controlsValue[control.entity];
       if (!controlValue || !Array.isArray(controlValue)) {
-        a[c.entity] = [];
+        a[control.entity] = [];
 
         return a;
       }
@@ -221,7 +225,7 @@ export function normalizeControlsValue(controlsValue: ControlsValue, cs: Screen[
       const reduced = entityValue.reduce<typeof entityValue>((a, singleEntity) => {
         if (typeof singleEntity !== "object" || singleEntity === null) return a;
 
-        const newValue = c.template.reduce<typeof singleEntity>((innerA, t) => {
+        const newValue = control.template.reduce<typeof singleEntity>((innerA, t) => {
           if (t.type === "typography" || t.type === "file" || t.type === "image") {
             return innerA;
           }
@@ -244,13 +248,13 @@ export function normalizeControlsValue(controlsValue: ControlsValue, cs: Screen[
         return a.concat(newValue);
       }, []);
 
-      a[c.entity] = reduced;
+      a[control.entity] = reduced;
 
       return a;
     }
 
-    if (c.attribute) {
-      a[c.attribute] = normalizeControlValue(c, controlsValue[c.attribute]);
+    if (control.attribute) {
+      a[control.attribute] = normalizeControlValue(control, controlsValue[control.attribute]);
     }
 
     return a;

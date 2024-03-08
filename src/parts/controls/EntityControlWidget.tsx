@@ -1,4 +1,4 @@
-import { Control, EntityControl } from "@decisively-io/interview-sdk";
+import type { Control, EntityControl, RenderableControl } from "@decisively-io/interview-sdk";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
@@ -11,9 +11,9 @@ import styled from "styled-components";
 import { v4 as uuid } from "uuid";
 import { deriveDefaultControlsValue, deriveLabel } from "../../util/controls";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
-import { ControlComponents } from "./index";
+import type { ControlComponents } from "./index";
 
 export const classes = {
   ">h": "heading_jQlatn",
@@ -54,7 +54,7 @@ const Wrap = styled.div`
   }
 `;
 
-export interface EntityControlWidgetProps extends ControlWidgetProps<EntityControl> {
+export interface EntityControlWidgetProps extends ControlWidgetProps<EntityControl<RenderableControl>> {
   controlComponents: ControlComponents;
   className?: string;
 }
@@ -149,15 +149,15 @@ const EntityControlWidget = Object.assign(
     );
   }),
   {
-    displayName: `${DISPLAY_NAME_PREFIX}/EntityInput`,
+    displayName: `${DISPLAY_NAME_PREFIX}/EntityControlWidget`,
     classes,
-    /*** @deprecated use `EntityInput` directly */
+    /*** @deprecated use `EntityControlWidget` directly */
     _: null as any as React.ComponentType<EntityControlWidgetProps>,
   },
 );
 EntityControlWidget._ = EntityControlWidget;
 
-/*** @deprecated use `EntityInput` directly */
+/*** @deprecated use `EntityControlWidget` directly */
 export const _ = EntityControlWidget;
 
 export default EntityControlWidget;
