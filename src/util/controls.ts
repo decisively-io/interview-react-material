@@ -203,7 +203,11 @@ export function normalizeControlsValue(controlsValue: ControlsValue, controls: S
     }
 
     if (control.type === "switch_container") {
-      return Object.assign(a, normalizeControlsValue(controlsValue, control.branch === "true" ? control.outcome_true : control.outcome_false));
+      const controls = control.branch === "true" ? control.outcome_true : control.outcome_false;
+      if (controls) {
+        return Object.assign(a, normalizeControlsValue(controlsValue, controls));
+      }
+      return a;
     }
 
     if (control.type === "number_of_instances") {

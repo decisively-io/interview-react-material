@@ -68,7 +68,10 @@ const generateValidatorsForControls = (controls: RenderableControl[], values: an
       }
       case "switch_container": {
         const controls = c.branch === "true" ? c.outcome_true : c.outcome_false;
-        return Object.assign(a, generateValidatorsForControls(controls, values));
+        if (controls) {
+          return Object.assign(a, generateValidatorsForControls(controls, values));
+        }
+        return a;
       }
 
       case "number_of_instances": {
@@ -134,8 +137,6 @@ export const generateValidator =
 
       const result = await schema.validate(values, Object.assign({ abortEarly: false }, {}, { context }));
 
-      options.shouldUseNativeValidation && validateFieldsNatively({}, options);
-
       return {
         values: result,
         errors: {},
@@ -147,7 +148,7 @@ export const generateValidator =
 
       return {
         values: {},
-        errors: toNestErrors(parseErrorSchema(e, !options.shouldUseNativeValidation && options.criteriaMode === "all"), options),
+        errors: toNestErrors(parseErrorSchema(e, false), options ?? {}),
       };
     }
   };
