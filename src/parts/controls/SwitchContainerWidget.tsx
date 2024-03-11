@@ -21,9 +21,19 @@ const SwitchContainerControlWidget = React.memo((props: SwitchContainerControlWi
   const controls = branch === "true" ? outcome_true : outcome_false;
 
   return (
-    <StyledControlsWrap data-id={control} data-loading={(control as any).loading ? "true" : undefined}>
+    <StyledControlsWrap
+      data-id={control}
+      data-loading={(control as any).loading ? "true" : undefined}
+    >
       {controls?.map((value, controlIndex) => {
-        return <RenderControl chOnScreenData={chOnScreenData} key={controlIndex} control={value} controlComponents={controlComponents} />;
+        return (
+          <RenderControl
+            chOnScreenData={chOnScreenData}
+            key={controlIndex}
+            control={value}
+            controlComponents={controlComponents}
+          />
+        );
       })}
     </StyledControlsWrap>
   );

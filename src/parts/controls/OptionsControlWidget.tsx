@@ -38,7 +38,18 @@ const OptionsControlWidget = Object.assign(
     const { control: formControl } = useFormContext();
     const { attribute, asRadio, options, allow_other } = control;
 
-    const radioOptionsJSX = React.useMemo(() => options?.map((it) => <FormControlLabel key={String(it.value)} value={it.value} control={RadioControl} label={it.label} />), [options]);
+    const radioOptionsJSX = React.useMemo(
+      () =>
+        options?.map((it) => (
+          <FormControlLabel
+            key={String(it.value)}
+            value={it.value}
+            control={RadioControl}
+            label={it.label}
+          />
+        )),
+      [options],
+    );
 
     const isBool = React.useMemo(() => options?.length === 2 && options.some((it) => it.value === false) && options.some((it) => it.value === true), [options]);
 
@@ -66,16 +77,27 @@ const OptionsControlWidget = Object.assign(
           };
 
           return (
-            <FormControl explanation={explanation} title={control.label} disabled={control.disabled} className={finalClsnm}>
+            <FormControl
+              explanation={explanation}
+              title={control.label}
+              disabled={control.disabled}
+              className={finalClsnm}
+            >
               {({ Explanation }) => (
                 <>
                   <Explanation visible={control.showExplanation} />
                   {asRadio ? (
                     <>
-                      <FormLabel error={Boolean(error)} component="legend">
+                      <FormLabel
+                        error={Boolean(error)}
+                        component="legend"
+                      >
                         {Label}
                       </FormLabel>
-                      <RadioGroup value={typedValue === undefined || typedValue === null ? null : typedValue} onChange={setValueRadio}>
+                      <RadioGroup
+                        value={typedValue === undefined || typedValue === null ? null : typedValue}
+                        onChange={setValueRadio}
+                      >
                         {radioOptionsJSX}
                       </RadioGroup>
                       <ControlError>{error?.message || " "}</ControlError>
@@ -129,7 +151,16 @@ const OptionsControlWidget = Object.assign(
                       getOptionLabel={(option) => option.label?.toString()}
                       renderOption={(option) => option.label}
                       freeSolo={allow_other}
-                      renderInput={(params) => <TextField {...params} label={Label} error={Boolean(error)} helperText={error?.message || " "} variant="outlined" {...autocompleteTextFieldProps} />}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label={Label}
+                          error={Boolean(error)}
+                          helperText={error?.message || " "}
+                          variant="outlined"
+                          {...autocompleteTextFieldProps}
+                        />
+                      )}
                       disabled={control.disabled}
                       {...autocompleteProps}
                     />

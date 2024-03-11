@@ -157,29 +157,52 @@ const Content = Object.assign(
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <FormProvider {...methods}>
-          <Wrap onSubmit={methods.handleSubmit(onSubmit)} className={className}>
+          <Wrap
+            onSubmit={methods.handleSubmit(onSubmit)}
+            className={className}
+          >
             <div className={classes[">formWrap"]._}>
               <div className={formClss._}>
-                <Typography variant="h4" className={formClss[">h"]}>
+                <Typography
+                  variant="h4"
+                  className={formClss[">h"]}
+                >
                   {pageTitle}
                 </Typography>
 
                 <StyledControlsWrap className={formClss[">controls"]}>
-                  <Controls controlComponents={controlComponents} controls={screen.controls} chOnScreenData={chOnScreenData} />
+                  <Controls
+                    controlComponents={controlComponents}
+                    controls={screen.controls}
+                    chOnScreenData={chOnScreenData}
+                  />
                 </StyledControlsWrap>
               </div>
             </div>
             {(next || back) && (
               <div className={classes[">btns"]._}>
                 {back && (
-                  <Button size="medium" variant="outlined" disabled={backDisabled} onClick={onBack} className={classes[">btns"][">back"]}>
+                  <Button
+                    size="medium"
+                    variant="outlined"
+                    disabled={backDisabled}
+                    onClick={onBack}
+                    className={classes[">btns"][">back"]}
+                  >
                     <Typography>Back</Typography>
                   </Button>
                 )}
                 {next && (
                   <div className={submitClss._}>
                     {isSubmitting && <CircularProgress size="2rem" />}
-                    <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled || !methods.formState.isValid} className={submitClss[">next"]}>
+                    <Button
+                      size="medium"
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      disabled={nextDisabled || !methods.formState.isValid}
+                      className={submitClss[">next"]}
+                    >
                       <Typography>Next</Typography>
                     </Button>
                   </div>

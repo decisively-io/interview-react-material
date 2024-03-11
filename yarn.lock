@@ -283,24 +283,24 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@biomejs/biome@^1.5.2":
-  version "1.5.2"
-  resolved "https://registry.npmjs.org/@biomejs/biome/-/biome-1.5.2.tgz"
-  integrity sha512-LhycxGQBQLmfv6M3e4tMfn/XKcUWyduDYOlCEBrHXJ2mMth2qzYt1JWypkWp+XmU/7Hl2dKvrP4mZ5W44+nWZw==
+"@biomejs/biome@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.npmjs.org/@biomejs/biome/-/biome-1.6.0.tgz"
+  integrity sha512-hvP8K1+CV8qc9eNdXtPwzScVxFSHB448CPKSqX6+8IW8G7bbhBVKGC80BowExJN5+vu+kzsj4xkWa780MAOlJw==
   optionalDependencies:
-    "@biomejs/cli-darwin-arm64" "1.5.2"
-    "@biomejs/cli-darwin-x64" "1.5.2"
-    "@biomejs/cli-linux-arm64" "1.5.2"
-    "@biomejs/cli-linux-arm64-musl" "1.5.2"
-    "@biomejs/cli-linux-x64" "1.5.2"
-    "@biomejs/cli-linux-x64-musl" "1.5.2"
-    "@biomejs/cli-win32-arm64" "1.5.2"
-    "@biomejs/cli-win32-x64" "1.5.2"
+    "@biomejs/cli-darwin-arm64" "1.6.0"
+    "@biomejs/cli-darwin-x64" "1.6.0"
+    "@biomejs/cli-linux-arm64" "1.6.0"
+    "@biomejs/cli-linux-arm64-musl" "1.6.0"
+    "@biomejs/cli-linux-x64" "1.6.0"
+    "@biomejs/cli-linux-x64-musl" "1.6.0"
+    "@biomejs/cli-win32-arm64" "1.6.0"
+    "@biomejs/cli-win32-x64" "1.6.0"
 
-"@biomejs/cli-darwin-arm64@1.5.2":
-  version "1.5.2"
-  resolved "https://registry.npmjs.org/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-1.5.2.tgz"
-  integrity sha512-3JVl08aHKsPyf0XL9SEj1lssIMmzOMAn2t1zwZKBiy/mcZdb0vuyMSTM5haMQ/90wEmrkYN7zux777PHEGrGiw==
+"@biomejs/cli-darwin-arm64@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.npmjs.org/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-1.6.0.tgz"
+  integrity sha512-K1Fjqye5pt+Ua+seC7V/2bFjfnqOaEOcQbBQSiiefB/VPNOb6lA5NFIfJ1PskTA3JrMXE1k7iqKQn56qrKFS6A==
 
 "@date-io/core@^1.3.13", "@date-io/core@1.x":
   version "1.3.13"
@@ -314,10 +314,10 @@
   dependencies:
     "@date-io/core" "^1.3.13"
 
-"@decisively-io/interview-sdk@^0.6.0":
-  version "0.6.0"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.6.0/39537bbe74f1e7eb6934f9d83fffd8b720930a8f"
-  integrity sha512-2VVeZO8dzkH2GSXsmHnvBudykx5L4xs2sIeO3jprrXhisf6IClgIpnUlveRmRp/zgH+o76U7CdqhclzgkhsVfg==
+"@decisively-io/interview-sdk@^0.6.2":
+  version "0.6.2"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.6.2/f251def5820fddab92a3fa5dcdf45e9366b5931a"
+  integrity sha512-9dGJhZCXXbiXIwCWshPo0+umB7vHQS40ORYiBRkpVNcxVU5DDgJVMld8PmjC0/ad5sch+a9gXGDVp6bfdWDd7Q==
   dependencies:
     "@decisively-io/types-interview" "^0.3.0"
     axios "^0.26.1"
@@ -350,10 +350,10 @@
 "@emotion/unitless@^0.7.4":
   version "0.7.5"
 
-"@imminently/standard@^0.1.0":
-  version "0.1.0"
-  resolved "https://npm.pkg.github.com/download/@imminently/standard/0.1.0/dfc3efd71d0a4acd06afc4e466a5e81bf3fa73c5"
-  integrity sha512-0OEwqTYEQwQsYwdMXWr4aTTCZt9trCtnLMj4fA3zNX2rd4+epJy3izzpqN2qNmuZ3vXXQOi+FEocBLfjZMlO6Q==
+"@imminently/standard@^0.1.4":
+  version "0.1.4"
+  resolved "https://npm.pkg.github.com/download/@imminently/standard/0.1.4/94b0ba0f6b6bd209f13420df3fddbd8971589cc3"
+  integrity sha512-cnvYC95E+IC2ZSNAAxuWCWBSsSxSK8Zy7MF9AsxJokIeNnT6WYeWHXlYN9tnFIXCWVMLAVk7tbiVwfKUqi7cQQ==
 
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"

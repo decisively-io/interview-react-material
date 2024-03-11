@@ -212,10 +212,26 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
 
     let content: React.ReactNode;
     if (ThemedComp !== undefined) {
-      // @ts-ignore
-      content = <ThemedComp menu={menuProps} content={contentProps} />;
+      content = (
+        // @ts-ignore
+        <ThemedComp
+          menu={menuProps}
+          content={contentProps}
+        />
+      );
     } else {
-      content = <Frame contentJSX={<Content key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu {...menuProps} />} />;
+      content = (
+        <Frame
+          contentJSX={
+            <Content
+              key={contentProps.keyForRemount}
+              onDataChange={onDataChange}
+              {...contentProps}
+            />
+          }
+          menuJSX={<Menu {...menuProps} />}
+        />
+      );
     }
 
     return this.renderWrapper(content);

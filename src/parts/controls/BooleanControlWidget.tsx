@@ -41,11 +41,29 @@ const BooleanControlWidget = Object.assign(
           };
 
           return (
-            <FormControl explanation={explanation} title={control.label} disabled={control.disabled} className={className}>
+            <FormControl
+              explanation={explanation}
+              title={control.label}
+              disabled={control.disabled}
+              className={className}
+            >
               {({ Explanation }) => (
                 <>
-                  <Explanation visible={control.showExplanation} style={{ marginTop: 4 }} />
-                  <FormControlLabel control={<Checkbox onChange={handleChange} checked={typedValue || false} indeterminate={typeof typedValue !== "boolean"} {...checkboxProps} />} label={deriveLabel(control)} />
+                  <Explanation
+                    visible={control.showExplanation}
+                    style={{ marginTop: 4 }}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={handleChange}
+                        checked={typedValue || false}
+                        indeterminate={typeof typedValue !== "boolean"}
+                        {...checkboxProps}
+                      />
+                    }
+                    label={deriveLabel(control)}
+                  />
                   <ControlError>{error?.message || " "}</ControlError>
                 </>
               )}

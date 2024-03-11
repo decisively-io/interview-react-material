@@ -78,7 +78,11 @@ const DateControlWidget = Object.assign(
           };
 
           return (
-            <FormControl explanation={explanation} title={control.label} className={className}>
+            <FormControl
+              explanation={explanation}
+              title={control.label}
+              className={className}
+            >
               {({ Explanation }) => (
                 <>
                   <DatePicker
@@ -100,7 +104,13 @@ const DateControlWidget = Object.assign(
                   />
 
                   {Boolean(allowManual) === false ? null : (
-                    <ManualControlsWrap display="flex" width="100%" gridGap="0.5rem" alignItems="center" $cssOverride={manualControlsCssOverride}>
+                    <ManualControlsWrap
+                      display="flex"
+                      width="100%"
+                      gridGap="0.5rem"
+                      alignItems="center"
+                      $cssOverride={manualControlsCssOverride}
+                    >
                       <Explanation visible={control.showExplanation} />
                       <Box flexGrow="1">
                         {value === undefined || value === null ? (
@@ -115,7 +125,10 @@ const DateControlWidget = Object.assign(
                         )}
                       </Box>
 
-                      <Box flexShrink="0" marginTop="-1.25rem">
+                      <Box
+                        flexShrink="0"
+                        marginTop="-1.25rem"
+                      >
                         <IconButton onClick={emulateClickOnPicker}>
                           <CalendarTodayIcon />
                         </IconButton>

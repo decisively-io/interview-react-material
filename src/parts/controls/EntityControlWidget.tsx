@@ -93,17 +93,42 @@ const EntityControlWidget = Object.assign(
 
     return (
       <Wrap className={className}>
-        <Typography className={classes[">h"]} variant="h5">
+        <Typography
+          className={classes[">h"]}
+          variant="h5"
+        >
           {deriveLabel(control)}
         </Typography>
 
-        <Grid className={fieldGrpsClss._} container direction="column">
+        <Grid
+          className={fieldGrpsClss._}
+          container
+          direction="column"
+        >
           {fields.map((field, index) => (
-            <Grid item container key={(field as any)["@id"] || field.id} alignItems="flex-start" justifyContent="space-between" className={fieldGrpClss._}>
-              <Grid className={fieldGrpClss[">fieldControls"]} item xs={10}>
+            <Grid
+              item
+              container
+              key={(field as any)["@id"] || field.id}
+              alignItems="flex-start"
+              justifyContent="space-between"
+              className={fieldGrpClss._}
+            >
+              <Grid
+                className={fieldGrpClss[">fieldControls"]}
+                item
+                xs={10}
+              >
                 {template.map((value, controlIndex) => {
                   if (value.type === "typography") {
-                    return <RenderControl chOnScreenData={chOnScreenData} key={controlIndex} control={value} controlComponents={controlComponents} />;
+                    return (
+                      <RenderControl
+                        chOnScreenData={chOnScreenData}
+                        key={controlIndex}
+                        control={value}
+                        controlComponents={controlComponents}
+                      />
+                    );
                   }
 
                   if ("attribute" in value || value.type === "entity") {
@@ -116,11 +141,21 @@ const EntityControlWidget = Object.assign(
                       value: parent.value?.[index]?.[key],
                     } as Control;
 
-                    const content = <RenderControl key={controlIndex} chOnScreenData={chOnScreenData} control={childControl} controlComponents={controlComponents} />;
+                    const content = (
+                      <RenderControl
+                        key={controlIndex}
+                        chOnScreenData={chOnScreenData}
+                        control={childControl}
+                        controlComponents={controlComponents}
+                      />
+                    );
 
                     if (value.type === "entity") {
                       return (
-                        <Box key={controlIndex} padding={1}>
+                        <Box
+                          key={controlIndex}
+                          padding={1}
+                        >
                           {content}
                         </Box>
                       );
@@ -133,7 +168,13 @@ const EntityControlWidget = Object.assign(
                 })}
               </Grid>
 
-              <Grid className={fieldGrpClss[">fieldActions"]} item container justifyContent="center" xs={2}>
+              <Grid
+                className={fieldGrpClss[">fieldActions"]}
+                item
+                container
+                justifyContent="center"
+                xs={2}
+              >
                 <IconButton onClick={() => remove(index)}>
                   <DeleteIcon />
                 </IconButton>

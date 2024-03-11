@@ -134,7 +134,15 @@ const Menu = Object.assign(
       if (isStepVisibleInMenu(step)) {
         visibleIndex++;
       }
-      menuItems.push(<MenuItem key={step.id} step={step} status={status} avatarContent={visibleIndex} onClick={onClick} />);
+      menuItems.push(
+        <MenuItem
+          key={step.id}
+          step={step}
+          status={status}
+          avatarContent={visibleIndex}
+          onClick={onClick}
+        />,
+      );
     }
 
     return (
@@ -143,13 +151,23 @@ const Menu = Object.assign(
 
         {progress && (
           <div className={MENU_CLASS_NAMES[">progress"]._}>
-            <BorderLinearProgress className={MENU_CLASS_NAMES[">progress"][">bar"]} variant="determinate" value={progress.percentage} />
+            <BorderLinearProgress
+              className={MENU_CLASS_NAMES[">progress"][">bar"]}
+              variant="determinate"
+              value={progress.percentage}
+            />
             <div className={clssPrgrsInfo._}>
-              <Typography variant="caption" className={clssPrgrsInfo[">est"]}>
+              <Typography
+                variant="caption"
+                className={clssPrgrsInfo[">est"]}
+              >
                 {progress.percentage === 100 ? "Complete" : `Progress ${progress.percentage.toFixed(0)}%`}
               </Typography>
               {progress.time > 0 && (
-                <Typography variant="caption" className={clssPrgrsInfo[">summary"]}>
+                <Typography
+                  variant="caption"
+                  className={clssPrgrsInfo[">summary"]}
+                >
                   &nbsp;
                   {`- ${formatDistanceToNow(addSeconds(Date.now(), progress.time))} left`}
                 </Typography>

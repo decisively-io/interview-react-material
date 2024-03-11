@@ -56,7 +56,11 @@ const TimeControlWidget = Object.assign(
           };
 
           return (
-            <FormControl explanation={explanation} title={control.label} className={className}>
+            <FormControl
+              explanation={explanation}
+              title={control.label}
+              className={className}
+            >
               {({ Explanation }) => (
                 <>
                   <Explanation visible={control.showExplanation} />

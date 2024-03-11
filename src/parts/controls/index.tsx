@@ -59,7 +59,12 @@ const Controls = React.memo((props: ControlsProps) => {
   return (
     <>
       {controls.map((it, i) => (
-        <RenderControl key={it.id ?? `${it.type}-${i}`} control={it} chOnScreenData={chOnScreenData} controlComponents={resolvedControlComponents} />
+        <RenderControl
+          key={it.id ?? `${it.type}-${i}`}
+          control={it}
+          chOnScreenData={chOnScreenData}
+          controlComponents={resolvedControlComponents}
+        />
       ))}
     </>
   );

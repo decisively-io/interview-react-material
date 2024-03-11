@@ -48,7 +48,10 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
   const AvatarJSX = React.useMemo(
     () => (
       <Avatar className={clsx(clssItem[">avatar"]._, classNameForLevel)}>
-        <Typography className={clssItem[">avatar"][">T"]} variant="h4">
+        <Typography
+          className={clssItem[">avatar"][">T"]}
+          variant="h4"
+        >
           {avatarContent || "-"}
         </Typography>
       </Avatar>
@@ -72,15 +75,33 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
 
   return (
     <>
-      <ListItem onClick={clickOnItem} disabled={disableNavigation} button className={itemClassName}>
+      <ListItem
+        onClick={clickOnItem}
+        disabled={disableNavigation}
+        button
+        className={itemClassName}
+      >
         {AvatarJSX}
-        <ListItemText primary={step.title} className={textClassName} />
+        <ListItemText
+          primary={step.title}
+          className={textClassName}
+        />
       </ListItem>
       {step.steps === undefined || step.steps.length === 0 ? null : (
-        <Collapse in={open} timeout="auto" className={collapseClassName}>
+        <Collapse
+          in={open}
+          timeout="auto"
+          className={collapseClassName}
+        >
           <List className={listClassName}>
             {step.steps.map((it: Step) => (
-              <MenuItem key={it.id} step={it} status={status} level={level + 1} onClick={onClick} />
+              <MenuItem
+                key={it.id}
+                step={it}
+                status={status}
+                level={level + 1}
+                onClick={onClick}
+              />
             ))}
           </List>
         </Collapse>

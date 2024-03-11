@@ -20,7 +20,15 @@ type IArg = { value: CurrencyControl["value"] } & NonNullable<CurrencyControlWid
 const StyledTextField = styled(TextField)`
   flex: 1;
 `;
-const withFallback = (arg: IArg) => (arg.value === null || arg.value === undefined ? <StyledTextField {...arg} value="" /> : <StyledTextField {...arg} />);
+const withFallback = (arg: IArg) =>
+  arg.value === null || arg.value === undefined ? (
+    <StyledTextField
+      {...arg}
+      value=""
+    />
+  ) : (
+    <StyledTextField {...arg} />
+  );
 
 const CurrencyControlWidget = Object.assign(
   React.memo((props: CurrencyControlWidgetProps) => {
@@ -54,7 +62,11 @@ const CurrencyControlWidget = Object.assign(
           };
 
           return (
-            <FormControl explanation={explanation} title={control.label} className={className}>
+            <FormControl
+              explanation={explanation}
+              title={control.label}
+              className={className}
+            >
               {({ Explanation }) => (
                 <>
                   <Explanation visible={control.showExplanation} />

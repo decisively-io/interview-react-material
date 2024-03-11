@@ -53,8 +53,14 @@ const Banner = React.memo((props: BannerProps) => {
 
   return (
     <Comp>
-      <span className="emoji" dangerouslySetInnerHTML={{ __html: emoji || "" }} />
-      <StyledTypography data-loading={control.loading} variant="body1">
+      <span
+        className="emoji"
+        dangerouslySetInnerHTML={{ __html: emoji || "" }}
+      />
+      <StyledTypography
+        data-loading={control.loading}
+        variant="body1"
+      >
         {text}
       </StyledTypography>
     </Comp>
@@ -72,11 +78,20 @@ export const TypographyControlWidget = Object.assign(
       <div className={className}>
         {(() => {
           if (style === "banner-red" || style === "banner-green" || style === "banner-yellow") {
-            return <Banner control={control} text={text} />;
+            return (
+              <Banner
+                control={control}
+                text={text}
+              />
+            );
           }
 
           return (
-            <StyledTypography data-loading={control.loading} variant={style} {...typographyProps}>
+            <StyledTypography
+              data-loading={control.loading}
+              variant={style}
+              {...typographyProps}
+            >
               {emoji === undefined ? null : (
                 <span className="emoji">
                   {emoji}

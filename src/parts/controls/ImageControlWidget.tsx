@@ -13,7 +13,11 @@ export const ImageControlWidget = Object.assign(
 
     return (
       <FormControl>
-        <img src={data} alt="" width="100px" />
+        <img
+          src={data}
+          alt=""
+          width="100px"
+        />
       </FormControl>
     );
   }),

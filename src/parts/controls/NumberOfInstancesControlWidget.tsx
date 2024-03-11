@@ -21,7 +21,15 @@ const StyledTextField = styled(TextField)`
   flex: 1;
 `;
 
-const withFallback = (arg: IArg) => (arg.value === undefined || arg.value === null ? <StyledTextField {...arg} value="" /> : <StyledTextField {...arg} />);
+const withFallback = (arg: IArg) =>
+  arg.value === undefined || arg.value === null ? (
+    <StyledTextField
+      {...arg}
+      value=""
+    />
+  ) : (
+    <StyledTextField {...arg} />
+  );
 
 const NumberOfInstancesControlWidget = Object.assign(
   React.memo((props: NumberOfInstancesControlWidgetProps) => {
@@ -37,7 +45,10 @@ const NumberOfInstancesControlWidget = Object.assign(
           const typedValue = value as Value;
 
           return (
-            <FormControl title={control.label} className={className}>
+            <FormControl
+              title={control.label}
+              className={className}
+            >
               {withFallback({
                 onChange,
                 label: deriveLabel(control),

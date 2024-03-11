@@ -20,7 +20,15 @@ const StyledTextField = styled(TextField)`
   flex: 1;
 `;
 
-const withFallback = (arg: IParam) => (typeof arg.value === "string" ? <StyledTextField {...arg} /> : <StyledTextField {...arg} value="" />);
+const withFallback = (arg: IParam) =>
+  typeof arg.value === "string" ? (
+    <StyledTextField {...arg} />
+  ) : (
+    <StyledTextField
+      {...arg}
+      value=""
+    />
+  );
 
 const TextControlWidget = Object.assign(
   React.memo((props: TextControlWidgetProps) => {
@@ -60,7 +68,11 @@ const TextControlWidget = Object.assign(
           };
 
           return (
-            <FormControl explanation={explanation} title={control.label} className={className}>
+            <FormControl
+              explanation={explanation}
+              title={control.label}
+              className={className}
+            >
               {({ Explanation }) => (
                 <>
                   <Explanation visible={control.showExplanation} />

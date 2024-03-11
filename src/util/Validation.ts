@@ -105,7 +105,11 @@ const generateValidatorsForControls = (controls: RenderableControl[], values: an
   }, {} as any);
 };
 
-export type Resolver = <TFieldValues extends FieldValues, TContext>(values: TFieldValues, context: TContext | undefined, options: ResolverOptions<TFieldValues>) => Promise<ResolverResult<TFieldValues>>;
+export type Resolver = <TFieldValues extends FieldValues, TContext>(
+  values: TFieldValues,
+  context: TContext | undefined,
+  options: ResolverOptions<TFieldValues>,
+) => Promise<ResolverResult<TFieldValues>>;
 
 /**
  * Why `path!` ? because it could be `undefined` in some case
@@ -121,7 +125,13 @@ const parseErrorSchema = (error: Yup.ValidationError, validateAllFieldCriteria: 
       const types = previous[error.path!].types;
       const messages = types?.[error.type!];
 
-      previous[error.path!] = appendErrors(error.path!, validateAllFieldCriteria, previous, error.type!, messages ? ([] as string[]).concat(messages as string[], error.message) : error.message) as FieldError;
+      previous[error.path!] = appendErrors(
+        error.path!,
+        validateAllFieldCriteria,
+        previous,
+        error.type!,
+        messages ? ([] as string[]).concat(messages as string[], error.message) : error.message,
+      ) as FieldError;
     }
 
     return previous;
@@ -191,7 +201,11 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
       const schema = yup.string().nullable();
       const finalSchema: typeof schema = [schema]
         .map((it) => (required === undefined ? it : it.test("withRequired", requiredErrStr, (v) => v !== undefined && v !== null && v !== "")))
-        .map((it) => it.test("correctFormat", "Should be formatted like YYYY-MM-DD", (v) => (v === undefined || v === null || v === "" ? true : Boolean(v.match(DATE_FORMAT_REGEX) && Number.isNaN(Number(new Date(v))) === false))))
+        .map((it) =>
+          it.test("correctFormat", "Should be formatted like YYYY-MM-DD", (v) =>
+            v === undefined || v === null || v === "" ? true : Boolean(v.match(DATE_FORMAT_REGEX) && Number.isNaN(Number(new Date(v))) === false),
+          ),
+        )
         .map((it) => (nowLessMax === undefined ? it : it.test("withMax", `Should be before or equal to ${nowLessMax}`, (v) => v !== undefined && v !== null && v <= nowLessMax)))
         .map((it) => (nowLessMin === undefined ? it : it.test("withMin", `Should be after or equal to ${nowLessMin}`, (v) => v !== undefined && v !== null && v >= nowLessMin)))[0];
 
@@ -207,7 +221,8 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
 
       const withRequired: typeof schema = required === undefined ? schema : schema.test("withRequired", requiredErrStr, (v) => v !== undefined && v !== null);
 
-      const afterMax: typeof withRequired = max === undefined ? withRequired : withRequired.test("withMax", `Should be before or equal to ${maxForUi}`, (v) => v !== undefined && v !== null && v <= max);
+      const afterMax: typeof withRequired =
+        max === undefined ? withRequired : withRequired.test("withMax", `Should be before or equal to ${maxForUi}`, (v) => v !== undefined && v !== null && v <= max);
 
       const afterMin: typeof afterMax = min === undefined ? afterMax : afterMax.test("withMin", `Should be after or equal to ${minForUi}`, (v) => v !== undefined && v !== null && v >= min);
 
@@ -226,13 +241,25 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
 
       const withRequired: typeof schema = required === undefined ? schema : schema.test("withRequired", requiredErrStr, (v) => v !== undefined && v !== null);
 
-      const withDateMax: typeof withRequired = nowLessDateMax === undefined ? withRequired : withRequired.test("withDateMax", `Date should be before or equal to ${nowLessDateMax}`, (v) => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) <= nowLessDateMax);
+      const withDateMax: typeof withRequired =
+        nowLessDateMax === undefined
+          ? withRequired
+          : withRequired.test("withDateMax", `Date should be before or equal to ${nowLessDateMax}`, (v) => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) <= nowLessDateMax);
 
-      const withDateMin: typeof withDateMax = nowLessDateMin === undefined ? withDateMax : withDateMax.test("withDateMin", `Date should be after or equal to ${nowLessDateMin}`, (v) => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) >= nowLessDateMin);
+      const withDateMin: typeof withDateMax =
+        nowLessDateMin === undefined
+          ? withDateMax
+          : withDateMax.test("withDateMin", `Date should be after or equal to ${nowLessDateMin}`, (v) => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) >= nowLessDateMin);
 
-      const withTimeMax: typeof withDateMin = time_max === undefined ? withDateMin : withDateMin.test("withTimeMax", `Time should be before or equal to ${maxTimeForUi}`, (v) => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) <= time_max);
+      const withTimeMax: typeof withDateMin =
+        time_max === undefined
+          ? withDateMin
+          : withDateMin.test("withTimeMax", `Time should be before or equal to ${maxTimeForUi}`, (v) => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) <= time_max);
 
-      const withTimeMin: typeof withTimeMax = time_min === undefined ? withTimeMax : withTimeMax.test("withTimeMin", `Time should be after or equal to ${minTimeForUi}`, (v) => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) >= time_min);
+      const withTimeMin: typeof withTimeMax =
+        time_min === undefined
+          ? withTimeMax
+          : withTimeMax.test("withTimeMin", `Time should be after or equal to ${minTimeForUi}`, (v) => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) >= time_min);
 
       return withTimeMin;
     }
@@ -279,7 +306,11 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
 
       const maybeRequired: typeof schema = required === undefined ? schema : schema.test("withRequired", requiredErrStr, (v) => v !== undefined && v !== null && v !== "");
 
-      const withType: typeof maybeRequired = maybeRequired.test("isStringOrNumberOrNullOrUndefined", "This value should be either string or boolean", (v) => typeof v === "string" || typeof v === "boolean" || v === null || v === undefined);
+      const withType: typeof maybeRequired = maybeRequired.test(
+        "isStringOrNumberOrNullOrUndefined",
+        "This value should be either string or boolean",
+        (v) => typeof v === "string" || typeof v === "boolean" || v === null || v === undefined,
+      );
 
       return withType;
     }
