@@ -200,7 +200,7 @@ const Content = Object.assign(
                       type="submit"
                       variant="contained"
                       color="primary"
-                      disabled={nextDisabled || !methods.formState.isValid}
+                      disabled={nextDisabled || (!methods.formState.isValid && methods.formState.isSubmitted)}
                       className={submitClss[">next"]}
                     >
                       <Typography>Next</Typography>
