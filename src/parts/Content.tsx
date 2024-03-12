@@ -177,7 +177,7 @@ const Content = Object.assign(
                 {next && (
                   <div className={submitClss._}>
                     {isSubmitting && <CircularProgress size="2rem" />}
-                    <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled || !methods.formState.isValid} className={submitClss[">next"]}>
+                    <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled || (!methods.formState.isValid && methods.formState.isSubmitted)} className={submitClss[">next"]}>
                       <Typography>Next</Typography>
                     </Button>
                   </div>
