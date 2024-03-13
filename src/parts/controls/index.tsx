@@ -55,7 +55,10 @@ const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
 const Controls = React.memo((props: ControlsProps) => {
   const { controls, controlComponents, chOnScreenData } = props;
 
-  const resolvedControlComponents = controlComponents ?? DEFAULT_CONTROL_COMPONENTS;
+  const resolvedControlComponents = {
+    ...DEFAULT_CONTROL_COMPONENTS,
+    ...controlComponents,
+  };
   return (
     <>
       {controls.map((it, i) => (

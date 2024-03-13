@@ -1,7 +1,7 @@
 import { ControlsValue, getCurrentStep } from "@decisively-io/interview-sdk";
 import { AttributeData, Session } from "@decisively-io/interview-sdk";
 import React from "react";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, UseFormProps } from "react-hook-form";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { normalizeControlsValue } from "../util";
 import Content, { ContentProps } from "./Content";
@@ -47,6 +47,8 @@ export interface RootProps {
   externalLoading?: boolean;
   ThemedComp?: ThemedCompT;
   controlComponents: ControlComponents;
+  rhfMode?: ContentProps[ 'rhfMode' ];
+  rhfReValidateMode?: ContentProps[ 'rhfReValidateMode' ];
 }
 
 export interface RootState {
@@ -226,7 +228,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
   render() {
     const {
       state: { session, backDisabled, isSubmitting, nextDisabled, isRequestPending },
-      props: { controlComponents, onDataChange, ThemedComp },
+      props: { controlComponents, onDataChange, ThemedComp, rhfMode, rhfReValidateMode, },
       __setCurrentStep,
       __back,
       __next,
@@ -260,6 +262,8 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
       isSubmitting: isSubmitting || externalLoading,
       nextDisabled: isRequestPending || nextDisabled || externalLoading || lastStep,
       chOnScreenData,
+      rhfMode,
+      rhfReValidateMode,
     };
 
     let content: React.ReactNode;

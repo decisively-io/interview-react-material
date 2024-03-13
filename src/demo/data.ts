@@ -11,6 +11,19 @@ export const session: Session = {
     title: "Screen 1",
     controls: [
       {
+        type: "date",
+        attribute: "attributeDateValidate",
+        id: "dateValidate",
+        label: "Date validate",
+        required: true,
+        allowManual: true,
+        // min: '2022-04-01',
+        // max: 'now',
+        // default: '2022-01-01',
+        // value: null,
+        // default: '2022-01-11',
+      },
+      {
         type: "options",
         attribute: "attributeOptions",
         id: "options1",
@@ -50,7 +63,7 @@ export const session: Session = {
         label: "Text EmailOrNumber really",
         // variation: { type: 'number' },
         // required: true,
-        disabled: true,
+        // disabled: true,
         labelLength: 27,
         // max: 2,
         // value: 222222 as any,

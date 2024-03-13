@@ -121,6 +121,7 @@ const App = () => {
             return <TextControlRender {...{ control, textFieldProps: { size: "small" } }} />;
           },
         }}
+        rhfMode="onChange"
       />
     </ThemeProvider>
   );
