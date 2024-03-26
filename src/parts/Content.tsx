@@ -4,8 +4,8 @@ import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import React, { useContext, useImperativeHandle } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import React, { useContext } from "react";
+import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
 import { generateValidator } from "../util/Validation";
@@ -106,11 +106,27 @@ export interface ContentRootProps {
   isSubmitting?: boolean;
   chOnScreenData?: (data: AttributeData) => void;
   onDataChange?: (data: AttributeData, name: string | undefined) => void;
+  rhfMode?: UseFormProps[ 'mode' ];
+  rhfReValidateMode?: UseFormProps[ 'reValidateMode' ];
 }
 
 const Content = Object.assign(
   React.memo((props: ContentRootProps) => {
-    const { className, step, screen, next, back, backDisabled = false, nextDisabled = false, isSubmitting = false, controlComponents, chOnScreenData, onDataChange } = props;
+    const {
+      className,
+      step,
+      screen,
+      next,
+      back,
+      backDisabled = false,
+      nextDisabled = false,
+      isSubmitting = false,
+      controlComponents,
+      chOnScreenData,
+      onDataChange ,
+      rhfMode = 'onSubmit',
+      rhfReValidateMode = 'onChange',
+    } = props;
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
     const resolver = generateValidator(controls);
@@ -120,6 +136,8 @@ const Content = Object.assign(
     const methods = useForm({
       resolver,
       defaultValues,
+      mode: rhfMode,
+      reValidateMode: rhfReValidateMode,
     });
     interviewContext.registerFormMethods(methods);
 
@@ -228,7 +246,21 @@ export const _ = Content;
 
 export default Content;
 
-export type ContentProps = Pick<ContentRootProps, "className" | "back" | "next" | "step" | "backDisabled" | "nextDisabled" | "isSubmitting" | "controlComponents" | "screen" | "chOnScreenData">;
+export type ContentProps = Pick<
+  ContentRootProps,
+  | "className"
+  | "back"
+  | "next"
+  | "step"
+  | "backDisabled"
+  | "nextDisabled"
+  | "isSubmitting"
+  | "controlComponents"
+  | "screen"
+  | "chOnScreenData"
+  | "rhfMode"
+  | "rhfReValidateMode"
+>;
 
 // export const _: React.FC< IProps > = React.memo(
 //   props => {
