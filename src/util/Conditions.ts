@@ -1,4 +1,4 @@
-import { ConditionExpression, ConditionValue } from "@decisively-io/interview-sdk";
+import type { ConditionExpression, ConditionValue } from "@decisively-io/interview-sdk";
 
 const ADD_TIME_REGEXS = {
   years: /add-?years\(([^,]+),\s*(-?\d+)\)/i,
@@ -90,11 +90,11 @@ export const resolveElement = (element: ConditionExpression | ConditionValue, va
                 );
             if (resolvedDate instanceof Date) {
               if (timeType === "days") {
-                resolvedDate.setDate(resolvedDate.getDate() + parseInt(amount, 10));
+                resolvedDate.setDate(resolvedDate.getDate() + Number.parseInt(amount, 10));
               } else if (timeType === "months") {
-                resolvedDate.setMonth(resolvedDate.getMonth() + parseInt(amount, 10));
+                resolvedDate.setMonth(resolvedDate.getMonth() + Number.parseInt(amount, 10));
               } else {
-                resolvedDate.setFullYear(resolvedDate.getFullYear() + parseInt(amount, 10));
+                resolvedDate.setFullYear(resolvedDate.getFullYear() + Number.parseInt(amount, 10));
               }
               resolvedValue = resolvedDate;
             }

@@ -1,4 +1,4 @@
-import { AttributeData, Control } from "@decisively-io/interview-sdk";
+import type { AttributeData, Control } from "@decisively-io/interview-sdk";
 
 export interface ControlWidgetProps<C extends Control> {
   control: C;

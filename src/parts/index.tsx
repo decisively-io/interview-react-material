@@ -1,13 +1,13 @@
-import { ControlsValue, getCurrentStep } from "@decisively-io/interview-sdk";
-import { AttributeData, Session } from "@decisively-io/interview-sdk";
+import { type ControlsValue, getCurrentStep } from "@decisively-io/interview-sdk";
+import type { AttributeData, Session } from "@decisively-io/interview-sdk";
 import React from "react";
-import { UseFormReturn, UseFormProps } from "react-hook-form";
+import { UseFormProps, type UseFormReturn } from "react-hook-form";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { normalizeControlsValue } from "../util";
-import Content, { ContentProps } from "./Content";
+import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
-import Menu, { MenuProps } from "./Menu";
-import { ControlComponents } from "./controls";
+import Menu, { type MenuProps } from "./Menu";
+import type { ControlComponents } from "./controls";
 import type { ThemedCompProps, ThemedCompT } from "./themes/types";
 
 export const defaultStep: Session["steps"][0] = {
@@ -47,8 +47,8 @@ export interface RootProps {
   externalLoading?: boolean;
   ThemedComp?: ThemedCompT;
   controlComponents: ControlComponents;
-  rhfMode?: ContentProps[ 'rhfMode' ];
-  rhfReValidateMode?: ContentProps[ 'rhfReValidateMode' ];
+  rhfMode?: ContentProps["rhfMode"];
+  rhfReValidateMode?: ContentProps["rhfReValidateMode"];
 }
 
 export interface RootState {
@@ -228,7 +228,7 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
   render() {
     const {
       state: { session, backDisabled, isSubmitting, nextDisabled, isRequestPending },
-      props: { controlComponents, onDataChange, ThemedComp, rhfMode, rhfReValidateMode, },
+      props: { controlComponents, onDataChange, ThemedComp, rhfMode, rhfReValidateMode },
       __setCurrentStep,
       __back,
       __next,
@@ -268,10 +268,26 @@ export class Root<P extends RootProps = RootProps> extends React.PureComponent<P
 
     let content: React.ReactNode;
     if (ThemedComp !== undefined) {
-      // @ts-ignore
-      content = <ThemedComp menu={menuProps} content={contentProps} />;
+      content = (
+        // @ts-ignore
+        <ThemedComp
+          menu={menuProps}
+          content={contentProps}
+        />
+      );
     } else {
-      content = <Frame contentJSX={<Content key={contentProps.keyForRemount} onDataChange={onDataChange} {...contentProps} />} menuJSX={<Menu {...menuProps} />} />;
+      content = (
+        <Frame
+          contentJSX={
+            <Content
+              key={contentProps.keyForRemount}
+              onDataChange={onDataChange}
+              {...contentProps}
+            />
+          }
+          menuJSX={<Menu {...menuProps} />}
+        />
+      );
     }
 
     return this.renderWrapper(content);

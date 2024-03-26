@@ -1,11 +1,11 @@
-import { ConditionExpression, ConditionValue, ConditionalContainerControl } from "@decisively-io/interview-sdk";
+import { ConditionExpression, ConditionValue, type ConditionalContainerControl } from "@decisively-io/interview-sdk";
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { resolveCondition } from "../../util/Conditions";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
-import { ControlComponents } from "./index";
+import type { ControlComponents } from "./index";
 
 export interface ConditionalContainerControlWidgetProps extends ControlWidgetProps<ConditionalContainerControl> {
   controlComponents: ControlComponents;
@@ -34,7 +34,14 @@ const ConditionalContainerControlWidget = React.memo((props: ConditionalContaine
     <>
       {visible
         ? controls.map((value, controlIndex) => {
-            return <RenderControl chOnScreenData={chOnScreenData} key={controlIndex} control={value} controlComponents={controlComponents} />;
+            return (
+              <RenderControl
+                chOnScreenData={chOnScreenData}
+                key={controlIndex}
+                control={value}
+                controlComponents={controlComponents}
+              />
+            );
           })
         : null}
     </>

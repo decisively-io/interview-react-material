@@ -1,9 +1,9 @@
-import { TypographyControl } from "@decisively-io/interview-sdk";
-import MuiTypography, { TypographyProps as MuiTypographyProps } from "@material-ui/core/Typography";
+import type { TypographyControl } from "@decisively-io/interview-sdk";
+import MuiTypography, { type TypographyProps as MuiTypographyProps } from "@material-ui/core/Typography";
 import React from "react";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 
 export interface TypographyControlWidgetProps extends ControlWidgetProps<TypographyControl> {
   typographyProps?: MuiTypographyProps;
@@ -39,16 +39,21 @@ const BannerYellow = styled(BannerBase)`
 
 type BannerStyle = Extract<TypographyControl["style"], "banner-yellow" | "banner-green" | "banner-red">;
 
-const Banner: React.FC<{ text: string; style: BannerStyle; emoji?: TypographyControl["emoji"] }> = React.memo(({ style, text, emoji }) => {
-  const Comp = style === "banner-green" ? BannerGreen : style === "banner-red" ? BannerRed : BannerYellow;
+const Banner: React.FC<{ text: string; style: BannerStyle; emoji?: TypographyControl["emoji"] }> = React.memo(
+  ({ style, text, emoji }) => {
+    const Comp = style === "banner-green" ? BannerGreen : style === "banner-red" ? BannerRed : BannerYellow;
 
-  return (
-    <Comp>
-      <span className="emoji" dangerouslySetInnerHTML={{ __html: emoji || "" }} />
-      <MuiTypography variant="body1">{text}</MuiTypography>
-    </Comp>
-  );
-});
+    return (
+      <Comp>
+        <span
+          className="emoji"
+          dangerouslySetInnerHTML={{ __html: emoji || "" }}
+        />
+        <MuiTypography variant="body1">{text}</MuiTypography>
+      </Comp>
+    );
+  },
+);
 Banner.displayName = `${DISPLAY_NAME}/BannerComp`;
 
 export const TypographyControlWidget = Object.assign(
@@ -73,7 +78,10 @@ export const TypographyControlWidget = Object.assign(
           }
 
           return (
-            <MuiTypography variant={style} {...typographyProps}>
+            <MuiTypography
+              variant={style}
+              {...typographyProps}
+            >
               {emoji === undefined ? null : (
                 <span className="emoji">
                   {emoji}

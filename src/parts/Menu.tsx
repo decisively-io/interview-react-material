@@ -1,4 +1,4 @@
-import { Progress, Session, Step } from "@decisively-io/interview-sdk";
+import type { Progress, Session, Step } from "@decisively-io/interview-sdk";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
@@ -7,7 +7,7 @@ import { addSeconds, formatDistanceToNow } from "date-fns";
 import React from "react";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, MENU_CLASS_NAMES } from "../Constants";
-import MenuItem, { getClassNameForLevel, isStepVisibleInMenu, MenuItemProps } from "./MenuItem";
+import MenuItem, { getClassNameForLevel, isStepVisibleInMenu, type MenuItemProps } from "./MenuItem";
 
 const BorderLinearProgress = styled(LinearProgress)`
   height: 0.5rem;
@@ -134,7 +134,15 @@ const Menu = Object.assign(
       if (isStepVisibleInMenu(step)) {
         visibleIndex++;
       }
-      menuItems.push(<MenuItem key={step.id} step={step} status={status} avatarContent={visibleIndex} onClick={onClick} />);
+      menuItems.push(
+        <MenuItem
+          key={step.id}
+          step={step}
+          status={status}
+          avatarContent={visibleIndex}
+          onClick={onClick}
+        />,
+      );
     }
 
     return (
@@ -143,13 +151,23 @@ const Menu = Object.assign(
 
         {progress && (
           <div className={MENU_CLASS_NAMES[">progress"]._}>
-            <BorderLinearProgress className={MENU_CLASS_NAMES[">progress"][">bar"]} variant="determinate" value={progress.percentage} />
+            <BorderLinearProgress
+              className={MENU_CLASS_NAMES[">progress"][">bar"]}
+              variant="determinate"
+              value={progress.percentage}
+            />
             <div className={clssPrgrsInfo._}>
-              <Typography variant="caption" className={clssPrgrsInfo[">est"]}>
+              <Typography
+                variant="caption"
+                className={clssPrgrsInfo[">est"]}
+              >
                 {progress.percentage === 100 ? "Complete" : `Progress ${progress.percentage.toFixed(0)}%`}
               </Typography>
               {progress.time > 0 && (
-                <Typography variant="caption" className={clssPrgrsInfo[">summary"]}>
+                <Typography
+                  variant="caption"
+                  className={clssPrgrsInfo[">summary"]}
+                >
                   &nbsp;
                   {`- ${formatDistanceToNow(addSeconds(Date.now(), progress.time))} left`}
                 </Typography>

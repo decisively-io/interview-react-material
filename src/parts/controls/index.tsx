@@ -1,20 +1,22 @@
 import React from "react";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
-import { Control } from "@decisively-io/interview-sdk";
-import BooleanControlWidget, { BooleanControlWidgetProps } from "./BooleanControlWidget";
-import ConditionalContainerWidget, { ConditionalContainerControlWidgetProps } from "./ConditionalContainerWidget";
-import CurrencyControlWidget, { CurrencyControlWidgetProps } from "./CurrencyControlWidget";
-import DateControlWidget, { DateControlWidgetProps } from "./DateControlWidget";
-import DateTimeControlWidget, { DateTimeControlWidgetProps } from "./DateTimeControlWidget";
-import EntityControlWidget, { EntityControlWidgetProps } from "./EntityControlWidget";
-import ImageControlWidget, { ImageControlWidgetProps } from "./ImageControlWidget";
-import NumberOfInstancesControlWidget, { NumberOfInstancesControlWidgetProps } from "./NumberOfInstancesControlWidget";
-import OptionsControlWidget, { OptionsControlWidgetProps } from "./OptionsControlWidget";
+import type { Control } from "@decisively-io/interview-sdk";
+import BooleanControlWidget, { type BooleanControlWidgetProps } from "./BooleanControlWidget";
+import ConditionalContainerWidget, { type ConditionalContainerControlWidgetProps } from "./ConditionalContainerWidget";
+import CurrencyControlWidget, { type CurrencyControlWidgetProps } from "./CurrencyControlWidget";
+import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWidget";
+import DateTimeControlWidget, { type DateTimeControlWidgetProps } from "./DateTimeControlWidget";
+import EntityControlWidget, { type EntityControlWidgetProps } from "./EntityControlWidget";
+import ImageControlWidget, { type ImageControlWidgetProps } from "./ImageControlWidget";
+import NumberOfInstancesControlWidget, {
+  type NumberOfInstancesControlWidgetProps,
+} from "./NumberOfInstancesControlWidget";
+import OptionsControlWidget, { type OptionsControlWidgetProps } from "./OptionsControlWidget";
 import RenderControl from "./RenderControl";
-import TextControlWidget, { TextControlWidgetProps } from "./TextControlWidget";
-import TimeControlWidget, { TimeControlWidgetProps } from "./TimeControlWidget";
-import TypographyControlWidget, { TypographyControlWidgetProps } from "./TypographyControlWidget";
+import TextControlWidget, { type TextControlWidgetProps } from "./TextControlWidget";
+import TimeControlWidget, { type TimeControlWidgetProps } from "./TimeControlWidget";
+import TypographyControlWidget, { type TypographyControlWidgetProps } from "./TypographyControlWidget";
 
 export interface ControlsProps {
   controls: Control[];
@@ -62,7 +64,12 @@ const Controls = React.memo((props: ControlsProps) => {
   return (
     <>
       {controls.map((it, i) => (
-        <RenderControl key={it.id ?? `${it.type}-${i}`} control={it} chOnScreenData={chOnScreenData} controlComponents={resolvedControlComponents} />
+        <RenderControl
+          key={it.id ?? `${it.type}-${i}`}
+          control={it}
+          chOnScreenData={chOnScreenData}
+          controlComponents={resolvedControlComponents}
+        />
       ))}
     </>
   );

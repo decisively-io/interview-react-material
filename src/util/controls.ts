@@ -2,7 +2,18 @@ import DateFns from "@date-io/date-fns";
 import { format } from "date-fns";
 import { v4 as uuid } from "uuid";
 
-import { Control, ControlsValue, DATE_FORMAT, IControlsValue, IEntity, IFile, IImage, ITypography, RenderableControl, Screen } from "@decisively-io/interview-sdk";
+import {
+  type Control,
+  type ControlsValue,
+  DATE_FORMAT,
+  type IControlsValue,
+  type IEntity,
+  type IFile,
+  type IImage,
+  type ITypography,
+  type RenderableControl,
+  type Screen,
+} from "@decisively-io/interview-sdk";
 
 const DATE_FNS = new DateFns();
 
@@ -66,7 +77,9 @@ export const resolveNowInDate = (d?: string): string | undefined => (d === "now"
 
 export const requiredErrStr = "Please fill out this field";
 
-function getDefaultControlValue(c: Exclude<Control, IEntity | ITypography | IImage | IFile>): IControlsValue[keyof IControlsValue] {
+function getDefaultControlValue(
+  c: Exclude<Control, IEntity | ITypography | IImage | IFile>,
+): IControlsValue[keyof IControlsValue] {
   switch (c.type) {
     case "boolean":
       return c.value === undefined ? c.default : c.value;
@@ -112,7 +125,8 @@ function getDefaultControlValue(c: Exclude<Control, IEntity | ITypography | IIma
   }
 }
 
-export const deriveEntityChildId = (entity: string, indx: number, childIndx: number): string => `${entity}.${VALUE_ROWS_CONST}.${indx}.${childIndx}`;
+export const deriveEntityChildId = (entity: string, indx: number, childIndx: number): string =>
+  `${entity}.${VALUE_ROWS_CONST}.${indx}.${childIndx}`;
 
 // export const deriveEntityDefaultsForRow = (template: IEntity[ 'template' ]): IEntityData[ 'valueRows' ][ 0 ] => (
 //   template.map(
@@ -182,7 +196,11 @@ export function normalizeControlValue(c: Control, v: any): typeof v {
   if (c.type === "text") {
     const typedV = v as null | string | undefined;
 
-    return typedV === null || typedV === undefined ? null : c.variation !== undefined && c.variation.type === "number" ? Number(typedV) : typedV;
+    return typedV === null || typedV === undefined
+      ? null
+      : c.variation !== undefined && c.variation.type === "number"
+        ? Number(typedV)
+        : typedV;
   }
 
   if (c.type === "boolean") {

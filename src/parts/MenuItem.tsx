@@ -1,5 +1,5 @@
 import { containsCurrentStep } from "@decisively-io/interview-sdk";
-import { Session, Step } from "@decisively-io/interview-sdk";
+import type { Session, Step } from "@decisively-io/interview-sdk";
 import Avatar from "@material-ui/core/Avatar";
 import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List";
@@ -48,7 +48,10 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
   const AvatarJSX = React.useMemo(
     () => (
       <Avatar className={clsx(clssItem[">avatar"]._, classNameForLevel)}>
-        <Typography className={clssItem[">avatar"][">T"]} variant="h4">
+        <Typography
+          className={clssItem[">avatar"][">T"]}
+          variant="h4"
+        >
           {avatarContent || "-"}
         </Typography>
       </Avatar>
@@ -58,7 +61,13 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
 
   const open = React.useMemo(() => containsCurrentStep(step), [step]);
 
-  const itemClassName = clsx(clssItem._, classNameForLevel, open && clssItem["&.active"], step.complete && !step.skipped && clssItem["&.complete"], step.visited && clssItem["&.visited"]);
+  const itemClassName = clsx(
+    clssItem._,
+    classNameForLevel,
+    open && clssItem["&.active"],
+    step.complete && !step.skipped && clssItem["&.complete"],
+    step.visited && clssItem["&.visited"],
+  );
   const textClassName = clsx(clssItem[">text"], classNameForLevel);
   const collapseClassName = clsx(MENU_CLASS_NAMES[">list"][">collapse"], classNameForLevel);
   const listClassName = clsx(MENU_CLASS_NAMES[">list"]._, getClassNameForLevel(level + 1));
@@ -72,15 +81,33 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
 
   return (
     <>
-      <ListItem onClick={clickOnItem} disabled={disableNavigation} button className={itemClassName}>
+      <ListItem
+        onClick={clickOnItem}
+        disabled={disableNavigation}
+        button
+        className={itemClassName}
+      >
         {AvatarJSX}
-        <ListItemText primary={step.title} className={textClassName} />
+        <ListItemText
+          primary={step.title}
+          className={textClassName}
+        />
       </ListItem>
       {step.steps === undefined || step.steps.length === 0 ? null : (
-        <Collapse in={open} timeout="auto" className={collapseClassName}>
+        <Collapse
+          in={open}
+          timeout="auto"
+          className={collapseClassName}
+        >
           <List className={listClassName}>
             {step.steps.map((it: Step) => (
-              <MenuItem key={it.id} step={it} status={status} level={level + 1} onClick={onClick} />
+              <MenuItem
+                key={it.id}
+                step={it}
+                status={status}
+                level={level + 1}
+                onClick={onClick}
+              />
             ))}
           </List>
         </Collapse>

@@ -1,12 +1,12 @@
-import { AttributeData, TextControl } from "@decisively-io/interview-sdk";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import { AttributeData, type TextControl } from "@decisively-io/interview-sdk";
+import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 export interface TextControlWidgetProps extends ControlWidgetProps<TextControl> {
@@ -20,7 +20,15 @@ const StyledTextField = styled(TextField)`
   flex: 1;
 `;
 
-const withFallback = (arg: IParam) => (typeof arg.value === "string" ? <StyledTextField {...arg} /> : <StyledTextField {...arg} value="" />);
+const withFallback = (arg: IParam) =>
+  typeof arg.value === "string" ? (
+    <StyledTextField {...arg} />
+  ) : (
+    <StyledTextField
+      {...arg}
+      value=""
+    />
+  );
 
 const TextControlWidget = Object.assign(
   React.memo((props: TextControlWidgetProps) => {
@@ -60,7 +68,11 @@ const TextControlWidget = Object.assign(
           };
 
           return (
-            <FormControl explanation={explanation} title={control.label} className={className}>
+            <FormControl
+              explanation={explanation}
+              title={control.label}
+              className={className}
+            >
               {({ Explanation }) => (
                 <>
                   <Explanation visible={control.showExplanation} />

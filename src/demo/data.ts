@@ -1,4 +1,4 @@
-import { Session } from "@decisively-io/interview-sdk";
+import type { Session } from "@decisively-io/interview-sdk";
 import { defaultStep } from "../parts";
 
 export const session: Session = {

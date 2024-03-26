@@ -1,16 +1,16 @@
 import DateFnsUtils from "@date-io/date-fns";
-import { AttributeData, ControlsValue, Screen, Step } from "@decisively-io/interview-sdk";
+import type { AttributeData, ControlsValue, Screen, Step } from "@decisively-io/interview-sdk";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import React, { useContext } from "react";
-import { FormProvider, UseFormProps, useForm } from "react-hook-form";
+import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { generateValidator } from "../util/Validation";
 import { deriveDefaultControlsValue } from "../util/controls";
-import Controls, { ControlComponents } from "./controls";
+import Controls, { type ControlComponents } from "./controls";
 import { InterviewContext } from "./index";
 
 export const classes = {
@@ -104,8 +104,8 @@ export interface ContentRootProps {
   isSubmitting?: boolean;
   chOnScreenData?: (data: AttributeData) => void;
   onDataChange?: (data: AttributeData, name: string | undefined) => void;
-  rhfMode?: UseFormProps[ 'mode' ];
-  rhfReValidateMode?: UseFormProps[ 'reValidateMode' ];
+  rhfMode?: UseFormProps["mode"];
+  rhfReValidateMode?: UseFormProps["reValidateMode"];
 }
 
 const Content = Object.assign(
@@ -121,9 +121,9 @@ const Content = Object.assign(
       isSubmitting = false,
       controlComponents,
       chOnScreenData,
-      onDataChange ,
-      rhfMode = 'onSubmit',
-      rhfReValidateMode = 'onChange',
+      onDataChange,
+      rhfMode = "onSubmit",
+      rhfReValidateMode = "onChange",
     } = props;
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
@@ -173,29 +173,52 @@ const Content = Object.assign(
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <FormProvider {...methods}>
-          <Wrap onSubmit={methods.handleSubmit(onSubmit)} className={className}>
+          <Wrap
+            onSubmit={methods.handleSubmit(onSubmit)}
+            className={className}
+          >
             <div className={classes[">formWrap"]._}>
               <div className={formClss._}>
-                <Typography variant="h4" className={formClss[">h"]}>
+                <Typography
+                  variant="h4"
+                  className={formClss[">h"]}
+                >
                   {pageTitle}
                 </Typography>
 
                 <StyledControlsWrap className={formClss[">controls"]}>
-                  <Controls controlComponents={controlComponents} controls={screen.controls} chOnScreenData={chOnScreenData} />
+                  <Controls
+                    controlComponents={controlComponents}
+                    controls={screen.controls}
+                    chOnScreenData={chOnScreenData}
+                  />
                 </StyledControlsWrap>
               </div>
             </div>
             {(next || back) && (
               <div className={classes[">btns"]._}>
                 {back && (
-                  <Button size="medium" variant="outlined" disabled={backDisabled} onClick={onBack} className={classes[">btns"][">back"]}>
+                  <Button
+                    size="medium"
+                    variant="outlined"
+                    disabled={backDisabled}
+                    onClick={onBack}
+                    className={classes[">btns"][">back"]}
+                  >
                     <Typography>Back</Typography>
                   </Button>
                 )}
                 {next && (
                   <div className={submitClss._}>
                     {isSubmitting && <CircularProgress size="2rem" />}
-                    <Button size="medium" type="submit" variant="contained" color="primary" disabled={nextDisabled || (!methods.formState.isValid && methods.formState.isSubmitted)} className={submitClss[">next"]}>
+                    <Button
+                      size="medium"
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      disabled={nextDisabled || (!methods.formState.isValid && methods.formState.isSubmitted)}
+                      className={submitClss[">next"]}
+                    >
                       <Typography>Next</Typography>
                     </Button>
                   </div>

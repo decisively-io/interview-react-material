@@ -1,11 +1,11 @@
-import { NumberOfInstancesControl } from "@decisively-io/interview-sdk";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import type { NumberOfInstancesControl } from "@decisively-io/interview-sdk";
+import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { deriveLabel } from "../../util/controls";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 export interface NumberOfInstancesControlWidgetProps extends ControlWidgetProps<NumberOfInstancesControl> {
@@ -21,7 +21,15 @@ const StyledTextField = styled(TextField)`
   flex: 1;
 `;
 
-const withFallback = (arg: IArg) => (arg.value === undefined || arg.value === null ? <StyledTextField {...arg} value="" /> : <StyledTextField {...arg} />);
+const withFallback = (arg: IArg) =>
+  arg.value === undefined || arg.value === null ? (
+    <StyledTextField
+      {...arg}
+      value=""
+    />
+  ) : (
+    <StyledTextField {...arg} />
+  );
 
 const NumberOfInstancesControlWidget = Object.assign(
   React.memo((props: NumberOfInstancesControlWidgetProps) => {
@@ -37,7 +45,10 @@ const NumberOfInstancesControlWidget = Object.assign(
           const typedValue = value as Value;
 
           return (
-            <FormControl title={control.label} className={className}>
+            <FormControl
+              title={control.label}
+              className={className}
+            >
               {withFallback({
                 onChange,
                 label: deriveLabel(control),

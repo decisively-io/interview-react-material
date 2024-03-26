@@ -1,6 +1,6 @@
-import { TIME_FORMAT_12, TIME_FORMAT_24, TimeControl } from "@decisively-io/interview-sdk";
-import { TimePicker, TimePickerProps } from "@material-ui/pickers";
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import { TIME_FORMAT_12, TIME_FORMAT_24, type TimeControl } from "@decisively-io/interview-sdk";
+import { TimePicker, type TimePickerProps } from "@material-ui/pickers";
+import type { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { format } from "date-fns";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
 export interface TimeControlWidgetProps extends ControlWidgetProps<TimeControl> {
@@ -56,7 +56,11 @@ const TimeControlWidget = Object.assign(
           };
 
           return (
-            <FormControl explanation={explanation} title={control.label} className={className}>
+            <FormControl
+              explanation={explanation}
+              title={control.label}
+              className={className}
+            >
               {({ Explanation }) => (
                 <>
                   <Explanation visible={control.showExplanation} />

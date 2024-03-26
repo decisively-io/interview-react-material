@@ -1,10 +1,10 @@
-import { AttributeData, DATE_FORMAT, DateControl } from "@decisively-io/interview-sdk";
+import { AttributeData, DATE_FORMAT, type DateControl } from "@decisively-io/interview-sdk";
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import { DatePicker, DatePickerProps } from "@material-ui/pickers";
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import { DatePicker, type DatePickerProps } from "@material-ui/pickers";
+import type { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { format } from "date-fns";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -12,10 +12,11 @@ import styled from "styled-components";
 import { deriveLabel, resolveNowInDate } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-import { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
-export interface DateControlWidgetProps extends ControlWidgetProps<DateControl & { manualControlsCssOverride?: string }> {
+export interface DateControlWidgetProps
+  extends ControlWidgetProps<DateControl & { manualControlsCssOverride?: string }> {
   datePickerProps?: Partial<DatePickerProps>;
   className?: string;
 }
@@ -82,7 +83,11 @@ const DateControlWidget = Object.assign(
           };
 
           return (
-            <FormControl explanation={explanation} title={control.label} className={className}>
+            <FormControl
+              explanation={explanation}
+              title={control.label}
+              className={className}
+            >
               {({ Explanation }) => (
                 <>
                   <StyledDatePicker
@@ -90,7 +95,12 @@ const DateControlWidget = Object.assign(
                       label: deriveLabel(control),
                       error: error !== undefined,
                       helperText: error?.message || " ",
-                      value: typeof typedValue === "string" ? (typedValue === "now" ? new Date() : new Date(typedValue)) : null,
+                      value:
+                        typeof typedValue === "string"
+                          ? typedValue === "now"
+                            ? new Date()
+                            : new Date(typedValue)
+                          : null,
                       onChange: handleChange,
                       format: DATE_FORMAT,
                       maxDate: resolvedMax && new Date(resolvedMax),
@@ -104,7 +114,13 @@ const DateControlWidget = Object.assign(
                   />
 
                   {Boolean(allowManual) === false ? null : (
-                    <ManualControlsWrap display="flex" width="100%" gridGap="0.5rem" alignItems="center" $cssOverride={manualControlsCssOverride}>
+                    <ManualControlsWrap
+                      display="flex"
+                      width="100%"
+                      gridGap="0.5rem"
+                      alignItems="center"
+                      $cssOverride={manualControlsCssOverride}
+                    >
                       <Explanation visible={control.showExplanation} />
                       <Box flexGrow="1">
                         {value === undefined || value === null ? (
@@ -119,7 +135,10 @@ const DateControlWidget = Object.assign(
                         )}
                       </Box>
 
-                      <Box flexShrink="0" marginTop="-1.25rem">
+                      <Box
+                        flexShrink="0"
+                        marginTop="-1.25rem"
+                      >
                         <IconButton onClick={emulateClickOnPicker}>
                           <CalendarTodayIcon />
                         </IconButton>

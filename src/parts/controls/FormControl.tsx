@@ -1,4 +1,4 @@
-import BaseFormControl, { FormControlProps as BaseFormControlProps } from "@material-ui/core/FormControl";
+import BaseFormControl, { type FormControlProps as BaseFormControlProps } from "@material-ui/core/FormControl";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutline from "@material-ui/icons/HelpOutline";
 import React from "react";
@@ -44,9 +44,17 @@ const FormControl = React.memo((props: FormControlProps) => {
     }
 
     return (
-      <ExplanationTooltip placement={"bottom-start"} open={focus || helpHover} title={explanation || "no explanation"} {...otherProps}>
+      <ExplanationTooltip
+        placement={"bottom-start"}
+        open={focus || helpHover}
+        title={explanation || "no explanation"}
+        {...otherProps}
+      >
         {/* biome-ignore lint: it's fine not having onFocus */}
-        <div onMouseOver={() => setHelpHover(true)} onMouseLeave={() => setHelpHover(false)}>
+        <div
+          onMouseOver={() => setHelpHover(true)}
+          onMouseLeave={() => setHelpHover(false)}
+        >
           <HelpOutline />
         </div>
       </ExplanationTooltip>
