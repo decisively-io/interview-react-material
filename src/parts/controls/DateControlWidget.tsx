@@ -25,6 +25,10 @@ const ManualControlsWrap = styled(Box)<{ $cssOverride?: string }>`
   ${(p) => p.$cssOverride};
 `;
 
+const StyledDatePicker = styled(DatePicker)`
+  flex: 1;
+  `;
+
 const DateControlWidget = Object.assign(
   React.memo((props: DateControlWidgetProps) => {
     const { control, chOnScreenData, datePickerProps, className } = props;
@@ -86,7 +90,7 @@ const DateControlWidget = Object.assign(
             >
               {({ Explanation }) => (
                 <>
-                  <DatePicker
+                  <StyledDatePicker
                     {...{
                       label: deriveLabel(control),
                       error: error !== undefined,

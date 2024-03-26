@@ -2,7 +2,6 @@ import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decis
 import type { AttributeData, Session } from "@decisively-io/interview-sdk";
 import React from "react";
 import type { UseFormProps, UseFormReturn } from "react-hook-form";
-import { boolean } from "yup";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";

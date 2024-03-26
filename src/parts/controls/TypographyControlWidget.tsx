@@ -46,26 +46,28 @@ interface BannerProps {
   text: string;
 }
 
-const Banner = React.memo((props: BannerProps) => {
+const Banner = React.memo(
+  (props: BannerProps) => {
   const { control, text } = props;
   const { style, emoji } = control;
-  const Comp = style === "banner-green" ? BannerGreen : style === "banner-red" ? BannerRed : BannerYellow;
+    const Comp = style === "banner-green" ? BannerGreen : style === "banner-red" ? BannerRed : BannerYellow;
 
   return (
     <Comp>
       <span
         className="emoji"
         dangerouslySetInnerHTML={{ __html: emoji || "" }}
-      />
+        />
       <StyledTypography
         data-loading={control.loading}
         variant="body1"
       >
         {text}
       </StyledTypography>
-    </Comp>
-  );
-});
+      </Comp>
+    );
+  },
+);
 Banner.displayName = `${DISPLAY_NAME}/BannerComp`;
 
 export const TypographyControlWidget = Object.assign(
