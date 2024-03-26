@@ -77,7 +77,9 @@ export const resolveNowInDate = (d?: string): string | undefined => (d === "now"
 
 export const requiredErrStr = "Please fill out this field";
 
-function getDefaultControlValue(c: Exclude<Control, IEntity | ITypography | IImage | IFile>): IControlsValue[keyof IControlsValue] {
+function getDefaultControlValue(
+  c: Exclude<Control, IEntity | ITypography | IImage | IFile>,
+): IControlsValue[keyof IControlsValue] {
   switch (c.type) {
     case "boolean":
       return c.value === undefined ? c.default : c.value;
@@ -123,7 +125,8 @@ function getDefaultControlValue(c: Exclude<Control, IEntity | ITypography | IIma
   }
 }
 
-export const deriveEntityChildId = (entity: string, indx: number, childIndx: number): string => `${entity}.${VALUE_ROWS_CONST}.${indx}.${childIndx}`;
+export const deriveEntityChildId = (entity: string, indx: number, childIndx: number): string =>
+  `${entity}.${VALUE_ROWS_CONST}.${indx}.${childIndx}`;
 
 // export const deriveEntityDefaultsForRow = (template: IEntity[ 'template' ]): IEntityData[ 'valueRows' ][ 0 ] => (
 //   template.map(
@@ -188,16 +191,22 @@ export function deriveDefaultControlsValue(controls: RenderableControl[]): Contr
 }
 
 export const getEntityValueIndx = (path: string): number => {
-  const [maybeBracketedIndx] = path.match(/\[\d+\]$/)!;
+  const match = path.match(/\[\d+\]$/);
+  if (!match) return -1;
+  const [maybeBracketedIndx] = match;
 
-  return Number(maybeBracketedIndx!.slice(1, -1));
+  return Number(maybeBracketedIndx?.slice(1, -1));
 };
 
 export function normalizeControlValue(c: Control, v: any): typeof v {
   if (c.type === "text") {
     const typedV = v as null | string | undefined;
 
-    return typedV === null || typedV === undefined ? null : c.variation !== undefined && c.variation.type === "number" ? Number(typedV) : typedV;
+    return typedV === null || typedV === undefined
+      ? null
+      : c.variation !== undefined && c.variation.type === "number"
+        ? Number(typedV)
+        : typedV;
   }
 
   if (c.type === "boolean") {
@@ -207,7 +216,10 @@ export function normalizeControlValue(c: Control, v: any): typeof v {
   return v === undefined ? null : v;
 }
 
-export function normalizeControlsValue(controlsValue: ControlsValue, controls: Screen["controls"]): typeof controlsValue {
+export function normalizeControlsValue(
+  controlsValue: ControlsValue,
+  controls: Screen["controls"],
+): typeof controlsValue {
   return controls.reduce<ControlsValue>((a, control) => {
     if (control.type === "typography" || control.type === "file" || control.type === "image") {
       return a;

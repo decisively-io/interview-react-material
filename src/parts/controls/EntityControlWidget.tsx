@@ -134,7 +134,9 @@ const EntityControlWidget = Object.assign(
                   if ("attribute" in value || value.type === "entity") {
                     const parent = control;
                     const key = (value as any).attribute || (value as any).entity;
-                    const path = [parentPath ? `${parentPath}.${index}` : `${entity}.${index}`, key].filter((v) => v !== undefined).join(".");
+                    const path = [parentPath ? `${parentPath}.${index}` : `${entity}.${index}`, key]
+                      .filter((v) => v !== undefined)
+                      .join(".");
                     const childControl = {
                       ...value,
                       attribute: path,

@@ -51,7 +51,11 @@ const OptionsControlWidget = Object.assign(
       [options],
     );
 
-    const isBool = React.useMemo(() => options?.length === 2 && options.some((it) => it.value === false) && options.some((it) => it.value === true), [options]);
+    const isBool = React.useMemo(
+      () =>
+        options?.length === 2 && options.some((it) => it.value === false) && options.some((it) => it.value === true),
+      [options],
+    );
 
     const Label = deriveLabel(control);
 
@@ -66,7 +70,9 @@ const OptionsControlWidget = Object.assign(
         render={({ field: { value, onChange }, fieldState: { error } }) => {
           const typedValue = value as OptionsControl["value"];
 
-          const setValueRadio: NonNullable<React.ComponentProps<typeof RadioGroup>["onChange"]> = ({ currentTarget: { value } }) => {
+          const setValueRadio: NonNullable<React.ComponentProps<typeof RadioGroup>["onChange"]> = ({
+            currentTarget: { value },
+          }) => {
             const nextValue = isBool ? value === "true" : value;
 
             if (chOnScreenData) {

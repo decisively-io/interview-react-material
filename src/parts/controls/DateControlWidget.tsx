@@ -15,7 +15,8 @@ import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import FormControl from "./FormControl";
 
-export interface DateControlWidgetProps extends ControlWidgetProps<DateControl & { manualControlsCssOverride?: string }> {
+export interface DateControlWidgetProps
+  extends ControlWidgetProps<DateControl & { manualControlsCssOverride?: string }> {
   datePickerProps?: Partial<DatePickerProps>;
   className?: string;
 }
@@ -90,7 +91,12 @@ const DateControlWidget = Object.assign(
                       label: deriveLabel(control),
                       error: error !== undefined,
                       helperText: error?.message || " ",
-                      value: typeof typedValue === "string" ? (typedValue === "now" ? new Date() : new Date(typedValue)) : null,
+                      value:
+                        typeof typedValue === "string"
+                          ? typedValue === "now"
+                            ? new Date()
+                            : new Date(typedValue)
+                          : null,
                       onChange: handleChange,
                       format: DATE_FORMAT,
                       maxDate: resolvedMax && new Date(resolvedMax),

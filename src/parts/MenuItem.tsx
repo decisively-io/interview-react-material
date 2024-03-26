@@ -61,7 +61,13 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
 
   const open = React.useMemo(() => containsCurrentStep(step), [step]);
 
-  const itemClassName = clsx(clssItem._, classNameForLevel, open && clssItem["&.active"], step.complete && !step.skipped && clssItem["&.complete"], step.visited && clssItem["&.visited"]);
+  const itemClassName = clsx(
+    clssItem._,
+    classNameForLevel,
+    open && clssItem["&.active"],
+    step.complete && !step.skipped && clssItem["&.complete"],
+    step.visited && clssItem["&.visited"],
+  );
   const textClassName = clsx(clssItem[">text"], classNameForLevel);
   const collapseClassName = clsx(MENU_CLASS_NAMES[">list"][">collapse"], classNameForLevel);
   const listClassName = clsx(MENU_CLASS_NAMES[">list"]._, getClassNameForLevel(level + 1));

@@ -8,7 +8,9 @@ import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWid
 import DateTimeControlWidget, { type DateTimeControlWidgetProps } from "./DateTimeControlWidget";
 import EntityControlWidget, { type EntityControlWidgetProps } from "./EntityControlWidget";
 import ImageControlWidget, { type ImageControlWidgetProps } from "./ImageControlWidget";
-import NumberOfInstancesControlWidget, { type NumberOfInstancesControlWidgetProps } from "./NumberOfInstancesControlWidget";
+import NumberOfInstancesControlWidget, {
+  type NumberOfInstancesControlWidgetProps,
+} from "./NumberOfInstancesControlWidget";
 import OptionsControlWidget, { type OptionsControlWidgetProps } from "./OptionsControlWidget";
 import RenderControl from "./RenderControl";
 import SwitchContainerWidget, { type SwitchContainerControlWidgetProps } from "./SwitchContainerWidget";

@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import React, { useContext } from "react";
-import { FormProvider, UseFormProps, useForm } from "react-hook-form";
+import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
 import { generateValidator } from "../util/Validation";
@@ -106,8 +106,8 @@ export interface ContentRootProps {
   isSubmitting?: boolean;
   chOnScreenData?: (data: AttributeData) => void;
   onDataChange?: (data: AttributeData, name: string | undefined) => void;
-  rhfMode?: UseFormProps[ 'mode' ];
-  rhfReValidateMode?: UseFormProps[ 'reValidateMode' ];
+  rhfMode?: UseFormProps["mode"];
+  rhfReValidateMode?: UseFormProps["reValidateMode"];
 }
 
 const Content = Object.assign(
@@ -123,9 +123,9 @@ const Content = Object.assign(
       isSubmitting = false,
       controlComponents,
       chOnScreenData,
-      onDataChange ,
-      rhfMode = 'onSubmit',
-      rhfReValidateMode = 'onChange',
+      onDataChange,
+      rhfMode = "onSubmit",
+      rhfReValidateMode = "onChange",
     } = props;
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);

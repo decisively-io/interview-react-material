@@ -1,7 +1,7 @@
 import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
 import type { AttributeData, Session } from "@decisively-io/interview-sdk";
 import React from "react";
-import type { UseFormReturn, UseFormProps } from "react-hook-form";
+import type { UseFormProps, UseFormReturn } from "react-hook-form";
 import { boolean } from "yup";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { normalizeControlsValue } from "../util";
@@ -30,8 +30,8 @@ export interface RootProps {
   externalLoading?: boolean;
   ThemedComp?: ThemedComponent;
   controlComponents?: ControlComponents;
-  rhfMode?: ContentProps[ 'rhfMode' ];
-  rhfReValidateMode?: ContentProps[ 'rhfReValidateMode' ];
+  rhfMode?: ContentProps["rhfMode"];
+  rhfReValidateMode?: ContentProps["rhfReValidateMode"];
 }
 
 export interface RootState {
@@ -175,7 +175,7 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
   render() {
     const {
       state: { backDisabled, isSubmitting, nextDisabled, isRequestPending },
-      props: { controlComponents, onDataChange, ThemedComp, rhfMode, rhfReValidateMode, },
+      props: { controlComponents, onDataChange, ThemedComp, rhfMode, rhfReValidateMode },
       __setCurrentStep,
       __back,
       __next,
@@ -206,7 +206,12 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
       controlComponents,
       next: lastStep ? undefined : __next,
       back: __back,
-      backDisabled: isRequestPending || backDisabled || this.isFirstStep(steps, screen?.id) || externalLoading || session.externalLoading,
+      backDisabled:
+        isRequestPending ||
+        backDisabled ||
+        this.isFirstStep(steps, screen?.id) ||
+        externalLoading ||
+        session.externalLoading,
       isSubmitting: isSubmitting || externalLoading || session.externalLoading,
       nextDisabled: isRequestPending || nextDisabled || externalLoading || lastStep || session.externalLoading,
       chOnScreenData: this.session.chOnScreenData,

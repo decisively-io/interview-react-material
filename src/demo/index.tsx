@@ -27,7 +27,7 @@ const rootDiv = (() => {
       #${APP_DIV_ID}>div{ background-color: white;}
       </style>`,
   );
-  return document.getElementById(APP_DIV_ID)!;
+  return document.getElementById(APP_DIV_ID);
 })();
 
 FontNS.add(document);
