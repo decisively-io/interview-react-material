@@ -3,6 +3,7 @@ import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 
 import type { Control } from "@decisively-io/interview-sdk";
 import BooleanControlWidget, { type BooleanControlWidgetProps } from "./BooleanControlWidget";
+import CertaintyContainerWidget, { type CertaintyContainerControlWidgetProps } from "./CertaintyContainerWidget";
 import CurrencyControlWidget, { type CurrencyControlWidgetProps } from "./CurrencyControlWidget";
 import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWidget";
 import DateTimeControlWidget, { type DateTimeControlWidgetProps } from "./DateTimeControlWidget";
@@ -37,6 +38,7 @@ export interface ControlComponents {
   Time?: React.ComponentType<TimeControlWidgetProps>;
   Typography?: React.ComponentType<TypographyControlWidgetProps>;
   SwitchContainer?: React.ComponentType<SwitchContainerControlWidgetProps>;
+  CertaintyContainer?: React.ComponentType<CertaintyContainerControlWidgetProps>;
 }
 
 const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
@@ -52,6 +54,7 @@ const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
   Time: TimeControlWidget,
   Typography: TypographyControlWidget,
   SwitchContainer: SwitchContainerWidget,
+  CertaintyContainer: CertaintyContainerWidget,
 };
 
 const Controls = React.memo((props: ControlsProps) => {

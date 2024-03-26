@@ -233,6 +233,14 @@ export function normalizeControlsValue(
       return a;
     }
 
+    if (control.type === "certainty_container") {
+      const controls = control.branch === "certain" ? control.certain : control.uncertain;
+      if (controls) {
+        return Object.assign(a, normalizeControlsValue(controlsValue, controls));
+      }
+      return a;
+    }
+
     if (control.type === "number_of_instances") {
       a[control.entity] = normalizeControlValue(control, controlsValue[control.entity]);
       return a;

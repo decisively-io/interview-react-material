@@ -1,3 +1,7 @@
+## 0.3.6
+
+- add dynamic certainty container support
+
 ## 0.3.0
 
 - **BREAKING** pass in session instance directly
