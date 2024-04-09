@@ -1,4 +1,4 @@
-import { AttributeData, type Option, type OptionsControl } from "@decisively-io/interview-sdk";
+import { AttributeValues, type Option, type OptionsControl } from "@decisively-io/interview-sdk";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";

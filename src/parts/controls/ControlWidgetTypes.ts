@@ -1,6 +1,6 @@
-import type { AttributeData, Control } from "@decisively-io/interview-sdk";
+import type { AttributeValues, Control } from "@decisively-io/interview-sdk";
 
 export interface ControlWidgetProps<C extends Control> {
   control: C;
-  chOnScreenData?: (data: AttributeData) => void;
+  chOnScreenData?: (data: AttributeValues) => void;
 }

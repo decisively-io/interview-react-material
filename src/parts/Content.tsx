@@ -1,5 +1,5 @@
 import DateFnsUtils from "@date-io/date-fns";
-import type { AttributeData, ControlsValue, Screen, Step } from "@decisively-io/interview-sdk";
+import type { AttributeValues, ControlsValue, Screen, Step } from "@decisively-io/interview-sdk";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -104,8 +104,8 @@ export interface ContentRootProps {
   backDisabled?: boolean;
   nextDisabled?: boolean;
   isSubmitting?: boolean;
-  chOnScreenData?: (data: AttributeData) => void;
-  onDataChange?: (data: AttributeData, name: string | undefined) => void;
+  chOnScreenData?: (data: AttributeValues) => void;
+  onDataChange?: (data: AttributeValues, name: string | undefined) => void;
   rhfMode?: UseFormProps["mode"];
   rhfReValidateMode?: UseFormProps["reValidateMode"];
 }

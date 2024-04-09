@@ -1,4 +1,4 @@
-import { AttributeData, DATE_FORMAT, type DateControl } from "@decisively-io/interview-sdk";
+import { AttributeValues, DATE_FORMAT, type DateControl } from "@decisively-io/interview-sdk";
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import TextField, { type TextFieldProps } from "@material-ui/core/TextField";

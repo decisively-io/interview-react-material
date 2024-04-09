@@ -1,5 +1,5 @@
 import {
-  AttributeData,
+  AttributeValues,
   DATE_TIME_FORMAT_12,
   DATE_TIME_FORMAT_24,
   type DateTimeControl,

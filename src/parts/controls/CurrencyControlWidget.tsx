@@ -1,4 +1,4 @@
-import { AttributeData, type CurrencyControl } from "@decisively-io/interview-sdk";
+import { AttributeValues, type CurrencyControl } from "@decisively-io/interview-sdk";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";

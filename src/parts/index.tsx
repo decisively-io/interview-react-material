@@ -1,5 +1,5 @@
 import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
-import type { AttributeData, Session } from "@decisively-io/interview-sdk";
+import type { AttributeValues, Session } from "@decisively-io/interview-sdk";
 import React from "react";
 import type { UseFormProps, UseFormReturn } from "react-hook-form";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
@@ -24,7 +24,7 @@ export const defaultStep: Session["steps"][0] = {
 
 export interface RootProps {
   session: SessionInstance;
-  onDataChange?: (data: AttributeData, name: string | undefined) => void;
+  onDataChange?: (data: AttributeValues, name: string | undefined) => void;
   // flag to indicate that the component is loading data from an external source
   externalLoading?: boolean;
   ThemedComp?: ThemedComponent;

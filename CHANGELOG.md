@@ -1,3 +1,7 @@
+## 0.4.0
+
+- bump `@decisively-io/interview-sdk` to `0.8.0`
+
 ## 0.3.6
 
 - add dynamic certainty container support

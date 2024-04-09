@@ -1,4 +1,4 @@
-import type { AttributeData, BooleanControl } from "@decisively-io/interview-sdk";
+import type { AttributeValues, BooleanControl } from "@decisively-io/interview-sdk";
 import Checkbox, { type CheckboxProps } from "@material-ui/core/Checkbox";
 import FormControlLabel, { type FormControlLabelProps } from "@material-ui/core/FormControlLabel";
 import React from "react";
@@ -13,7 +13,7 @@ import FormControl from "./FormControl";
 export interface BooleanControlWidgetProps extends ControlWidgetProps<BooleanControl> {
   checkboxProps?: CheckboxProps;
   formControlLabelProps?: FormControlLabelProps;
-  chOnScreenData?: (data: AttributeData) => void;
+  chOnScreenData?: (data: AttributeValues) => void;
   className?: string;
 }
 

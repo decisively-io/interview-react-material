@@ -1,4 +1,4 @@
-import { AttributeData, type TextControl } from "@decisively-io/interview-sdk";
+import { AttributeValues, type TextControl } from "@decisively-io/interview-sdk";
 import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
