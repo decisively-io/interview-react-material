@@ -82,14 +82,16 @@ const EntityControlWidget = Object.assign(
       name: parentPath || entity,
     });
 
-    const appendHanler = React.useCallback(
-      () =>
-        append({
-          "@id": uuid(),
-          ...deriveDefaultControlsValue(template),
-        }),
-      [append, template],
-    );
+    const canAddMore = control.max === undefined || control.max > fields.length;
+
+    const appendHanler = React.useCallback(() => {
+      if (canAddMore === false) return;
+
+      append({
+        "@id": uuid(),
+        ...deriveDefaultControlsValue(template),
+      });
+    }, [append, template, canAddMore]);
 
     return (
       <Wrap className={className}>
@@ -185,9 +187,11 @@ const EntityControlWidget = Object.assign(
           ))}
         </Grid>
 
-        <IconButton onClick={appendHanler}>
-          <AddIcon />
-        </IconButton>
+        {canAddMore === false ? null : (
+          <IconButton onClick={appendHanler}>
+            <AddIcon />
+          </IconButton>
+        )}
       </Wrap>
     );
   }),

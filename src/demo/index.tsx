@@ -109,7 +109,8 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Parts.Root
-        getSession={getSession}
+        // getSession={getSession}
+        session={dataSession as any}
         next={next}
         back={back}
         navigateTo={navigateTo}
