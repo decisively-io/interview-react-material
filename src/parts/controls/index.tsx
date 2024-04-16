@@ -64,26 +64,6 @@ const Controls = React.memo((props: ControlsProps) => {
 
   const { controls, controlComponents, chOnScreenData } = props;
 
-  // for repeat containers, it helps us to mark the first row
-  let lastId = "";
-  let lastType = "";
-  (controls || "").forEach((control, idx) => {
-
-    const currId = control.id ?? "";
-    const currType = control.type ?? "";
-
-    const hasChanged = lastId !== currId || lastType !== currType;
-
-    if (currType === "repeating_container" && (control as any).display === "table") {
-      if (hasChanged) {
-        (control as any).isFirst = true;
-      }
-    }
-
-    lastId = currId;
-    lastType = currType;
-  });
-
   // console.log("====> screen.controls.upper", controls);
 
   const resolvedControlComponents = {
