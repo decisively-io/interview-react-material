@@ -94,6 +94,7 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
       className={clsx(
         className,
         {table: isTable},
+        {borderless: isTable && !((control as any).showBorders ?? false)}
       )}
       style={colLayout}
       data-id={control}

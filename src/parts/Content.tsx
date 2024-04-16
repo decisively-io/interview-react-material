@@ -122,6 +122,22 @@ export const StyledControlsWrap = styled.div`
         border-right: 1px solid grey;
       }
     }
+
+    &.borderless {
+      // remove all borders from the table
+      > * {
+        border: none;
+      }
+      > *:last-child {
+        border-right: none;
+      }
+      .header {
+        border: none;
+        &.last {
+          border: none;
+        }
+      }
+    }
   }
 `;
 
