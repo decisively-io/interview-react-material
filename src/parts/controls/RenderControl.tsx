@@ -17,6 +17,7 @@ const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "fi
   typography: "Typography",
   switch_container: "SwitchContainer",
   certainty_container: "CertaintyContainer",
+  repeating_container: "RepeatingContainer",
 };
 
 export interface RenderControlProps extends ControlWidgetProps<Control> {

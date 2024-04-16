@@ -18,6 +18,7 @@ import SwitchContainerWidget, { type SwitchContainerControlWidgetProps } from ".
 import TextControlWidget, { type TextControlWidgetProps } from "./TextControlWidget";
 import TimeControlWidget, { type TimeControlWidgetProps } from "./TimeControlWidget";
 import TypographyControlWidget, { type TypographyControlWidgetProps } from "./TypographyControlWidget";
+import RepeatingContainerWidget, { type RepeatingContainerControlWidgetProps } from "./RepeatingContainerWidget";
 
 export interface ControlsProps {
   controls: Control[];
@@ -39,6 +40,7 @@ export interface ControlComponents {
   Typography?: React.ComponentType<TypographyControlWidgetProps>;
   SwitchContainer?: React.ComponentType<SwitchContainerControlWidgetProps>;
   CertaintyContainer?: React.ComponentType<CertaintyContainerControlWidgetProps>;
+  RepeatingContainer?: React.ComponentType<RepeatingContainerControlWidgetProps>;
 }
 
 const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
@@ -55,10 +57,34 @@ const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
   Typography: TypographyControlWidget,
   SwitchContainer: SwitchContainerWidget,
   CertaintyContainer: CertaintyContainerWidget,
+  RepeatingContainer: RepeatingContainerWidget,
 };
 
 const Controls = React.memo((props: ControlsProps) => {
+
   const { controls, controlComponents, chOnScreenData } = props;
+
+  // for repeat containers, it helps us to mark the first row
+  let lastId = "";
+  let lastType = "";
+  (controls || "").forEach((control, idx) => {
+
+    const currId = control.id ?? "";
+    const currType = control.type ?? "";
+
+    const hasChanged = lastId !== currId || lastType !== currType;
+
+    if (currType === "repeating_container" && (control as any).display === "table") {
+      if (hasChanged) {
+        (control as any).isFirst = true;
+      }
+    }
+
+    lastId = currId;
+    lastType = currType;
+  });
+
+  // console.log("====> screen.controls.upper", controls);
 
   const resolvedControlComponents = {
     ...DEFAULT_CONTROL_COMPONENTS,
