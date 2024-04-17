@@ -123,6 +123,12 @@ export const StyledControlsWrap = styled.div`
       }
     }
 
+    &.top_border {
+      > * {
+        border-top: 1px solid grey;
+      }
+    }
+
     &.borderless {
       // remove all borders from the table
       > * {
