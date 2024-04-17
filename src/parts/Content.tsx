@@ -92,6 +92,59 @@ export const StyledControlsWrap = styled.div`
   > *:not(:last-child) {
     margin-bottom: 1rem;
   }
+
+  &.table {
+    display: grid;
+    // grid-template-columns: repeat(X, 1fr); // we'll fill this in dynamically
+    margin-bottom: 0;
+
+    > * {
+      border: 1px solid grey;
+      border-top: none;
+      border-right: none;
+      margin-bottom: 0;
+      padding: 0.25rem;
+
+      word-break: break-word;
+      white-space: pre-wrap;
+      hyphens: auto;
+    }
+    > *:last-child {
+      border-right: 1px solid grey;
+    }
+    .header {
+      font-weight: 600;
+      border: 1px solid grey;
+      border-top: 1px solid grey;
+      border-right: none;
+      // background-color: #f5f5f5;
+      &.last {
+        border-right: 1px solid grey;
+      }
+    }
+
+    &.top_border {
+      > * {
+        border-top: 1px solid grey;
+      }
+    }
+
+    &.borderless {
+      // remove all borders from the table
+      > * {
+        border: none;
+      }
+      > *:last-child {
+        border-right: none;
+      }
+      .header {
+        border: none;
+        &.last {
+          border: none;
+        }
+      }
+    }
+  }
 `;
 
 export interface ContentRootProps {
@@ -191,7 +244,7 @@ const Content = Object.assign(
                 <StyledControlsWrap className={formClss[">controls"]}>
                   <Controls
                     controlComponents={controlComponents}
-                    controls={screen.controls}
+                    controls={screen?.controls || []}
                     chOnScreenData={chOnScreenData}
                   />
                 </StyledControlsWrap>
