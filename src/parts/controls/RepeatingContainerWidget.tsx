@@ -22,9 +22,9 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
   const isTable = control?.display === "table";
   // if `isTable`; each container is one row - so the number of elements in control.controls is the number of columns
   const countCols = isTable ? controls?.length : null;
-  const isFirstRow = (control as any)?.isFirst ?? false;
-  const showHeaders = (control as any)?.showHeaders ?? true;
-  const showBorders = (control as any)?.showBorders ?? true;
+  const isFirstRow = control?.isFirst ?? false;
+  const showHeaders = control?.showHeaders ?? true;
+  const showBorders = control?.showBorders ?? true;
   const colHeaders = (() => {
 
     if (!isTable) {
