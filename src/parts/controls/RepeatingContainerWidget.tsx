@@ -1,14 +1,11 @@
-import type {
-  RenderableRepeatingContainerControl,
-} from "@decisively-io/interview-sdk";
+import type { RenderableRepeatingContainerControl } from "@decisively-io/interview-sdk";
+import clsx from "clsx";
 import React from "react";
 import { StyledControlsWrap } from "../Content";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
 import type { ControlComponents } from "./index";
-import clsx from "clsx";
-
 
 export interface RepeatingContainerControlWidgetProps extends ControlWidgetProps<RenderableRepeatingContainerControl> {
   controlComponents: ControlComponents;
@@ -16,7 +13,6 @@ export interface RepeatingContainerControlWidgetProps extends ControlWidgetProps
 }
 
 const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerControlWidgetProps) => {
-
   const { control, chOnScreenData, controlComponents, className } = props;
   const { controls } = control;
   const isTable = control?.display === "table";
@@ -26,42 +22,37 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
   const showHeaders = control?.showHeaders ?? true;
   const showBorders = control?.showBorders ?? true;
   const colHeaders = (() => {
-
     if (!isTable) {
-      return (null);
+      return null;
     }
 
-    return (controls?.map((ctrl) => (ctrl as any).columnHeading || ""));
+    return controls?.map((ctrl) => (ctrl as any).columnHeading || "");
   })();
   const colWidths = (() => {
-
     if (!isTable) {
-      return (null);
+      return null;
     }
 
-    return (controls?.map((ctrl) => (ctrl as any).columnWidth || ""));
+    return controls?.map((ctrl) => (ctrl as any).columnWidth || "");
   })();
 
-
   const colLayout = (() => {
-
     if (!isTable) {
-      return ({});
+      return {};
     }
 
     const widthsDefined = colWidths?.some((width) => !!(width || "")) ?? false;
 
     if (widthsDefined) {
-      const widths = colWidths?.map((width) => width ? `${width}px` : "1fr");
-      return ({
+      const widths = colWidths?.map((width) => (width ? `${width}px` : "1fr"));
+      return {
         gridTemplateColumns: widths?.join(" "),
-      });
+      };
     }
 
-    return ({
+    return {
       gridTemplateColumns: `repeat(${countCols}, 1fr)`,
-    });
-
+    };
   })();
 
   // console.log("====> repeating_container control", control);
@@ -69,35 +60,36 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
   // -- rendering
 
   const renderHeaderRow = () => {
-
-    if (!isFirstRow || !isTable || !colHeaders || colHeaders.length === 0 || colHeaders.length !== countCols || !showHeaders) {
-      return (null);
+    if (
+      !isFirstRow ||
+      !isTable ||
+      !colHeaders ||
+      colHeaders.length === 0 ||
+      colHeaders.length !== countCols ||
+      !showHeaders
+    ) {
+      return null;
     }
 
-    return (
-      colHeaders.map((header, index) => {
-        return (
-          <div
-            key={index}
-            className={clsx(
-              "header",
-              {last: index === colHeaders.length - 1},
-            )}
-          >
-            {header}
-          </div>
-        );
-      })
-    );
+    return colHeaders.map((header, index) => {
+      return (
+        <div
+          key={index}
+          className={clsx("header", { last: index === colHeaders.length - 1 })}
+        >
+          {header}
+        </div>
+      );
+    });
   };
 
   return (
     <StyledControlsWrap
       className={clsx(
         className,
-        {table: isTable},
-        {borderless: isTable && !showBorders},
-        {top_border: isTable && showBorders && !showHeaders && isFirstRow},
+        { table: isTable },
+        { borderless: isTable && !showBorders },
+        { top_border: isTable && showBorders && !showHeaders && isFirstRow },
       )}
       style={colLayout}
       data-id={control}

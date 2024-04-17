@@ -14,11 +14,11 @@ import NumberOfInstancesControlWidget, {
 } from "./NumberOfInstancesControlWidget";
 import OptionsControlWidget, { type OptionsControlWidgetProps } from "./OptionsControlWidget";
 import RenderControl from "./RenderControl";
+import RepeatingContainerWidget, { type RepeatingContainerControlWidgetProps } from "./RepeatingContainerWidget";
 import SwitchContainerWidget, { type SwitchContainerControlWidgetProps } from "./SwitchContainerWidget";
 import TextControlWidget, { type TextControlWidgetProps } from "./TextControlWidget";
 import TimeControlWidget, { type TimeControlWidgetProps } from "./TimeControlWidget";
 import TypographyControlWidget, { type TypographyControlWidgetProps } from "./TypographyControlWidget";
-import RepeatingContainerWidget, { type RepeatingContainerControlWidgetProps } from "./RepeatingContainerWidget";
 
 export interface ControlsProps {
   controls: Control[];
@@ -61,7 +61,6 @@ const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
 };
 
 const Controls = React.memo((props: ControlsProps) => {
-
   const { controls, controlComponents, chOnScreenData } = props;
 
   // console.log("====> screen.controls.upper", controls);
