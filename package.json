@@ -1,6 +1,6 @@
 {
   "name": "@decisively-io/interview-react-material",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -32,6 +32,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.6.3",
     "@imminently/standard": "^0.2.1",
+    "@jest/globals": "29.7.0",
     "@parcel/resolver-default": "^2.11.0",
     "@swc/jest": "^0.2.31",
     "@types/jest": "^29.5.11",

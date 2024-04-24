@@ -183,6 +183,12 @@ export function deriveDefaultControlsValue(controls: RenderableControl[]): Contr
         break;
       }
 
+      case "repeating_container": {
+        Object.assign(result, deriveDefaultControlsValue(control.controls));
+
+        break;
+      }
+
       default:
         break;
     }
