@@ -102,7 +102,7 @@ export const StyledControlsWrap = styled.div`
       border: 1px solid grey;
       border-top: none;
       border-right: none;
-      margin-bottom: 0;
+      margin-bottom: 0 !important;
       padding: 0.25rem;
 
       word-break: break-word;
@@ -143,6 +143,10 @@ export const StyledControlsWrap = styled.div`
           border: none;
         }
       }
+    }
+
+    &.last_row {
+      margin-bottom: 1rem;
     }
   }
 `;
