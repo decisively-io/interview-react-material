@@ -18,7 +18,7 @@ const SwitchContainerControlWidget = React.memo((props: SwitchContainerControlWi
   const { control, chOnScreenData, controlComponents, className } = props;
   const { outcome_true, outcome_false, branch, condition, attribute } = control;
 
-  const controls = branch === "true" ? outcome_true : outcome_false;
+  const controls = (branch === "true" ? outcome_true : outcome_false) || [];
 
   /**
    * we want to override child controls in case we are rendering\
