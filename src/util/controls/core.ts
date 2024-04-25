@@ -276,6 +276,17 @@ export function normalizeControlsValue(
             return innerA;
           }
 
+          if (t.type === "switch_container") {
+            const controls = (t.branch === "false" ? t.outcome_false : t.outcome_true) || [];
+            for (const child of controls) {
+              if (child.attribute === undefined) continue;
+
+              innerA[child.attribute] = normalizeControlValue(child, singleEntity[child.attribute]);
+            }
+
+            return innerA;
+          }
+
           if (t.attribute) {
             innerA[t.attribute] = normalizeControlValue(t, singleEntity[t.attribute]);
           }
