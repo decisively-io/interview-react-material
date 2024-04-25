@@ -91,7 +91,7 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
         { table: isTable },
         { borderless: isTable && !showBorders },
         { top_border: isTable && showBorders && !showHeaders && isFirstRow },
-        { last_row: isLastRow},
+        { last_row: isLastRow },
       )}
       style={colLayout}
       data-id={control}
