@@ -19,6 +19,7 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
   // if `isTable`; each container is one row - so the number of elements in control.controls is the number of columns
   const countCols = isTable ? controls?.length : null;
   const isFirstRow = control?.isFirst ?? false;
+  const isLastRow = (control as any)?.isLast ?? false;
   const showHeaders = control?.showHeaders ?? true;
   const showBorders = control?.showBorders ?? true;
   const colHeaders = (() => {
@@ -90,6 +91,7 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
         { table: isTable },
         { borderless: isTable && !showBorders },
         { top_border: isTable && showBorders && !showHeaders && isFirstRow },
+        { last_row: isLastRow},
       )}
       style={colLayout}
       data-id={control}
