@@ -49,10 +49,6 @@ const BooleanControlWidget = Object.assign(
             >
               {({ Explanation }) => (
                 <>
-                  <Explanation
-                    visible={control.showExplanation}
-                    style={{ marginTop: 4 }}
-                  />
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -64,6 +60,12 @@ const BooleanControlWidget = Object.assign(
                     }
                     label={deriveLabel(control)}
                   />
+
+                  <Explanation
+                    visible={control.showExplanation}
+                    style={{ marginTop: 4 }}
+                  />
+
                   <ControlError>{error?.message || " "}</ControlError>
                 </>
               )}

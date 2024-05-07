@@ -121,7 +121,6 @@ const DateControlWidget = Object.assign(
                       alignItems="center"
                       $cssOverride={manualControlsCssOverride}
                     >
-                      <Explanation visible={control.showExplanation} />
                       <Box flexGrow="1">
                         {value === undefined || value === null ? (
                           <TextField
@@ -143,6 +142,8 @@ const DateControlWidget = Object.assign(
                           <CalendarTodayIcon />
                         </IconButton>
                       </Box>
+
+                      <Explanation visible={control.showExplanation} />
                     </ManualControlsWrap>
                   )}
                 </>

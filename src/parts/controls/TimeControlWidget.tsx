@@ -63,7 +63,6 @@ const TimeControlWidget = Object.assign(
             >
               {({ Explanation }) => (
                 <>
-                  <Explanation visible={control.showExplanation} />
                   <StyledTimePicker
                     label={deriveLabel(control)}
                     error={error !== undefined}
@@ -78,6 +77,8 @@ const TimeControlWidget = Object.assign(
                     disabled={control.disabled}
                     {...timePickerProps}
                   />
+
+                  <Explanation visible={control.showExplanation} />
                 </>
               )}
             </FormControl>

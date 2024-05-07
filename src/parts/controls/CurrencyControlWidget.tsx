@@ -69,7 +69,6 @@ const CurrencyControlWidget = Object.assign(
             >
               {({ Explanation }) => (
                 <>
-                  <Explanation visible={control.showExplanation} />
                   {withFallback({
                     onChange: handleChange,
                     label: deriveLabel(control),
@@ -81,6 +80,8 @@ const CurrencyControlWidget = Object.assign(
                     disabled: control.disabled,
                     ...textFieldProps,
                   })}
+
+                  <Explanation visible={control.showExplanation} />
                 </>
               )}
             </FormControl>

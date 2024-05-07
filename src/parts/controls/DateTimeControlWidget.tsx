@@ -23,7 +23,7 @@ export interface DateTimeControlWidgetProps extends ControlWidgetProps<DateTimeC
 
 const StyledDateTimePicker = styled(DateTimePicker)`
   flex: 1;
-)`;
+`;
 
 const DateTimeControlWidget = Object.assign(
   React.memo((props: DateTimeControlWidgetProps) => {
@@ -67,8 +67,6 @@ const DateTimeControlWidget = Object.assign(
             >
               {({ Explanation }) => (
                 <>
-                  <Explanation visible={control.showExplanation} />
-
                   <StyledDateTimePicker
                     label={deriveLabel(control)}
                     error={error !== undefined}
@@ -84,6 +82,8 @@ const DateTimeControlWidget = Object.assign(
                     disabled={control.disabled}
                     {...dateTimePickerProps}
                   />
+
+                  <Explanation visible={control.showExplanation} />
                 </>
               )}
             </FormControl>

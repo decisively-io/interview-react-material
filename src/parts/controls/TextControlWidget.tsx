@@ -75,7 +75,6 @@ const TextControlWidget = Object.assign(
             >
               {({ Explanation }) => (
                 <>
-                  <Explanation visible={control.showExplanation} />
                   {withFallback({
                     onChange: handleChange,
                     label: deriveLabel(control),
@@ -88,6 +87,8 @@ const TextControlWidget = Object.assign(
                     ...maybeWithMulti,
                     ...textFieldProps,
                   })}
+
+                  <Explanation visible={control.showExplanation} />
                 </>
               )}
             </FormControl>

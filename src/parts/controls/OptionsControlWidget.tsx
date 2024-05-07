@@ -91,7 +91,6 @@ const OptionsControlWidget = Object.assign(
             >
               {({ Explanation }) => (
                 <>
-                  <Explanation visible={control.showExplanation} />
                   {asRadio ? (
                     <>
                       <FormLabel
@@ -171,6 +170,8 @@ const OptionsControlWidget = Object.assign(
                       {...autocompleteProps}
                     />
                   )}
+
+                  <Explanation visible={control.showExplanation} />
                 </>
               )}
             </FormControl>
