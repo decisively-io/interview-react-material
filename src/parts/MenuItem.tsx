@@ -9,6 +9,13 @@ import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
 import React from "react";
 import { DISPLAY_NAME_PREFIX, MENU_CLASS_NAMES, SHOW_UNVISITED_MENU_ITEMS } from "../Constants";
+import { makeStyles } from "../parts/themes/types";
+
+const useStyles = makeStyles((theme) => ({
+  nestedItem: {
+    paddingLeft: "3rem !important",
+  },
+}));
 
 export interface MenuItemProps {
   step: Step;
@@ -35,7 +42,9 @@ export const isStepVisibleInMenu = (step: Step): boolean => {
 const clssItem = MENU_CLASS_NAMES[">list"][">item"];
 
 const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
+  const classes = useStyles();
   const { step, status, level = 0, avatarContent, onClick } = props;
+  const isNestedSubstep = level > 0;
 
   const clickOnItem = React.useCallback(() => {
     // do nothing if current step
@@ -85,7 +94,10 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
         onClick={clickOnItem}
         disabled={disableNavigation}
         button
-        className={itemClassName}
+        className={clsx(
+          itemClassName,
+          {[classes.nestedItem]: isNestedSubstep},
+        )}
       >
         {AvatarJSX}
         <ListItemText
