@@ -92,6 +92,10 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
       this.setState({ renderAt: nextProps.session?.renderAt });
       return true;
     }
+    // or if the theme has changed
+    if (nextProps.ThemedComp !== this.props.ThemedComp) {
+      return true;
+    }
     return false;
   }
 
