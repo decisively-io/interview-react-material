@@ -14,6 +14,6 @@ In the the target project
 
 ```bash
 # link and install the package
-yarn link @decisively-io/interview-react-material
-yarn add @decisively-io/interview-react-material
+yarn link "@decisively-io/interview-react-material"
+yarn add "@decisively-io/interview-react-material"
 ```

@@ -19,3 +19,6 @@ export type ThemedCompProps = ThemedComponentProps;
  */
 export type ThemedCompT = React.ComponentType<ThemedCompProps>;
 export type ThemedComponent = React.ComponentType<ThemedCompProps>;
+
+// re-export mui styling components
+export { makeStyles } from "@material-ui/core";
