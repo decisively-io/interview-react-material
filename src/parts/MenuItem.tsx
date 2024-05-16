@@ -94,10 +94,7 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
         onClick={clickOnItem}
         disabled={disableNavigation}
         button
-        className={clsx(
-          itemClassName,
-          {[classes.nestedItem]: isNestedSubstep},
-        )}
+        className={clsx(itemClassName, { [classes.nestedItem]: isNestedSubstep })}
       >
         {AvatarJSX}
         <ListItemText

@@ -147,11 +147,7 @@ const Menu = Object.assign(
 
     return (
       <Wrap className={className}>
-        <List
-          className={`${MENU_CLASS_NAMES[">list"]._} ${getClassNameForLevel(0)}`}
-        >
-          {menuItems}
-        </List>
+        <List className={`${MENU_CLASS_NAMES[">list"]._} ${getClassNameForLevel(0)}`}>{menuItems}</List>
 
         {progress && (
           <div className={MENU_CLASS_NAMES[">progress"]._}>
