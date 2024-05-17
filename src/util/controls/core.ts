@@ -26,12 +26,17 @@ export interface IEntityData {
 
 // ===================================================================================
 
-const __innerDeriveLabel = (label?: string, desiredLength?: number, required?: true) => {
+export const deriveLabel = (control: RenderableControl): string | undefined => {
+  const { label, required, labelLength } = control as {
+    label?: string;
+    required?: boolean;
+    labelLength?: number;
+  };
   if (label === undefined) return undefined;
 
   const labelWithRequired = label + (required ? " *" : "");
 
-  if (desiredLength === undefined || labelWithRequired.length <= desiredLength) {
+  if (labelLength === undefined || labelWithRequired.length <= labelLength) {
     return labelWithRequired;
   }
 
@@ -46,27 +51,8 @@ const __innerDeriveLabel = (label?: string, desiredLength?: number, required?: t
    * be of length (labelLength - 1) (if we just neeed to account\
    * for ellipsis) or (labelLength - 2) (ellipsis + *)
    */
-  const finalLength = desiredLength - (required ? 2 : 1);
+  const finalLength = labelLength - (required ? 2 : 1);
   return `${labelWithRequired.slice(0, finalLength)}…${required ? "*" : ""}`;
-};
-
-export const deriveLabel = (c: RenderableControl): string | undefined => {
-  switch (c.type) {
-    case "boolean":
-    case "currency":
-    case "date":
-    case "datetime":
-    case "options":
-    case "text":
-    case "time":
-    case "file":
-      return __innerDeriveLabel(c.label, c.labelLength, c.required);
-    case "entity":
-    case "number_of_instances":
-      return __innerDeriveLabel(c.label, c.labelLength);
-    default:
-      return undefined;
-  }
 };
 
 // ===================================================================================

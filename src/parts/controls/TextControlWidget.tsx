@@ -1,13 +1,12 @@
-import { AttributeValues, type TextControl } from "@decisively-io/interview-sdk";
+import { type TextControl } from "@decisively-io/interview-sdk";
 import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { deriveLabel } from "../../util/controls";
 import { InterviewContext } from "../index";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import FormControl from "./FormControl";
+import { useFormControl } from "../../Hooks";
 
 export interface TextControlWidgetProps extends ControlWidgetProps<TextControl> {
   textFieldProps?: TextFieldProps;
@@ -52,6 +51,11 @@ const TextControlWidget = Object.assign(
             type: variation.type,
           };
 
+    const { renderWrapper, label, renderExplanation } = useFormControl({
+      control,
+      wrapperClassName: className,
+    });
+
     return (
       <Controller
         control={formControl}
@@ -67,31 +71,23 @@ const TextControlWidget = Object.assign(
             onChange(e.target.value);
           };
 
-          return (
-            <FormControl
-              explanation={explanation}
-              title={control.label}
-              className={className}
-            >
-              {({ Explanation }) => (
-                <>
-                  {withFallback({
-                    onChange: handleChange,
-                    label: deriveLabel(control),
-                    value: typedValue,
-                    variant: "outlined",
-                    error: error !== undefined,
-                    helperText: error?.message || " ",
-                    disabled: control.disabled,
-                    ...maybeWithType,
-                    ...maybeWithMulti,
-                    ...textFieldProps,
-                  })}
+          return renderWrapper(
+            <>
+              {withFallback({
+                onChange: handleChange,
+                label: label,
+                value: typedValue,
+                variant: "outlined",
+                error: error !== undefined,
+                helperText: error?.message || " ",
+                disabled: control.disabled,
+                ...maybeWithType,
+                ...maybeWithMulti,
+                ...textFieldProps,
+              })}
 
-                  <Explanation visible={control.showExplanation} />
-                </>
-              )}
-            </FormControl>
+              {renderExplanation()}
+            </>,
           );
         }}
       />
