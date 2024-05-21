@@ -1,12 +1,10 @@
-import { type TextControl } from "@decisively-io/interview-sdk";
+import type { TextControl } from "@decisively-io/interview-sdk";
 import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { InterviewContext } from "../index";
+import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import { useFormControl } from "../../Hooks";
 
 export interface TextControlWidgetProps extends ControlWidgetProps<TextControl> {
   textFieldProps?: TextFieldProps;
@@ -32,10 +30,7 @@ const withFallback = (arg: IParam) =>
 const TextControlWidget = Object.assign(
   React.memo((props: TextControlWidgetProps) => {
     const { control, textFieldProps, chOnScreenData, className } = props;
-    const { control: formControl } = useFormContext();
-    const { attribute, multi, variation } = control;
-    const interview = React.useContext(InterviewContext);
-    const explanation = interview?.getExplanation(attribute);
+    const { multi, variation } = control;
 
     const maybeWithMulti: Pick<IParam, "multiline" | "maxRows" | "minRows"> =
       multi === undefined
@@ -51,33 +46,27 @@ const TextControlWidget = Object.assign(
             type: variation.type,
           };
 
-    const { renderWrapper, label, renderExplanation } = useFormControl({
+    const FormControl = useFormControl({
       control,
-      wrapperClassName: className,
+      className: className,
+      onScreenDataChange: chOnScreenData,
     });
 
     return (
-      <Controller
-        control={formControl}
-        name={attribute}
-        render={({ field: { onChange, value }, fieldState: { error } }) => {
-          const typedValue = value as TextControl["value"];
-
+      <FormControl>
+        {({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (chOnScreenData) {
-              chOnScreenData({ [attribute]: e.target.value });
-            }
-
             onChange(e.target.value);
           };
 
-          return renderWrapper(
+          return (
             <>
               {withFallback({
                 onChange: handleChange,
-                label: label,
-                value: typedValue,
+                label: inlineLabel,
+                value: value,
                 variant: "outlined",
+                id: forId,
                 error: error !== undefined,
                 helperText: error?.message || " ",
                 disabled: control.disabled,
@@ -87,10 +76,10 @@ const TextControlWidget = Object.assign(
               })}
 
               {renderExplanation()}
-            </>,
+            </>
           );
         }}
-      />
+      </FormControl>
     );
   }),
   {

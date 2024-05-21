@@ -1,14 +1,14 @@
-import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
 import type { AttributeValues, Session } from "@decisively-io/interview-sdk";
+import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
 import React from "react";
-import type { UseFormProps, UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
-import type { ThemedCompProps, ThemedCompT, ThemedComponent } from "./themes/types";
+import type { ThemedCompProps, ThemedComponent } from "./themes/types";
 
 export const defaultStep: Session["steps"][0] = {
   complete: false,

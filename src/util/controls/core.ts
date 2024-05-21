@@ -26,34 +26,7 @@ export interface IEntityData {
 
 // ===================================================================================
 
-export const deriveLabel = (control: RenderableControl): string | undefined => {
-  const { label, required, labelLength } = control as {
-    label?: string;
-    required?: boolean;
-    labelLength?: number;
-  };
-  if (label === undefined) return undefined;
-
-  const labelWithRequired = label + (required ? " *" : "");
-
-  if (labelLength === undefined || labelWithRequired.length <= labelLength) {
-    return labelWithRequired;
-  }
-
-  /**
-   * so, we know that our labelWithRequired is too long\
-   * and we need to cut it, but persist the required suffix \
-   * star, if that is present\
-   * e.g. 'some really long label with required *' -> 'some really long lab…*'\
-   *      'some really long label' -> 'some really long lab…'\
-   *
-   * to do that we need to slice labelWithRequired either to \
-   * be of length (labelLength - 1) (if we just neeed to account\
-   * for ellipsis) or (labelLength - 2) (ellipsis + *)
-   */
-  const finalLength = labelLength - (required ? 2 : 1);
-  return `${labelWithRequired.slice(0, finalLength)}…${required ? "*" : ""}`;
-};
+export const MAX_INLINE_LABEL_LENGTH = 32;
 
 // ===================================================================================
 

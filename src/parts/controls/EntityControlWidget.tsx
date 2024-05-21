@@ -9,7 +9,7 @@ import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { v4 as uuid } from "uuid";
-import { deriveDefaultControlsValue, deriveLabel } from "../../util/controls";
+import { deriveDefaultControlsValue } from "../../util/controls";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
@@ -95,12 +95,14 @@ const EntityControlWidget = Object.assign(
 
     return (
       <Wrap className={className}>
-        <Typography
-          className={classes[">h"]}
-          variant="h5"
-        >
-          {deriveLabel(control)}
-        </Typography>
+        {control.label ? (
+          <Typography
+            className={classes[">h"]}
+            variant="h5"
+          >
+            {control.label}
+          </Typography>
+        ) : null}
 
         <Grid
           className={fieldGrpsClss._}
