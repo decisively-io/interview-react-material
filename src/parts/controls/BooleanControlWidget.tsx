@@ -2,13 +2,10 @@ import type { AttributeValues, BooleanControl } from "@decisively-io/interview-s
 import Checkbox, { type CheckboxProps } from "@material-ui/core/Checkbox";
 import FormControlLabel, { type FormControlLabelProps } from "@material-ui/core/FormControlLabel";
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
-import { deriveLabel } from "../../util/controls";
-import { InterviewContext } from "../index";
+import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import FormControl from "./FormControl";
 
 export interface BooleanControlWidgetProps extends ControlWidgetProps<BooleanControl> {
   checkboxProps?: CheckboxProps;
@@ -20,59 +17,48 @@ export interface BooleanControlWidgetProps extends ControlWidgetProps<BooleanCon
 const BooleanControlWidget = Object.assign(
   React.memo((props: BooleanControlWidgetProps) => {
     const { control, checkboxProps, chOnScreenData, className } = props;
-    const { control: formControl } = useFormContext();
-    const { attribute } = control;
-    const interview = React.useContext(InterviewContext);
-    const explanation = interview?.getExplanation(attribute);
+
+    const FormControl = useFormControl({
+      control,
+      className: className,
+      onScreenDataChange: chOnScreenData,
+    });
 
     return (
-      <Controller
-        control={formControl}
-        name={attribute}
-        render={({ field: { onChange, value }, fieldState: { error } }) => {
+      <FormControl>
+        {({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
           const typedValue = value as BooleanControl["value"];
 
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (chOnScreenData) {
-              chOnScreenData({ [attribute]: e.target.checked });
-            }
-
             onChange(e.target.checked);
           };
 
           return (
-            <FormControl
-              explanation={explanation}
-              title={control.label}
-              disabled={control.disabled}
-              className={className}
-            >
-              {({ Explanation }) => (
-                <>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        onChange={handleChange}
-                        checked={typedValue || false}
-                        indeterminate={typeof typedValue !== "boolean"}
-                        {...checkboxProps}
-                      />
-                    }
-                    label={deriveLabel(control)}
+            <>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={handleChange}
+                    id={forId}
+                    checked={typedValue || false}
+                    indeterminate={typeof typedValue !== "boolean"}
+                    {...checkboxProps}
                   />
+                }
+                htmlFor={forId}
+                label={inlineLabel}
+                {...props.formControlLabelProps}
+              />
 
-                  <Explanation
-                    visible={control.showExplanation}
-                    style={{ marginTop: 4 }}
-                  />
+              {renderExplanation({
+                style: { marginTop: 4 },
+              })}
 
-                  <ControlError>{error?.message || " "}</ControlError>
-                </>
-              )}
-            </FormControl>
+              <ControlError>{error?.message || " "}</ControlError>
+            </>
           );
         }}
-      />
+      </FormControl>
     );
   }),
   {

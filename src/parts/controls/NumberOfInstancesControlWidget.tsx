@@ -1,12 +1,10 @@
 import type { NumberOfInstancesControl } from "@decisively-io/interview-sdk";
 import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { deriveLabel } from "../../util/controls";
+import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import FormControl from "./FormControl";
 
 export interface NumberOfInstancesControlWidgetProps extends ControlWidgetProps<NumberOfInstancesControl> {
   textFieldProps?: Omit<TextFieldProps, "value">;
@@ -34,35 +32,30 @@ const withFallback = (arg: IArg) =>
 const NumberOfInstancesControlWidget = Object.assign(
   React.memo((props: NumberOfInstancesControlWidgetProps) => {
     const { control, textFieldProps, className } = props;
-    const { control: formControl } = useFormContext();
-    const { entity } = control;
+
+    const FormControl = useFormControl({
+      control,
+      className: className,
+    });
 
     return (
-      <Controller
-        control={formControl}
-        name={entity}
-        render={({ field: { onChange, value }, fieldState: { error } }) => {
+      <FormControl>
+        {({ onChange, forId, value, error, inlineLabel }) => {
           const typedValue = value as Value;
 
-          return (
-            <FormControl
-              title={control.label}
-              className={className}
-            >
-              {withFallback({
-                onChange,
-                label: deriveLabel(control),
-                value: typedValue,
-                variant: "outlined",
-                error: error !== undefined,
-                helperText: error?.message || " ",
-                disabled: control.disabled,
-                ...textFieldProps,
-              })}
-            </FormControl>
-          );
+          return withFallback({
+            onChange,
+            label: inlineLabel,
+            value: typedValue,
+            variant: "outlined",
+            id: forId,
+            error: error !== undefined,
+            helperText: error?.message || " ",
+            disabled: control.disabled,
+            ...textFieldProps,
+          });
         }}
-      />
+      </FormControl>
     );
   }),
   {

@@ -1,4 +1,4 @@
-import { AttributeValues, DATE_FORMAT, type DateControl } from "@decisively-io/interview-sdk";
+import { DATE_FORMAT, type DateControl } from "@decisively-io/interview-sdk";
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
@@ -7,13 +7,11 @@ import { DatePicker, type DatePickerProps } from "@material-ui/pickers";
 import type { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { format } from "date-fns";
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { deriveLabel, resolveNowInDate } from "../../util/controls";
-import { InterviewContext } from "../index";
+import { useFormControl } from "../../FormControl";
+import { resolveNowInDate } from "../../util/controls";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import FormControl from "./FormControl";
 
 export interface DateControlWidgetProps
   extends ControlWidgetProps<DateControl & { manualControlsCssOverride?: string }> {
@@ -32,7 +30,6 @@ const StyledDatePicker = styled(DatePicker)`
 const DateControlWidget = Object.assign(
   React.memo((props: DateControlWidgetProps) => {
     const { control, chOnScreenData, datePickerProps, className } = props;
-    const { control: formControl } = useFormContext();
     const { attribute, max, min, allowManual, manualControlsCssOverride, disabled } = control;
     const datePickerRef = React.useRef<HTMLInputElement>(null);
 
@@ -52,17 +49,18 @@ const DateControlWidget = Object.assign(
 
     const emulateClickOnPicker = React.useCallback(() => datePickerRef.current?.click(), []);
 
-    const interview = React.useContext(InterviewContext);
-    const explanation = interview?.getExplanation(attribute);
+    const FormControl = useFormControl({
+      control,
+      className: className,
+      onScreenDataChange: chOnScreenData,
+    });
 
     return (
-      <Controller
-        control={formControl}
-        name={attribute}
-        render={({ field: { value, onChange }, fieldState: { error } }) => {
+      <FormControl>
+        {({ onChange, forId, value, error, inlineLabel, renderExplanation }) => {
           const typedValue = value as DateControl["value"];
           const manualInputProps: TextFieldProps = {
-            label: deriveLabel(control),
+            label: inlineLabel,
             error: error !== undefined,
             helperText: error?.message || " ",
             value,
@@ -74,84 +72,69 @@ const DateControlWidget = Object.assign(
 
           const handleChange = (d: MaterialUiPickersDate) => {
             if (d) {
-              if (chOnScreenData) {
-                chOnScreenData({ [attribute]: format(d, DATE_FORMAT) });
-              }
-
               onChange(format(d, DATE_FORMAT));
             }
           };
 
           return (
-            <FormControl
-              explanation={explanation}
-              title={control.label}
-              className={className}
-            >
-              {({ Explanation }) => (
-                <>
-                  <StyledDatePicker
-                    {...{
-                      label: deriveLabel(control),
-                      error: error !== undefined,
-                      helperText: error?.message || " ",
-                      value:
-                        typeof typedValue === "string"
-                          ? typedValue === "now"
-                            ? new Date()
-                            : new Date(typedValue)
-                          : null,
-                      onChange: handleChange,
-                      format: DATE_FORMAT,
-                      maxDate: resolvedMax && new Date(resolvedMax),
-                      minDate: resolvedMin && new Date(resolvedMin),
-                      inputVariant: "outlined",
-                      disabled: control.disabled,
-                      style: datePickerStyle,
-                      inputRef: datePickerRef,
-                      ...datePickerProps,
-                    }}
-                  />
+            <>
+              <StyledDatePicker
+                {...{
+                  label: inlineLabel,
+                  error: error !== undefined,
+                  helperText: error?.message || " ",
+                  value:
+                    typeof typedValue === "string" ? (typedValue === "now" ? new Date() : new Date(typedValue)) : null,
+                  onChange: handleChange,
+                  format: DATE_FORMAT,
+                  id: forId,
+                  maxDate: resolvedMax && new Date(resolvedMax),
+                  minDate: resolvedMin && new Date(resolvedMin),
+                  inputVariant: "outlined",
+                  disabled: control.disabled,
+                  style: datePickerStyle,
+                  inputRef: datePickerRef,
+                  ...datePickerProps,
+                }}
+              />
 
-                  {Boolean(allowManual) === false ? null : (
-                    <ManualControlsWrap
-                      display="flex"
-                      width="100%"
-                      gridGap="0.5rem"
-                      alignItems="center"
-                      $cssOverride={manualControlsCssOverride}
-                    >
-                      <Box flexGrow="1">
-                        {value === undefined || value === null ? (
-                          <TextField
-                            {...{
-                              ...manualInputProps,
-                              value: "",
-                            }}
-                          />
-                        ) : (
-                          <TextField {...manualInputProps} />
-                        )}
-                      </Box>
+              {Boolean(allowManual) === false ? null : (
+                <ManualControlsWrap
+                  display="flex"
+                  width="100%"
+                  gridGap="0.5rem"
+                  alignItems="center"
+                  $cssOverride={manualControlsCssOverride}
+                >
+                  <Box flexGrow="1">
+                    {value === undefined || value === null ? (
+                      <TextField
+                        {...{
+                          ...manualInputProps,
+                          value: "",
+                        }}
+                      />
+                    ) : (
+                      <TextField {...manualInputProps} />
+                    )}
+                  </Box>
 
-                      <Box
-                        flexShrink="0"
-                        marginTop="-1.25rem"
-                      >
-                        <IconButton onClick={emulateClickOnPicker}>
-                          <CalendarTodayIcon />
-                        </IconButton>
-                      </Box>
+                  <Box
+                    flexShrink="0"
+                    marginTop="-1.25rem"
+                  >
+                    <IconButton onClick={emulateClickOnPicker}>
+                      <CalendarTodayIcon />
+                    </IconButton>
+                  </Box>
 
-                      <Explanation visible={control.showExplanation} />
-                    </ManualControlsWrap>
-                  )}
-                </>
+                  {renderExplanation()}
+                </ManualControlsWrap>
               )}
-            </FormControl>
+            </>
           );
         }}
-      />
+      </FormControl>
     );
   }),
   {

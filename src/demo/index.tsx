@@ -1,5 +1,5 @@
-import { type SessionInstance, transformResponse } from "@decisively-io/interview-sdk";
 import type { ResponseData, Session } from "@decisively-io/interview-sdk";
+import { type SessionInstance, transformResponse } from "@decisively-io/interview-sdk";
 import { CssBaseline, ThemeProvider, createTheme } from "@material-ui/core";
 import React, { useCallback, useState } from "react";
 import ReactDom from "react-dom";

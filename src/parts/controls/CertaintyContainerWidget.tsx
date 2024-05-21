@@ -1,11 +1,8 @@
 import type { RenderableCertaintyContainerControl } from "@decisively-io/interview-sdk";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { LOADING_ANIMATION_CSS } from "../../Constants";
+import React from "react";
 import { StyledControlsWrap } from "../Content";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import EntityControlWidget from "./EntityControlWidget";
 import RenderControl from "./RenderControl";
 import type { ControlComponents } from "./index";
 

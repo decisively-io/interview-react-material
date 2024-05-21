@@ -1,14 +1,11 @@
-import { AttributeValues, type CurrencyControl } from "@decisively-io/interview-sdk";
+import type { CurrencyControl } from "@decisively-io/interview-sdk";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { deriveLabel } from "../../util/controls";
-import { InterviewContext } from "../index";
+import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import FormControl from "./FormControl";
 
 export interface CurrencyControlWidgetProps extends ControlWidgetProps<CurrencyControl> {
   textFieldProps?: Omit<TextFieldProps, "value">;
@@ -33,7 +30,6 @@ const withFallback = (arg: IArg) =>
 const CurrencyControlWidget = Object.assign(
   React.memo((props: CurrencyControlWidgetProps) => {
     const { control, textFieldProps, chOnScreenData, className } = props;
-    const { control: formControl } = useFormContext();
     const { attribute, symbol } = control;
 
     const InputProps = React.useMemo(
@@ -43,51 +39,41 @@ const CurrencyControlWidget = Object.assign(
       [symbol],
     );
 
-    const interview = React.useContext(InterviewContext);
-    const explanation = interview?.getExplanation(attribute);
+    const FormControl = useFormControl({
+      control,
+      className: className,
+      onScreenDataChange: chOnScreenData,
+    });
 
     return (
-      <Controller
-        control={formControl}
-        name={attribute}
-        render={({ field: { value, onChange }, fieldState: { error } }) => {
+      <FormControl>
+        {({ onChange, forId, value, error, inlineLabel, renderExplanation }) => {
           const typedValue = value as CurrencyControl["value"];
 
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (chOnScreenData) {
-              chOnScreenData({ [attribute]: e.target.value });
-            }
-
             onChange(e.target.value);
           };
 
           return (
-            <FormControl
-              explanation={explanation}
-              title={control.label}
-              className={className}
-            >
-              {({ Explanation }) => (
-                <>
-                  {withFallback({
-                    onChange: handleChange,
-                    label: deriveLabel(control),
-                    value: typedValue,
-                    variant: "outlined",
-                    error: error !== undefined,
-                    helperText: error?.message || " ",
-                    InputProps,
-                    disabled: control.disabled,
-                    ...textFieldProps,
-                  })}
+            <>
+              {withFallback({
+                onChange: handleChange,
+                label: inlineLabel,
+                value: typedValue,
+                variant: "outlined",
+                id: forId,
+                error: error !== undefined,
+                helperText: error?.message || " ",
+                InputProps,
+                disabled: control.disabled,
+                ...textFieldProps,
+              })}
 
-                  <Explanation visible={control.showExplanation} />
-                </>
-              )}
-            </FormControl>
+              {renderExplanation()}
+            </>
           );
         }}
-      />
+      </FormControl>
     );
   }),
   {

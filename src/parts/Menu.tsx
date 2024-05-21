@@ -2,7 +2,6 @@ import type { Progress, Session, Step } from "@decisively-io/interview-sdk";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
-import clsx from "clsx";
 import { addSeconds, formatDistanceToNow } from "date-fns";
 import React from "react";
 import styled from "styled-components";

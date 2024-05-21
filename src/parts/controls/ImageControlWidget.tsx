@@ -1,8 +1,8 @@
 import type { ImageControl } from "@decisively-io/interview-sdk";
 import React from "react";
+import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import FormControl from "./FormControl";
 
 export interface ImageControlWidgetProps extends ControlWidgetProps<ImageControl> {}
 
@@ -11,13 +11,21 @@ export const ImageControlWidget = Object.assign(
     const { control } = props;
     const { data } = control;
 
+    const FormControl = useFormControl({
+      control,
+    });
+
     return (
       <FormControl>
-        <img
-          src={data}
-          alt=""
-          width="100px"
-        />
+        {({ onChange }) => {
+          return (
+            <img
+              src={data}
+              alt=""
+              width="100px"
+            />
+          );
+        }}
       </FormControl>
     );
   }),
