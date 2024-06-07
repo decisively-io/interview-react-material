@@ -211,6 +211,14 @@ export function normalizeControlsValue(
       return a;
     }
 
+    if (control.type === "repeating_container") {
+      const controls = control.controls;
+      if (controls) {
+        return Object.assign(a, normalizeControlsValue(controlsValue, controls));
+      }
+      return a;
+    }
+
     if (control.type === "entity") {
       const controlValue = controlsValue[control.entity];
       if (!controlValue || !Array.isArray(controlValue)) {
