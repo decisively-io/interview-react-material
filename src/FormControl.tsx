@@ -112,67 +112,64 @@ export const useFormControl = (options: FormControlOptions): React.ComponentType
   const inlineLabel = shouldInlineLabel ? label : undefined;
   const [forId] = useState(() => Math.random().toString(36).substring(7));
 
-  return useMemo(
-    () => (props) => {
-      if (!attribute) {
-        return null;
-      }
-      const { children } = props;
+  return (props) => {
+    if (!attribute) {
+      return null;
+    }
+    const { children } = props;
 
-      return (
-        <Controller
-          control={formControl}
-          name={attribute}
-          render={({ field: { name, value, onChange }, fieldState: { error } }) => {
-            const handleChange = (value: any) => {
-              if (attribute) {
-                onScreenDataChange?.({ [attribute]: value });
+    return (
+      <Controller
+        control={formControl}
+        name={attribute}
+        render={({ field: { name, value, onChange }, fieldState: { error } }) => {
+          const handleChange = (value: any) => {
+            if (attribute) {
+              onScreenDataChange?.({ [attribute]: value });
 
-                onChange(value);
-              }
-            };
+              onChange(value);
+            }
+          };
 
-            return (
-              <>
-                {label && !shouldInlineLabel ? (
-                  <div>
-                    <Typography
-                      color={error ? "error" : "initial"}
-                      htmlFor={forId}
-                      component="label"
-                    >
-                      {label}
-                    </Typography>
-                  </div>
-                ) : null}
-                <FormControlStyled
-                  data-control={control.type}
-                  onFocus={() => {
-                    setFocus(true);
-                  }}
-                  className={className}
-                  // @ts-ignore
-                  title={control.label}
-                  // @ts-ignore
-                  disabled={control.disabled}
-                  onBlur={() => setFocus(false)}
-                  fullWidth
-                >
-                  {children({
-                    onChange: handleChange,
-                    value,
-                    forId,
-                    error,
-                    inlineLabel,
-                    renderExplanation,
-                  })}
-                </FormControlStyled>
-              </>
-            );
-          }}
-        />
-      );
-    },
-    [],
-  );
+          return (
+            <>
+              {label && !shouldInlineLabel ? (
+                <div>
+                  <Typography
+                    color={error ? "error" : "initial"}
+                    htmlFor={forId}
+                    component="label"
+                  >
+                    {label}
+                  </Typography>
+                </div>
+              ) : null}
+              <FormControlStyled
+                data-control={control.type}
+                onFocus={() => {
+                  setFocus(true);
+                }}
+                className={className}
+                // @ts-ignore
+                title={control.label}
+                // @ts-ignore
+                disabled={control.disabled}
+                onBlur={() => setFocus(false)}
+                fullWidth
+              >
+                {children({
+                  onChange: handleChange,
+                  value,
+                  forId,
+                  error,
+                  inlineLabel,
+                  renderExplanation,
+                })}
+              </FormControlStyled>
+            </>
+          );
+        }}
+      />
+    );
+  };
 };
