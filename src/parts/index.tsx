@@ -212,7 +212,9 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
       backDisabled:
         isRequestPending ||
         backDisabled ||
-        this.isFirstStep(steps, screen?.id) ||
+        // https://app.clickup.com/t/86b0a7pdr - We don't want this behavior
+        // trust backend, backDisabled instead
+        // this.isFirstStep(steps, screen?.id) ||
         externalLoading ||
         session.externalLoading,
       isSubmitting: isSubmitting || externalLoading || session.externalLoading,
