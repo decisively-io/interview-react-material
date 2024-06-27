@@ -30,8 +30,8 @@
   },
   "homepage": "https://github.com/decisively-io/interview-react-material#readme",
   "devDependencies": {
-    "@biomejs/biome": "^1.6.3",
-    "@imminently/standard": "^0.2.1",
+    "@biomejs/biome": "^1.8.2",
+    "@imminently/standard": "^0.2.3",
     "@jest/globals": "29.7.0",
     "@parcel/resolver-default": "^2.11.0",
     "@swc/jest": "^0.2.31",
