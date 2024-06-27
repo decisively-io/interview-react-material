@@ -33,30 +33,25 @@ const NumberOfInstancesControlWidget = Object.assign(
   React.memo((props: NumberOfInstancesControlWidgetProps) => {
     const { control, textFieldProps, className } = props;
 
-    const FormControl = useFormControl({
+    return useFormControl({
       control,
       className: className,
+      render: ({ onChange, forId, value, error, inlineLabel }) => {
+        const typedValue = value as Value;
+
+        return withFallback({
+          onChange,
+          label: inlineLabel,
+          value: typedValue,
+          variant: "outlined",
+          id: forId,
+          error: error !== undefined,
+          helperText: error?.message || " ",
+          disabled: control.disabled,
+          ...textFieldProps,
+        });
+      },
     });
-
-    return (
-      <FormControl>
-        {({ onChange, forId, value, error, inlineLabel }) => {
-          const typedValue = value as Value;
-
-          return withFallback({
-            onChange,
-            label: inlineLabel,
-            value: typedValue,
-            variant: "outlined",
-            id: forId,
-            error: error !== undefined,
-            helperText: error?.message || " ",
-            disabled: control.disabled,
-            ...textFieldProps,
-          });
-        }}
-      </FormControl>
-    );
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/NumberOfInstancesControlWidget`,

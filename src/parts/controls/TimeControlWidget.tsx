@@ -31,42 +31,37 @@ const TimeControlWidget = Object.assign(
       uiTimeFormat = uiTimeFormat.replace(":ss", "");
     }
 
-    const FormControl = useFormControl({
+    return useFormControl({
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
+      render: ({ onChange, value, error, forId, inlineLabel, renderExplanation }) => {
+        const typedValue = value as TimeControl["value"];
+        const compValue = typeof typedValue === "string" ? new Date(`1970-01-01T${value}`) : null;
+
+        return (
+          <>
+            <StyledTimePicker
+              label={inlineLabel}
+              error={error !== undefined}
+              helperText={error?.message || " "}
+              id={forId}
+              value={compValue}
+              onChange={(value) => onChange(format(value as any, TIME_FORMAT_24))}
+              format={uiTimeFormat}
+              inputVariant="outlined"
+              ampm={Boolean(amPmFormat)}
+              minutesStep={minutes_increment}
+              views={allowSeconds ? allViews : secondLessViews}
+              disabled={control.disabled}
+              {...timePickerProps}
+            />
+
+            {renderExplanation()}
+          </>
+        );
+      },
     });
-
-    return (
-      <FormControl>
-        {({ onChange, value, error, forId, inlineLabel, renderExplanation }) => {
-          const typedValue = value as TimeControl["value"];
-          const compValue = typeof typedValue === "string" ? new Date(`1970-01-01T${value}`) : null;
-
-          return (
-            <>
-              <StyledTimePicker
-                label={inlineLabel}
-                error={error !== undefined}
-                helperText={error?.message || " "}
-                id={forId}
-                value={compValue}
-                onChange={(value) => onChange(format(value as any, TIME_FORMAT_24))}
-                format={uiTimeFormat}
-                inputVariant="outlined"
-                ampm={Boolean(amPmFormat)}
-                minutesStep={minutes_increment}
-                views={allowSeconds ? allViews : secondLessViews}
-                disabled={control.disabled}
-                {...timePickerProps}
-              />
-
-              {renderExplanation()}
-            </>
-          );
-        }}
-      </FormControl>
-    );
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/TimeControlWidget`,

@@ -46,41 +46,36 @@ const TextControlWidget = Object.assign(
             type: variation.type,
           };
 
-    const FormControl = useFormControl({
+    return useFormControl({
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
+      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          onChange(e.target.value);
+        };
+
+        return (
+          <>
+            {withFallback({
+              onChange: handleChange,
+              label: inlineLabel,
+              value: value,
+              variant: "outlined",
+              id: forId,
+              error: error !== undefined,
+              helperText: error?.message || " ",
+              disabled: control.disabled,
+              ...maybeWithType,
+              ...maybeWithMulti,
+              ...textFieldProps,
+            })}
+
+            {renderExplanation()}
+          </>
+        );
+      },
     });
-
-    return (
-      <FormControl>
-        {({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
-          const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(e.target.value);
-          };
-
-          return (
-            <>
-              {withFallback({
-                onChange: handleChange,
-                label: inlineLabel,
-                value: value,
-                variant: "outlined",
-                id: forId,
-                error: error !== undefined,
-                helperText: error?.message || " ",
-                disabled: control.disabled,
-                ...maybeWithType,
-                ...maybeWithMulti,
-                ...textFieldProps,
-              })}
-
-              {renderExplanation()}
-            </>
-          );
-        }}
-      </FormControl>
-    );
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Text`,

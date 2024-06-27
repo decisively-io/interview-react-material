@@ -55,112 +55,107 @@ const OptionsControlWidget = Object.assign(
 
     const finalClsnm = [asRadio ? asRadioClsnm : autocompleteClsnm, className].filter(Boolean).join(" ");
 
-    const FormControl = useFormControl({
+    return useFormControl({
       control,
       className: finalClsnm,
       onScreenDataChange: chOnScreenData,
-    });
+      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
+        const typedValue = value as OptionsControl["value"];
 
-    return (
-      <FormControl>
-        {({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
-          const typedValue = value as OptionsControl["value"];
+        const setValueRadio: NonNullable<React.ComponentProps<typeof RadioGroup>["onChange"]> = ({
+          currentTarget: { value },
+        }) => {
+          const nextValue = isBool ? value === "true" : value;
+          onChange(nextValue);
+        };
 
-          const setValueRadio: NonNullable<React.ComponentProps<typeof RadioGroup>["onChange"]> = ({
-            currentTarget: { value },
-          }) => {
-            const nextValue = isBool ? value === "true" : value;
-            onChange(nextValue);
-          };
-
-          return (
-            <>
-              {asRadio ? (
-                <>
-                  <FormLabel
-                    error={Boolean(error)}
-                    htmlFor={forId}
-                    component="legend"
-                  >
-                    {inlineLabel}
-                  </FormLabel>
-                  <RadioGroup
-                    value={typedValue === undefined || typedValue === null ? null : typedValue}
-                    onChange={setValueRadio}
-                    id={forId}
-                  >
-                    {radioOptionsJSX}
-                  </RadioGroup>
-                  <ControlError>{error?.message || " "}</ControlError>
-                </>
-              ) : (
-                <StyledAutoComplete
-                  value={
-                    typedValue === null || typedValue === undefined
-                      ? null
-                      : options?.find((it) => it.value === typedValue) || {
-                          value: typedValue,
-                          label: String(typedValue),
-                        }
-                  }
-                  onChange={(_, newValue) => {
-                    if (newValue === null) {
-                      onChange(null);
-                      return;
-                    }
-
-                    if (typeof newValue === "string") return;
-
-                    onChange(newValue.value);
-                  }}
-                  filterOptions={(options, params) => {
-                    const filtered = filter(options, params);
-
-                    // Suggest the creation of a new value
-                    if (allow_other && !isBool && params.inputValue !== "") {
-                      filtered.push({
-                        label: `Add "${params.inputValue}"`,
-                        value: params.inputValue,
-                      });
-                    }
-
-                    return filtered;
-                  }}
-                  selectOnFocus
-                  clearOnBlur
-                  handleHomeEndKeys
+        return (
+          <>
+            {asRadio ? (
+              <>
+                <FormLabel
+                  error={Boolean(error)}
+                  htmlFor={forId}
+                  component="legend"
+                >
+                  {inlineLabel}
+                </FormLabel>
+                <RadioGroup
+                  value={typedValue === undefined || typedValue === null ? null : typedValue}
+                  onChange={setValueRadio}
                   id={forId}
-                  options={options || []}
-                  // @ts-ignore
-                  getOptionLabel={(option) => option.label?.toString()}
-                  renderOption={(option) => option.label}
-                  freeSolo={allow_other}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={inlineLabel}
-                      error={Boolean(error)}
-                      helperText={error?.message || " "}
-                      variant="outlined"
-                      {...autocompleteTextFieldProps}
-                      InputProps={{
-                        ...params.InputProps,
-                        ...autocompleteTextFieldProps?.InputProps,
-                        id: forId,
-                      }}
-                    />
-                  )}
-                  disabled={control.disabled}
-                  {...autocompleteProps}
-                />
-              )}
+                >
+                  {radioOptionsJSX}
+                </RadioGroup>
+                <ControlError>{error?.message || " "}</ControlError>
+              </>
+            ) : (
+              <StyledAutoComplete
+                value={
+                  typedValue === null || typedValue === undefined
+                    ? null
+                    : options?.find((it) => it.value === typedValue) || {
+                        value: typedValue,
+                        label: String(typedValue),
+                      }
+                }
+                onChange={(_, newValue) => {
+                  if (newValue === null) {
+                    onChange(null);
+                    return;
+                  }
 
-              {renderExplanation()}
-            </>
-          );
-        }}
-      </FormControl>
-    );
+                  if (typeof newValue === "string") return;
+
+                  onChange(newValue.value);
+                }}
+                filterOptions={(options, params) => {
+                  const filtered = filter(options, params);
+
+                  // Suggest the creation of a new value
+                  if (allow_other && !isBool && params.inputValue !== "") {
+                    filtered.push({
+                      label: `Add "${params.inputValue}"`,
+                      value: params.inputValue,
+                    });
+                  }
+
+                  return filtered;
+                }}
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                id={forId}
+                options={options || []}
+                // @ts-ignore
+                getOptionLabel={(option) => option.label?.toString()}
+                renderOption={(option) => option.label}
+                freeSolo={allow_other}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={inlineLabel}
+                    error={Boolean(error)}
+                    helperText={error?.message || " "}
+                    variant="outlined"
+                    {...autocompleteTextFieldProps}
+                    InputProps={{
+                      ...params.InputProps,
+                      ...autocompleteTextFieldProps?.InputProps,
+                      id: forId,
+                    }}
+                  />
+                )}
+                disabled={control.disabled}
+                {...autocompleteProps}
+              />
+            )}
+
+            {renderExplanation()}
+          </>
+        );
+      },
+    });
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/OptionsControlWidget`,

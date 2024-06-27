@@ -39,42 +39,37 @@ const CurrencyControlWidget = Object.assign(
       [symbol],
     );
 
-    const FormControl = useFormControl({
+    return useFormControl({
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
+      render: ({ onChange, forId, value, error, inlineLabel, renderExplanation }) => {
+        const typedValue = value as CurrencyControl["value"];
+
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          onChange(e.target.value);
+        };
+
+        return (
+          <>
+            {withFallback({
+              onChange: handleChange,
+              label: inlineLabel,
+              value: typedValue,
+              variant: "outlined",
+              id: forId,
+              error: error !== undefined,
+              helperText: error?.message || " ",
+              InputProps,
+              disabled: control.disabled,
+              ...textFieldProps,
+            })}
+
+            {renderExplanation()}
+          </>
+        );
+      },
     });
-
-    return (
-      <FormControl>
-        {({ onChange, forId, value, error, inlineLabel, renderExplanation }) => {
-          const typedValue = value as CurrencyControl["value"];
-
-          const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(e.target.value);
-          };
-
-          return (
-            <>
-              {withFallback({
-                onChange: handleChange,
-                label: inlineLabel,
-                value: typedValue,
-                variant: "outlined",
-                id: forId,
-                error: error !== undefined,
-                helperText: error?.message || " ",
-                InputProps,
-                disabled: control.disabled,
-                ...textFieldProps,
-              })}
-
-              {renderExplanation()}
-            </>
-          );
-        }}
-      </FormControl>
-    );
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Currency`,

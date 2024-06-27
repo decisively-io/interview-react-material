@@ -11,23 +11,18 @@ export const ImageControlWidget = Object.assign(
     const { control } = props;
     const { data } = control;
 
-    const FormControl = useFormControl({
+    return useFormControl({
       control,
+      render: ({ onChange }) => {
+        return (
+          <img
+            src={data}
+            alt=""
+            width="100px"
+          />
+        );
+      },
     });
-
-    return (
-      <FormControl>
-        {({ onChange }) => {
-          return (
-            <img
-              src={data}
-              alt=""
-              width="100px"
-            />
-          );
-        }}
-      </FormControl>
-    );
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Image`,
