@@ -105,7 +105,7 @@ const EntityControlWidget = Object.assign(
 
     const canAddMore = control.max === undefined || control.max > fields.length;
 
-    const appendHanler = React.useCallback(() => {
+    const handleAdd = React.useCallback(() => {
       if (canAddMore === false) return;
 
       append({
@@ -115,6 +115,26 @@ const EntityControlWidget = Object.assign(
       const newValue = formControl._formValues[name];
       chOnScreenData?.(flatten({ [name]: newValue }));
     }, [append, template, canAddMore]);
+
+    const handleDelete = (index: number) => {
+      const oldValue = formControl._formValues[name];
+      remove(index);
+      const newValue = formControl._formValues[name];
+      const flatKeys = Object.keys(flatten({ [name]: oldValue }));
+
+      const update = {
+        ...flatKeys.reduce((update, key) => {
+          update[key] = undefined;
+          return update;
+        }, {} as any),
+        ...flatten({
+          [name]: newValue,
+        }),
+      };
+      console.log(update, oldValue, newValue, flatKeys);
+      // remove instance from data
+      chOnScreenData?.(update);
+    };
 
     return (
       <Wrap className={className}>
@@ -204,7 +224,7 @@ const EntityControlWidget = Object.assign(
                 justifyContent="center"
                 xs={2}
               >
-                <IconButton onClick={() => remove(index)}>
+                <IconButton onClick={() => handleDelete(index)}>
                   <DeleteIcon />
                 </IconButton>
               </Grid>
@@ -213,7 +233,7 @@ const EntityControlWidget = Object.assign(
         </Grid>
 
         {canAddMore === false ? null : (
-          <IconButton onClick={appendHanler}>
+          <IconButton onClick={handleAdd}>
             <AddIcon />
           </IconButton>
         )}
