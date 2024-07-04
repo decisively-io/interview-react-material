@@ -1,4 +1,4 @@
-import type { Control, EntityControl, RenderableControl } from "@decisively-io/interview-sdk";
+import type { Control, RenderableEntityControl } from "@decisively-io/interview-sdk";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
@@ -54,7 +54,27 @@ const Wrap = styled.div`
   }
 `;
 
-export interface EntityControlWidgetProps extends ControlWidgetProps<EntityControl<RenderableControl>> {
+// turn deep object into flat . delimted object
+const flatten = (value: any) => {
+  const result: Record<string, any> = {};
+
+  const recurse = (obj: any, path: string[] = []) => {
+    if (typeof obj !== "object" || obj === null) {
+      result[path.join(".")] = obj;
+      return;
+    }
+
+    for (const [key, value] of Object.entries(obj)) {
+      recurse(value, [...path, key]);
+    }
+  };
+
+  recurse(value);
+
+  return result;
+};
+
+export interface EntityControlWidgetProps extends ControlWidgetProps<RenderableEntityControl> {
   controlComponents: ControlComponents;
   className?: string;
 }
@@ -72,14 +92,15 @@ export interface EntityControlWidgetProps extends ControlWidgetProps<EntityContr
 const EntityControlWidget = Object.assign(
   React.memo((props: EntityControlWidgetProps) => {
     const { control, chOnScreenData, controlComponents, className } = props;
-    const { entity, template } = control;
+    const { entity, instances, template } = control;
     const { control: formControl } = useFormContext();
 
     const parentPath = (control as any).attribute;
+    const name = parentPath ?? entity;
 
     const { fields, append, remove } = useFieldArray({
       control: formControl,
-      name: parentPath || entity,
+      name: name,
     });
 
     const canAddMore = control.max === undefined || control.max > fields.length;
@@ -91,6 +112,8 @@ const EntityControlWidget = Object.assign(
         "@id": uuid(),
         ...deriveDefaultControlsValue(template),
       });
+      const newValue = formControl._formValues[name];
+      chOnScreenData?.(flatten({ [name]: newValue }));
     }, [append, template, canAddMore]);
 
     return (
@@ -109,7 +132,7 @@ const EntityControlWidget = Object.assign(
           container
           direction="column"
         >
-          {fields.map((field, index) => (
+          {instances?.map((field, index) => (
             <Grid
               item
               container
@@ -123,7 +146,7 @@ const EntityControlWidget = Object.assign(
                 item
                 xs={10}
               >
-                {template.map((value, controlIndex) => {
+                {field.controls.map((value, controlIndex) => {
                   if (value.type === "typography") {
                     return (
                       <RenderControl

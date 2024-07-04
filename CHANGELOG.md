@@ -1,3 +1,7 @@
+## 0.5.0
+
+- allow dynamic text in an entity control
+
 ## 0.4.0
 
 - bump `@decisively-io/interview-sdk` to `0.8.0`
