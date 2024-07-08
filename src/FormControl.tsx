@@ -1,4 +1,5 @@
 import type { Control, LabelDisplay } from "@decisively-io/interview-sdk";
+import Box from "@material-ui/core/Box";
 import BaseFormControl from "@material-ui/core/FormControl";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -62,7 +63,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
   const { control: formControl } = useFormContext();
 
   const renderExplanation = (props?: ExplanationProps) => {
-    const { ...otherProps } = props;
+    const otherProps = props;
     // @ts-ignore
     if (!control.showExplanation || !explanation) {
       return null;
@@ -85,6 +86,13 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
       </ExplanationTooltip>
     );
   };
+
+  const sxForSeparateLabel =
+    "sxForSeparateLabel" in control &&
+    typeof control.sxForSeparateLabel === "object" &&
+    control.sxForSeparateLabel !== null
+      ? control.sxForSeparateLabel
+      : undefined;
 
   let label: string | undefined = (control as any).label;
   let shouldInlineLabel = false;
@@ -128,7 +136,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
         return (
           <>
             {label && !shouldInlineLabel ? (
-              <div>
+              <Box sx={sxForSeparateLabel}>
                 <Typography
                   color={error ? "error" : "initial"}
                   htmlFor={forId}
@@ -136,7 +144,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
                 >
                   {label}
                 </Typography>
-              </div>
+              </Box>
             ) : null}
             <FormControlStyled
               data-control={control.type}
