@@ -1,5 +1,11 @@
 import DateFnsUtils from "@date-io/date-fns";
-import type { AttributeValues, ControlsValue, Screen, Step } from "@decisively-io/interview-sdk";
+import {
+  type AttributeValues,
+  type ControlsValue,
+  type Screen,
+  type Step,
+  deriveDefaultControlsValue,
+} from "@decisively-io/interview-sdk";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -9,7 +15,6 @@ import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
 import { generateValidator } from "../util/Validation";
-import { deriveDefaultControlsValue } from "../util/controls";
 import Controls, { type ControlComponents } from "./controls";
 import { InterviewContext } from "./index";
 

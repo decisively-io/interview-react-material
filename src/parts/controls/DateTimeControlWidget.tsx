@@ -1,6 +1,10 @@
-import { DATE_TIME_FORMAT_12, DATE_TIME_FORMAT_24, type DateTimeControl } from "@decisively-io/interview-sdk";
+import {
+  DATE_TIME_FORMAT_12,
+  DATE_TIME_FORMAT_24,
+  type DateTimeControl,
+  formatDate,
+} from "@decisively-io/interview-sdk";
 import { DateTimePicker, type DateTimePickerProps } from "@material-ui/pickers";
-import { format } from "date-fns";
 import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
@@ -41,7 +45,7 @@ const DateTimeControlWidget = Object.assign(
             error={error !== undefined}
             helperText={error?.message || " "}
             value={typeof value === "string" ? new Date(value) : null}
-            onChange={(value) => onChange(format(value as any, DATE_TIME_FORMAT_24))}
+            onChange={(value) => onChange(formatDate(value as any, DATE_TIME_FORMAT_24))}
             format={uiTimeFormat}
             id={forId}
             inputVariant="outlined"

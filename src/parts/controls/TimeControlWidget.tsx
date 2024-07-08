@@ -1,7 +1,5 @@
-import { TIME_FORMAT_12, TIME_FORMAT_24, type TimeControl } from "@decisively-io/interview-sdk";
+import { TIME_FORMAT_12, TIME_FORMAT_24, type TimeControl, formatDate } from "@decisively-io/interview-sdk";
 import { TimePicker, type TimePickerProps } from "@material-ui/pickers";
-import type { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import { format } from "date-fns";
 import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
@@ -47,7 +45,7 @@ const TimeControlWidget = Object.assign(
               helperText={error?.message || " "}
               id={forId}
               value={compValue}
-              onChange={(value) => onChange(format(value as any, TIME_FORMAT_24))}
+              onChange={(value) => onChange(formatDate(value as any, TIME_FORMAT_24))}
               format={uiTimeFormat}
               inputVariant="outlined"
               ampm={Boolean(amPmFormat)}

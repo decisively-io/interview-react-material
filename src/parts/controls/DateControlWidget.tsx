@@ -1,11 +1,10 @@
-import { DATE_FORMAT, type DateControl } from "@decisively-io/interview-sdk";
+import { DATE_FORMAT, type DateControl, formatDate } from "@decisively-io/interview-sdk";
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import { DatePicker, type DatePickerProps } from "@material-ui/pickers";
 import type { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import { format } from "date-fns";
 import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
@@ -68,7 +67,7 @@ const DateControlWidget = Object.assign(
 
         const handleChange = (d: MaterialUiPickersDate) => {
           if (d) {
-            onChange(format(d, DATE_FORMAT));
+            onChange(formatDate(d, DATE_FORMAT));
           }
         };
 

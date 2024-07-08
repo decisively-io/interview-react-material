@@ -1,4 +1,4 @@
-import { deriveDefaultControlsValue } from "../util";
+import { deriveDefaultControlsValue } from "@decisively-io/interview-sdk";
 
 describe("derive default", () => {
   it("1. works with multiple entities", () => {

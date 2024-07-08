@@ -3,7 +3,7 @@ import BaseFormControl from "@material-ui/core/FormControl";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import HelpOutline from "@material-ui/icons/HelpOutline";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Controller, type FieldError, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { InterviewContext } from "./parts";

@@ -8,8 +8,8 @@ import {
   type RenderableControl,
   TIME_FORMAT_12,
   TIME_FORMAT_24,
+  formatDate,
 } from "@decisively-io/interview-sdk";
-import { format } from "date-fns";
 import {
   type Field,
   type FieldError,
@@ -292,8 +292,10 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
     case "time": {
       const { max, min, required, amPmFormat } = c;
 
-      const maxForUi = max && format(deriveDateFromTimeComponent(max), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
-      const minForUi = min && format(deriveDateFromTimeComponent(min), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
+      const maxForUi =
+        max && formatDate(deriveDateFromTimeComponent(max), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
+      const minForUi =
+        min && formatDate(deriveDateFromTimeComponent(min), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
 
       const schema = yup.string().nullable();
 
@@ -329,9 +331,9 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
       const nowLessDateMin = resolveNowInDate(date_min);
 
       const maxTimeForUi =
-        time_max && format(deriveDateFromTimeComponent(time_max), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
+        time_max && formatDate(deriveDateFromTimeComponent(time_max), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
       const minTimeForUi =
-        time_min && format(deriveDateFromTimeComponent(time_min), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
+        time_min && formatDate(deriveDateFromTimeComponent(time_min), amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24);
 
       const schema = yup.string().nullable();
 
@@ -346,7 +348,7 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
           : withRequired.test(
               "withDateMax",
               `Date should be before or equal to ${nowLessDateMax}`,
-              (v) => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) <= nowLessDateMax,
+              (v) => v !== undefined && v !== null && formatDate(new Date(v), DATE_FORMAT) <= nowLessDateMax,
             );
 
       const withDateMin: typeof withDateMax =
@@ -355,7 +357,7 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
           : withDateMax.test(
               "withDateMin",
               `Date should be after or equal to ${nowLessDateMin}`,
-              (v) => v !== undefined && v !== null && format(new Date(v), DATE_FORMAT) >= nowLessDateMin,
+              (v) => v !== undefined && v !== null && formatDate(new Date(v), DATE_FORMAT) >= nowLessDateMin,
             );
 
       const withTimeMax: typeof withDateMin =
@@ -364,7 +366,7 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
           : withDateMin.test(
               "withTimeMax",
               `Time should be before or equal to ${maxTimeForUi}`,
-              (v) => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) <= time_max,
+              (v) => v !== undefined && v !== null && formatDate(new Date(v), TIME_FORMAT_24) <= time_max,
             );
 
       const withTimeMin: typeof withTimeMax =
@@ -373,7 +375,7 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
           : withTimeMax.test(
               "withTimeMin",
               `Time should be after or equal to ${minTimeForUi}`,
-              (v) => v !== undefined && v !== null && format(new Date(v), TIME_FORMAT_24) >= time_min,
+              (v) => v !== undefined && v !== null && formatDate(new Date(v), TIME_FORMAT_24) >= time_min,
             );
 
       return withTimeMin;

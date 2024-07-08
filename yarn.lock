@@ -336,14 +336,7 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@babel/runtime@^7.21.0":
-  version "7.23.6"
-  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.23.6.tgz"
-  integrity sha512-zHd0eUrf5GZoOWVCXp6koAKQTfZV07eit6bGPmJgnZdnSAvvZee6zniW2XMF7Cmc4ISOOnPy3QaSiIJGJkVEDQ==
-  dependencies:
-    regenerator-runtime "^0.14.0"
-
-"@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.0", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.21.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.0", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.7":
   version "7.24.7"
   dependencies:
     regenerator-runtime "^0.14.0"
@@ -460,14 +453,14 @@
   dependencies:
     "@date-io/core" "^1.3.13"
 
-"@decisively-io/interview-sdk@^0.9.2":
-  version "0.9.2"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.9.2/619e3ef76db6c68443399f9507bbdacdbb2496f7"
-  integrity sha512-8fluzlApLhCwgYVTZH798+lCknepr4etRiXHvXylgd90jzUg9fTLAWghP9UE67WiZd54umtvBYZ8IaPVjlOhtQ==
+"@decisively-io/interview-sdk@^0.9.4":
+  version "0.9.4"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.9.4/a47df681c54166c7e473a910bb3b09983208f149"
+  integrity sha512-WfeN7Ts8dJH3TonoyLWAsbSu7Ybq/qA+onyqBNNVQ0s988BybrDkIvG/EpffIXs5X9but4FN4Dd2c5tvvagBPg==
   dependencies:
     "@decisively-io/types-interview" "^0.5.0"
     axios "^0.26.1"
-    date-fns "^3.6.0"
+    date-fns "^2.28.0"
     immer "^9.0.12"
     lodash.debounce "^4.0.8"
     lodash.isempty "^4.4.0"
@@ -1997,11 +1990,6 @@
   dependencies:
     "@types/react" "*"
 
-"@types/uuid@^8.3.4":
-  version "8.3.4"
-  resolved "https://registry.npmjs.org/@types/uuid/-/uuid-8.3.4.tgz"
-  integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
-
 "@types/yargs-parser@*":
   version "21.0.3"
   resolved "https://registry.npmjs.org/@types/yargs-parser/-/yargs-parser-21.0.3.tgz"
@@ -2483,11 +2471,6 @@ date-fns@^2.0.0, date-fns@^2.28.0:
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
   dependencies:
     "@babel/runtime" "^7.21.0"
-
-date-fns@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.npmjs.org/date-fns/-/date-fns-3.6.0.tgz"
-  integrity sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==
 
 debug@^4.1.0, debug@^4.1.1, debug@^4.3.1:
   version "4.3.4"

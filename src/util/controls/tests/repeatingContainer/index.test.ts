@@ -1,6 +1,5 @@
-import type { RenderableControl } from "@decisively-io/interview-sdk";
+import { type RenderableControl, deriveDefaultControlsValue } from "@decisively-io/interview-sdk";
 import { describe, expect, test } from "@jest/globals";
-import { deriveDefaultControlsValue } from "../../core";
 
 describe("repeating_container", () => {
   test("properly derives default values", () => {

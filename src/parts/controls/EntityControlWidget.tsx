@@ -1,4 +1,10 @@
-import type { Control, RenderableEntityControl } from "@decisively-io/interview-sdk";
+import {
+  type Control,
+  type RenderableEntityControl,
+  deriveDefaultControlsValue,
+  flatten,
+  uuid,
+} from "@decisively-io/interview-sdk";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
@@ -8,8 +14,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { v4 as uuid } from "uuid";
-import { deriveDefaultControlsValue } from "../../util/controls";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
@@ -53,26 +57,6 @@ const Wrap = styled.div`
     }
   }
 `;
-
-// turn deep object into flat . delimted object
-const flatten = (value: any) => {
-  const result: Record<string, any> = {};
-
-  const recurse = (obj: any, path: string[] = []) => {
-    if (typeof obj !== "object" || obj === null) {
-      result[path.join(".")] = obj;
-      return;
-    }
-
-    for (const [key, value] of Object.entries(obj)) {
-      recurse(value, [...path, key]);
-    }
-  };
-
-  recurse(value);
-
-  return result;
-};
 
 export interface EntityControlWidgetProps extends ControlWidgetProps<RenderableEntityControl> {
   controlComponents: ControlComponents;

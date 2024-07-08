@@ -1,21 +1,11 @@
-import DateFns from "@date-io/date-fns";
-import { format } from "date-fns";
-import { v4 as uuid } from "uuid";
-
 import {
   type Control,
   type ControlsValue,
   DATE_FORMAT,
-  type IControlsValue,
   type IEntity,
-  type IFile,
-  type IImage,
-  type ITypography,
-  type RenderableControl,
   type Screen,
+  formatDate,
 } from "@decisively-io/interview-sdk";
-
-const DATE_FNS = new DateFns();
 
 export const VALUE_ROWS_CONST = "valueRows";
 
@@ -32,57 +22,10 @@ export const MAX_INLINE_LABEL_LENGTH = 32;
 
 export const deriveDateFromTimeComponent = (t: string): Date => new Date(`1970-01-01T${t}`);
 
-export const resolveNowInDate = (d?: string): string | undefined => (d === "now" ? format(new Date(), DATE_FORMAT) : d);
+export const resolveNowInDate = (d?: string): string | undefined =>
+  d === "now" ? formatDate(new Date(), DATE_FORMAT) : d;
 
 export const requiredErrStr = "Please fill out this field";
-
-function getDefaultControlValue(
-  c: Exclude<Control, IEntity | ITypography | IImage | IFile>,
-): IControlsValue[keyof IControlsValue] {
-  switch (c.type) {
-    case "boolean":
-      return c.value === undefined ? c.default : c.value;
-
-    case "currency":
-      return c.value === undefined ? c.default : c.value;
-
-    case "date": {
-      const valueRaw = c.value === undefined ? c.default : c.value;
-
-      return valueRaw === "now" ? DATE_FNS.format(new Date(), "yyyy-MM-dd") : valueRaw;
-    }
-
-    case "time": {
-      const valueRaw = c.value === undefined ? c.default : c.value;
-
-      return valueRaw === "now" ? DATE_FNS.format(new Date(), "HH:mm:ss") : valueRaw;
-    }
-
-    case "datetime":
-      return c.value === undefined ? c.default : c.value;
-
-    case "options":
-      return c.value === undefined ? c.default : c.value;
-
-    case "number_of_instances":
-      return (() => {
-        if (c.value !== undefined && c.value !== null) return c.value.length;
-        if (c.default !== undefined) return c.default.length;
-
-        return c.min ?? 0;
-      })();
-
-    case "text": {
-      const v = c.value === undefined ? c.default : c.value;
-
-      // additional stringification is here, because we might get
-      // number from server
-      return v == null || v === undefined ? v : String(v);
-    }
-
-    default:
-  }
-}
 
 export const deriveEntityChildId = (entity: string, indx: number, childIndx: number): string =>
   `${entity}.${VALUE_ROWS_CONST}.${indx}.${childIndx}`;
@@ -98,62 +41,6 @@ export const deriveEntityChildId = (entity: string, indx: number, childIndx: num
 //     },
 //   )
 // );
-
-export function deriveDefaultControlsValue(controls: RenderableControl[]): ControlsValue {
-  return controls.reduce((result, control) => {
-    switch (control.type) {
-      case "boolean":
-      case "currency":
-      case "date":
-      case "time":
-      case "datetime":
-      case "options":
-      case "text":
-        result[control.attribute] = getDefaultControlValue(control);
-        break;
-      case "number_of_instances":
-        result[control.entity] = getDefaultControlValue(control);
-        break;
-
-      case "entity": {
-        const { min, value, template, entityId } = control;
-
-        const entities = [];
-        const entityCount = Math.max(min || 0, value?.length || 0);
-        for (let i = 0; i < entityCount; i++) {
-          const existingEntity = value?.[i];
-          const resolveEntityId = existingEntity?.["@id"] || entityId || uuid();
-          entities.push({
-            "@id": resolveEntityId,
-            ...deriveDefaultControlsValue(template),
-            ...existingEntity,
-          });
-        }
-
-        result[control.entity] = entities;
-        break;
-      }
-
-      case "switch_container": {
-        const controls = control.branch === "true" ? control.outcome_true : control.outcome_false;
-        if (controls) {
-          Object.assign(result, deriveDefaultControlsValue(controls));
-        }
-        break;
-      }
-
-      case "repeating_container": {
-        Object.assign(result, deriveDefaultControlsValue(control.controls));
-
-        break;
-      }
-
-      default:
-        break;
-    }
-    return result;
-  }, {} as ControlsValue);
-}
 
 export const getEntityValueIndx = (path: string): number => {
   const match = path.match(/\[\d+\]$/);
