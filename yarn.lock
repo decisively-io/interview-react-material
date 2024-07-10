@@ -455,10 +455,10 @@
   dependencies:
     "@date-io/core" "^1.3.13"
 
-"@decisively-io/interview-sdk@^0.9.9":
-  version "0.9.9"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.9.9/64895d355ae20329497ce3319f856534b4b2ed7c"
-  integrity sha512-3D0bPOPus6hcGCXAV+z66xs5nBo9kS4K8JsBrz5O2gRjD8ZfFFpDmfau2yazzSTB0eEJx7DOu+Ee43USVo9VvQ==
+"@decisively-io/interview-sdk@^0.9.10":
+  version "0.9.10"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.9.10/559c37dd94ad70509e953e142e7ad9e28d37cd54"
+  integrity sha512-/v1DzniDdFOh2VWvOA+qB12pu04Irv0FYTBOIyjxrSNYWtvfD2LGOYEuIbD762pRLgh32nBg7EQt/JTZQAPrdg==
   dependencies:
     "@decisively-io/types-interview" "^0.5.2"
     axios "^0.26.1"
