@@ -16,6 +16,7 @@ const SwitchContainerControlWidget = React.memo((props: SwitchContainerControlWi
   const { outcome_true, outcome_false, branch, condition, attribute } = control;
 
   const controls = (branch === "true" ? outcome_true : outcome_false) || [];
+  console.log(control);
 
   /**
    * we want to override child controls in case we are rendering\
@@ -38,7 +39,7 @@ const SwitchContainerControlWidget = React.memo((props: SwitchContainerControlWi
 
   return (
     <StyledControlsWrap
-      data-id={control}
+      data-id={control.id}
       data-loading={(control as any).loading ? "true" : undefined}
     >
       {mappedControls.length === 0

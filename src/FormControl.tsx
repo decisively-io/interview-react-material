@@ -148,6 +148,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
             ) : null}
             <FormControlStyled
               data-control={control.type}
+              data-id={control.id}
               data-name={name}
               onFocus={() => {
                 setFocus(true);
