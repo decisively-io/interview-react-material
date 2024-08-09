@@ -136,84 +136,90 @@ const EntityControlWidget = Object.assign(
           container
           direction="column"
         >
-          {instances?.map((field, index) => (
-            <Grid
-              item
-              container
-              key={(field as any)["@id"] || field.id}
-              alignItems="flex-start"
-              justifyContent="space-between"
-              className={fieldGrpClss._}
-            >
+          {instances?.map((field, index, arr) => {
+            const shouldHideDelete = control.min !== undefined && arr.length === control.min;
+
+            return (
               <Grid
-                className={fieldGrpClss[">fieldControls"]}
-                item
-                xs={10}
-              >
-                {field.controls.map((value, controlIndex) => {
-                  if (value.type === "typography") {
-                    return (
-                      <RenderControl
-                        chOnScreenData={chOnScreenData}
-                        key={controlIndex}
-                        control={value}
-                        controlComponents={controlComponents}
-                      />
-                    );
-                  }
-
-                  if ("attribute" in value || value.type === "entity") {
-                    const parent = control;
-                    const key = (value as any).attribute || (value as any).entity;
-                    const path = [parentPath ? `${parentPath}.${index}` : `${entity}.${index}`, key]
-                      .filter((v) => v !== undefined)
-                      .join(".");
-                    const childControl = {
-                      ...value,
-                      attribute: path,
-                      value: parent.value?.[index]?.[key],
-                    } as Control;
-
-                    const content = (
-                      <RenderControl
-                        key={controlIndex}
-                        chOnScreenData={chOnScreenData}
-                        control={childControl}
-                        controlComponents={controlComponents}
-                      />
-                    );
-
-                    if (value.type === "entity") {
-                      return (
-                        <Box
-                          key={controlIndex}
-                          padding={1}
-                        >
-                          {content}
-                        </Box>
-                      );
-                    }
-                    return content;
-                  }
-
-                  console.log("Unsupported template control", value);
-                  return null;
-                })}
-              </Grid>
-
-              <Grid
-                className={fieldGrpClss[">fieldActions"]}
                 item
                 container
-                justifyContent="center"
-                xs={2}
+                key={(field as any)["@id"] || field.id}
+                alignItems="flex-start"
+                justifyContent="space-between"
+                className={fieldGrpClss._}
               >
-                <IconButton onClick={() => handleDelete(index)}>
-                  <DeleteIcon />
-                </IconButton>
+                <Grid
+                  className={fieldGrpClss[">fieldControls"]}
+                  item
+                  xs={10}
+                >
+                  {field.controls.map((value, controlIndex) => {
+                    if (value.type === "typography") {
+                      return (
+                        <RenderControl
+                          chOnScreenData={chOnScreenData}
+                          key={controlIndex}
+                          control={value}
+                          controlComponents={controlComponents}
+                        />
+                      );
+                    }
+
+                    if ("attribute" in value || value.type === "entity") {
+                      const parent = control;
+                      const key = (value as any).attribute || (value as any).entity;
+                      const path = [parentPath ? `${parentPath}.${index}` : `${entity}.${index}`, key]
+                        .filter((v) => v !== undefined)
+                        .join(".");
+                      const childControl = {
+                        ...value,
+                        attribute: path,
+                        value: parent.value?.[index]?.[key],
+                      } as Control;
+
+                      const content = (
+                        <RenderControl
+                          key={controlIndex}
+                          chOnScreenData={chOnScreenData}
+                          control={childControl}
+                          controlComponents={controlComponents}
+                        />
+                      );
+
+                      if (value.type === "entity") {
+                        return (
+                          <Box
+                            key={controlIndex}
+                            padding={1}
+                          >
+                            {content}
+                          </Box>
+                        );
+                      }
+                      return content;
+                    }
+
+                    console.log("Unsupported template control", value);
+                    return null;
+                  })}
+                </Grid>
+
+                {shouldHideDelete ? null : (
+                  <Grid
+                    className={fieldGrpClss[">fieldActions"]}
+                    item
+                    container
+                    justifyContent="center"
+                    xs={2}
+                  >
+                    <IconButton onClick={() => handleDelete(index)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
+                )}
               </Grid>
-            </Grid>
-          ))}
+            );
+          })}
         </Grid>
 
         {canAddMore === false ? null : (

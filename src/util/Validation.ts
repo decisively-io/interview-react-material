@@ -438,9 +438,10 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
           : schema.test("withRequired", requiredErrStr, (v) => v !== undefined && v !== null && v !== "");
 
       const withType: typeof maybeRequired = maybeRequired.test(
-        "isStringOrNumberOrNullOrUndefined",
-        "This value should be either string or boolean",
-        (v) => typeof v === "string" || typeof v === "boolean" || v === null || v === undefined,
+        "isStringOrNumberOrBoolOrNullOrUndefined",
+        "This value should be string, number or boolean",
+        (v) =>
+          typeof v === "string" || typeof v === "number" || typeof v === "boolean" || v === null || v === undefined,
       );
 
       return withType;

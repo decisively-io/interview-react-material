@@ -16,7 +16,7 @@ export interface IEntityData {
 
 // ===================================================================================
 
-export const MAX_INLINE_LABEL_LENGTH = 32;
+export const MAX_INLINE_LABEL_LENGTH = 64;
 
 // ===================================================================================
 
