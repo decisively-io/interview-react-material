@@ -11,12 +11,11 @@ export interface SwitchContainerControlWidgetProps extends ControlWidgetProps<Re
   className?: string;
 }
 
-const SwitchContainerControlWidget = React.memo((props: SwitchContainerControlWidgetProps) => {
+const SwitchContainerControlWidget = (props: SwitchContainerControlWidgetProps) => {
   const { control, chOnScreenData, controlComponents, className } = props;
   const { outcome_true, outcome_false, branch, condition, attribute } = control;
 
   const controls = (branch === "true" ? outcome_true : outcome_false) || [];
-  console.log(control);
 
   /**
    * we want to override child controls in case we are rendering\
@@ -27,13 +26,17 @@ const SwitchContainerControlWidget = React.memo((props: SwitchContainerControlWi
   const mappedControls = React.useMemo(() => {
     if (attribute === undefined) return controls;
 
-    const splittedWithoutLast = attribute.split(".").slice(0, -1);
-    if (splittedWithoutLast.length === 0) return controls;
+    const parentPathParts = attribute.split(attribute.includes("/") ? "/" : ".").slice(0, -1);
+    if (!parentPathParts?.length) return controls;
 
     return controls.map((it) => {
       if (it.attribute === undefined) return it;
 
-      return { ...it, attribute: splittedWithoutLast.concat(it.attribute).join(".") };
+      if (it.attribute.startsWith(parentPathParts.join(".")) || it.attribute.startsWith(parentPathParts.join("/"))) {
+        return it;
+      }
+
+      return { ...it, attribute: parentPathParts.concat(it.attribute).join(".") };
     });
   }, [controls, attribute]);
 
@@ -56,7 +59,7 @@ const SwitchContainerControlWidget = React.memo((props: SwitchContainerControlWi
           })}
     </StyledControlsWrap>
   );
-});
+};
 
 SwitchContainerControlWidget.displayName = `${DISPLAY_NAME_PREFIX}/SwitchContainer`;
 

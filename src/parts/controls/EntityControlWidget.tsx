@@ -74,7 +74,7 @@ export interface EntityControlWidgetProps extends ControlWidgetProps<RenderableE
 // };
 
 const EntityControlWidget = Object.assign(
-  React.memo((props: EntityControlWidgetProps) => {
+  (props: EntityControlWidgetProps) => {
     const { control, chOnScreenData, controlComponents, className } = props;
     const { entity, instances, template } = control;
     const { control: formControl } = useFormContext();
@@ -119,7 +119,6 @@ const EntityControlWidget = Object.assign(
       // remove instance from data
       chOnScreenData?.(update);
     };
-
     return (
       <Wrap className={className}>
         {control.label ? (
@@ -168,9 +167,11 @@ const EntityControlWidget = Object.assign(
                     if ("attribute" in value || value.type === "entity") {
                       const parent = control;
                       const key = (value as any).attribute || (value as any).entity;
-                      const path = [parentPath ? `${parentPath}.${index}` : `${entity}.${index}`, key]
-                        .filter((v) => v !== undefined)
-                        .join(".");
+                      const path = key.includes("/")
+                        ? key
+                        : [parentPath ? `${parentPath}.${index}` : `${entity}.${index}`, key]
+                            .filter((v) => v !== undefined)
+                            .join(".");
                       const childControl = {
                         ...value,
                         attribute: path,
@@ -229,7 +230,7 @@ const EntityControlWidget = Object.assign(
         )}
       </Wrap>
     );
-  }),
+  },
   {
     displayName: `${DISPLAY_NAME_PREFIX}/EntityControlWidget`,
     classes,

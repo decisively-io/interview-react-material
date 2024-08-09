@@ -173,7 +173,7 @@ export interface ContentRootProps {
 }
 
 const Content = Object.assign(
-  React.memo((props: ContentRootProps) => {
+  (props: ContentRootProps) => {
     const {
       className,
       step,
@@ -293,7 +293,7 @@ const Content = Object.assign(
         </FormProvider>
       </MuiPickersUtilsProvider>
     );
-  }),
+  },
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Content`,
     classes,

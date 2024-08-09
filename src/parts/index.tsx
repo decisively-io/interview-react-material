@@ -37,7 +37,6 @@ export interface RootState {
   backDisabled: boolean;
   isSubmitting: boolean;
   isRequestPending: boolean;
-  renderAt?: number;
   nextDisabled: boolean;
 }
 
@@ -88,8 +87,8 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
   };
 
   shouldComponentUpdate(nextProps: Readonly<P>, nextState: Readonly<RootState>, nextContext: any): boolean {
-    if (nextProps.session?.renderAt !== this.state.renderAt) {
-      this.setState({ renderAt: nextProps.session?.renderAt });
+    const session: any = this.props.session;
+    if (nextProps.session?.renderAt !== session?.lastRenderAt) {
       return true;
     }
     // or if the theme has changed
