@@ -1,5 +1,5 @@
 import type { AttributeValues, Session } from "@decisively-io/interview-sdk";
-import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
+import { type ControlsValue, getCurrentStep, type SessionInstance } from "@decisively-io/interview-sdk";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
@@ -8,7 +8,7 @@ import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
-import type { ThemedCompProps, ThemedComponent } from "./themes/types";
+import type { ThemedComponent, ThemedCompProps } from "./themes/types";
 
 export const defaultStep: Session["steps"][0] = {
   complete: false,
@@ -199,6 +199,7 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
     };
 
     const lastStep = this.isLastStep(steps, screen?.id) && status !== "in-progress";
+    const buttons = (screen as any).buttons;
 
     const contentProps: ThemedCompProps["content"] = {
       // use screen id as key, as it will re-render if the screen changes
@@ -209,6 +210,7 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
       next: lastStep ? undefined : __next,
       back: __back,
       backDisabled:
+        !buttons.back ||
         isRequestPending ||
         backDisabled ||
         // https://app.clickup.com/t/86b0a7pdr - We don't want this behavior
@@ -217,7 +219,8 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
         externalLoading ||
         session.externalLoading,
       isSubmitting: isSubmitting || externalLoading || session.externalLoading,
-      nextDisabled: isRequestPending || nextDisabled || externalLoading || lastStep || session.externalLoading,
+      nextDisabled:
+        !buttons.next || isRequestPending || nextDisabled || externalLoading || lastStep || session.externalLoading,
       chOnScreenData: this.session.chOnScreenData,
       rhfMode,
       rhfReValidateMode,
