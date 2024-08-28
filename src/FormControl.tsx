@@ -124,6 +124,8 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
     <Controller
       control={formControl}
       name={name}
+      // @ts-ignore
+      defaultValue={control.value ?? control.default}
       render={({ field: { name, value, onChange }, fieldState: { error } }) => {
         const handleChange = (value: any) => {
           if (name) {

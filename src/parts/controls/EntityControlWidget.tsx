@@ -167,6 +167,7 @@ const EntityControlWidget = Object.assign(
                     if ("attribute" in value || value.type === "entity") {
                       const parent = control;
                       const key = (value as any).attribute || (value as any).entity;
+                      const attribute = key.split("/").pop() as string;
                       const path = key.includes("/")
                         ? key
                         : [parentPath ? `${parentPath}.${index}` : `${entity}.${index}`, key]
@@ -175,7 +176,8 @@ const EntityControlWidget = Object.assign(
                       const childControl = {
                         ...value,
                         attribute: path,
-                        value: parent.value?.[index]?.[key],
+                        // @ts-ignore
+                        value: parent.value?.[index]?.[attribute],
                       } as Control;
 
                       const content = (
