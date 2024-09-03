@@ -3,7 +3,7 @@ import React from "react";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import type { ControlComponents } from "./index";
 
-const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "file" | "document"> = {
+const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "file" | "document" | "data_container"> = {
   boolean: "Boolean",
   currency: "Currency",
   date: "Date",

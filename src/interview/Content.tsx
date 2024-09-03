@@ -14,6 +14,7 @@ import React, { useContext } from "react";
 import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
+import ChatPanel from "../chat/ChatPanel";
 import { generateValidator } from "../util/Validation";
 import { InterviewContext } from "./Interview";
 import Controls, { type ControlComponents } from "./controls";
@@ -54,6 +55,7 @@ const Wrap = styled.form`
 
     > .${formClss._} {
       margin: 0 auto;
+      height: 100%;
       padding: 1.5rem 2rem;
       max-width: 43.75rem;
       display: flex;
@@ -251,11 +253,24 @@ const Content = Object.assign(
                 </Typography>
 
                 <StyledControlsWrap className={formClss[">controls"]}>
-                  <Controls
-                    controlComponents={controlComponents}
-                    controls={screen?.controls || []}
-                    chOnScreenData={chOnScreenData}
-                  />
+                  {screen.type === "chat" ? (
+                    <ChatPanel
+                      style={{ height: "100%" }}
+                      setMessages={() => {}}
+                      messages={[
+                        {
+                          self: true,
+                          content: "Hello, I'm a chat message",
+                        },
+                      ]}
+                    />
+                  ) : (
+                    <Controls
+                      controlComponents={controlComponents}
+                      controls={screen?.controls || []}
+                      chOnScreenData={chOnScreenData}
+                    />
+                  )}
                 </StyledControlsWrap>
               </div>
             </div>

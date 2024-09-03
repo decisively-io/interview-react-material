@@ -1,5 +1,6 @@
 import { Box } from "@material-ui/core";
-import React, { useEffect, useRef, useState } from "react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
 import ChatMessageBubble, { type ChatMessage } from "./ChatMessageBubble";
@@ -8,6 +9,8 @@ export interface ChatPanelProps {
   messages: ChatMessage[];
   setMessages: (messages: ChatMessage[]) => void;
   serverLoading?: boolean;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 const CHAT_PANEL_CLASSES = {
@@ -53,7 +56,7 @@ const ChatPanelWrap = styled.div`
 `;
 
 const ChatPanel = (props: ChatPanelProps) => {
-  const { messages, setMessages, serverLoading } = props;
+  const { messages, setMessages, serverLoading, ...otherProps } = props;
 
   const onAddMessage = (msg: ChatMessage) => {
     messages.push(msg);
@@ -61,7 +64,7 @@ const ChatPanel = (props: ChatPanelProps) => {
   };
 
   return (
-    <ChatPanelWrap>
+    <ChatPanelWrap {...otherProps}>
       <Box className={CHAT_PANEL_CLASSES.messages}>
         {messages.map((msg, index) => (
           <ChatMessageBubble
