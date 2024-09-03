@@ -210,7 +210,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       next: lastStep ? undefined : __next,
       back: __back,
       backDisabled:
-        !buttons.back ||
+        buttons?.back === false ||
         isRequestPending ||
         backDisabled ||
         // https://app.clickup.com/t/86b0a7pdr - We don't want this behavior
@@ -220,7 +220,12 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
         session.externalLoading,
       isSubmitting: isSubmitting || externalLoading || session.externalLoading,
       nextDisabled:
-        !buttons.next || isRequestPending || nextDisabled || externalLoading || lastStep || session.externalLoading,
+        buttons?.next === false ||
+        isRequestPending ||
+        nextDisabled ||
+        externalLoading ||
+        lastStep ||
+        session.externalLoading,
       chOnScreenData: this.session.chOnScreenData,
       rhfMode,
       rhfReValidateMode,
