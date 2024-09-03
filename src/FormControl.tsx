@@ -7,7 +7,7 @@ import HelpOutline from "@material-ui/icons/HelpOutline";
 import React, { useState } from "react";
 import { Controller, type FieldError, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { InterviewContext } from "./parts";
+import { InterviewContext } from "./interview/Interview";
 import { MAX_INLINE_LABEL_LENGTH } from "./util";
 
 export interface ExplanationProps {

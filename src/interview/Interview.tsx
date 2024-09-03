@@ -3,12 +3,12 @@ import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decis
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DISPLAY_NAME_PREFIX } from "../Constants";
+import type { ThemedCompProps, ThemedComponent } from "../themes/types";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
-import type { ThemedCompProps, ThemedComponent } from "./themes/types";
 
 export const defaultStep: Session["steps"][0] = {
   complete: false,
@@ -22,7 +22,7 @@ export const defaultStep: Session["steps"][0] = {
   steps: [],
 };
 
-export interface RootProps {
+export interface InterviewProps {
   session: SessionInstance;
   onDataChange?: (data: AttributeValues, name: string | undefined) => void;
   // flag to indicate that the component is loading data from an external source
@@ -33,7 +33,7 @@ export interface RootProps {
   rhfReValidateMode?: ContentProps["rhfReValidateMode"];
 }
 
-export interface RootState {
+export interface InterviewState {
   backDisabled: boolean;
   isSubmitting: boolean;
   isRequestPending: boolean;
@@ -52,8 +52,8 @@ export const InterviewContext = React.createContext<InterviewContextState>({
   getExplanation: () => undefined,
 });
 
-export class Root<P extends RootProps = RootProps> extends React.Component<P, RootState> {
-  static displayName = `${DISPLAY_NAME_PREFIX}/Root`;
+export default class Interview<P extends InterviewProps = InterviewProps> extends React.Component<P, InterviewState> {
+  static displayName = `${DISPLAY_NAME_PREFIX}/Interview`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
 
   constructor(props: P) {
@@ -86,7 +86,7 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
     this.formMethods?.reset(values);
   };
 
-  shouldComponentUpdate(nextProps: Readonly<P>, nextState: Readonly<RootState>, nextContext: any): boolean {
+  shouldComponentUpdate(nextProps: Readonly<P>, nextState: Readonly<InterviewState>, nextContext: any): boolean {
     const session: any = this.props.session;
     if (nextProps.session?.renderAt !== session?.lastRenderAt) {
       return true;
@@ -253,29 +253,3 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
     return this.renderWrapper(content);
   }
 }
-
-export { default as Frame, type FrameProps } from "./Frame";
-export { default as Menu, type MenuProps } from "./Menu";
-export * as Font from "./font";
-export { default as Content, type ContentProps } from "./Content";
-export * as Themes from "./themes";
-
-// these are needed because when we use this lib in project with
-// module not set to cjs, it starts importing other entities, and
-// breaks references. So useFormContext inported in consumer project !== useFormContext
-// that is compatible wth this repo
-// that's why we reexport same exact functions that are referentially equal to
-// react-hook-form build used in this repo
-export {
-  useFormContext,
-  useFieldArray,
-  useForm,
-  useController,
-  useWatch,
-  useFormState,
-  FormProvider,
-  Controller,
-  appendErrors,
-  get,
-  set,
-} from "react-hook-form";
