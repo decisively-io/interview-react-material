@@ -43,12 +43,12 @@ export interface InterviewState {
 export interface InterviewContextState {
   registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;
   getExplanation: (attribute: string) => string | undefined;
-  session: Session;
+  session: SessionInstance;
 }
 
 export const InterviewContext = React.createContext<InterviewContextState>({
   registerFormMethods: () => {},
-  session: {} as Session,
+  session: {} as SessionInstance,
   getExplanation: () => undefined,
 });
 

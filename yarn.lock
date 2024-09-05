@@ -455,10 +455,10 @@
   dependencies:
     "@date-io/core" "^1.3.13"
 
-"@decisively-io/interview-sdk@^0.10.0-alpha.3":
-  version "0.10.0-alpha.3"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.10.0-alpha.3/d05e879adee6d031f0de8c581ee0f5c5ce464993"
-  integrity sha512-fQbrLjjXMJQn/XX19ad17K6FkFAFyqOAp2Vozs4+EBJmYPBSZdj6q6xZp6T7Byf4cCpuqIv6CDHnWDJx//wS2w==
+"@decisively-io/interview-sdk@^0.10.0-alpha.8":
+  version "0.10.0-alpha.8"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.10.0-alpha.8/6236c6067931682d84929b6a97841247240f3fbf"
+  integrity sha512-gbbIbaRubd9MAkayKbJwSRE4hRHO+JDQJ61TuNs0gfk1funvJ9yvUMXxmfVE9F2Qn/ZO47AbZAxAcuiiM09+Jg==
   dependencies:
     axios "^0.26.1"
     date-fns "^2.28.0"

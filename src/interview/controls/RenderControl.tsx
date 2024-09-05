@@ -18,6 +18,7 @@ const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "da
   switch_container: "SwitchContainer",
   certainty_container: "CertaintyContainer",
   repeating_container: "RepeatingContainer",
+  generative_chat: "GenerativeChat",
 };
 
 export interface RenderControlProps extends ControlWidgetProps<Control> {

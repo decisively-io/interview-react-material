@@ -20,6 +20,18 @@ import { InterviewContext } from "./Interview";
 import Controls, { type ControlComponents } from "./controls";
 
 export const classes = {
+  formWrap: "formWrap_2NgTRe",
+  form: "form_eyu2Bt",
+  heading: "heading_U1LjQu",
+  controls: "controls_Uj4EDN",
+  btns: "btns_fiwac2",
+  back: "back_Qt7DZ6",
+  submit: "submit_qOUndF",
+  next: "next_ggiip5",
+
+  /**
+   * @deprecated - use `formWrap` instead
+   */
   ">formWrap": {
     _: "formWrap_2NgTRe",
 
@@ -29,6 +41,9 @@ export const classes = {
       ">controls": "controls_Uj4EDN",
     },
   },
+  /**
+   * @deprecated - use `btns` instead
+   */
   ">btns": {
     _: "btns_fiwac2",
 
@@ -60,6 +75,12 @@ const Wrap = styled.form`
       max-width: 43.75rem;
       display: flex;
       flex-direction: column;
+
+        > .${classes.controls} {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
 
       > .${formClss[">h"]} {
@@ -253,24 +274,11 @@ const Content = Object.assign(
                 </Typography>
 
                 <StyledControlsWrap className={formClss[">controls"]}>
-                  {screen.type === "chat" ? (
-                    <ChatPanel
-                      style={{ height: "100%" }}
-                      setMessages={() => {}}
-                      messages={[
-                        {
-                          self: true,
-                          content: "Hello, I'm a chat message",
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <Controls
-                      controlComponents={controlComponents}
-                      controls={screen?.controls || []}
-                      chOnScreenData={chOnScreenData}
-                    />
-                  )}
+                  <Controls
+                    controlComponents={controlComponents}
+                    controls={screen?.controls || []}
+                    chOnScreenData={chOnScreenData}
+                  />
                 </StyledControlsWrap>
               </div>
             </div>

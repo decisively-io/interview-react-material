@@ -1,6 +1,5 @@
 import { Box } from "@material-ui/core";
-import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useImperativeHandle } from "react";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
 import ChatMessageBubble, { type ChatMessage } from "./ChatMessageBubble";
@@ -34,6 +33,8 @@ const ChatPanelWrap = styled.div`
 
   .${CHAT_PANEL_CLASSES.messages} {
     flex: 1 1 0%;
+      padding: 1rem;
+      padding-bottom: 0.5rem;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     display: flex;
@@ -47,6 +48,8 @@ const ChatPanelWrap = styled.div`
     flex: 0 1 auto;
     display: flex;
     align-content: flex-end;
+      padding: 1rem;
+      padding-top: 0.5rem;
 
     & > * {
       min-width: 0;
@@ -55,8 +58,27 @@ const ChatPanelWrap = styled.div`
 
 `;
 
-const ChatPanel = (props: ChatPanelProps) => {
+export interface ChatPanelHandle {
+  scrollToBottom: () => void;
+}
+
+const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
   const { messages, setMessages, serverLoading, ...otherProps } = props;
+
+  const scrollableRef = useRef<any>();
+  const handle: ChatPanelHandle = {
+    scrollToBottom: () => {
+      scrollableRef.current?.scrollTo({
+        top: scrollableRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    },
+  };
+  useImperativeHandle(ref, () => handle);
+
+  useEffect(() => {
+    handle.scrollToBottom();
+  }, [messages.length]);
 
   const onAddMessage = (msg: ChatMessage) => {
     messages.push(msg);
@@ -65,7 +87,10 @@ const ChatPanel = (props: ChatPanelProps) => {
 
   return (
     <ChatPanelWrap {...otherProps}>
-      <Box className={CHAT_PANEL_CLASSES.messages}>
+      <div
+        ref={scrollableRef}
+        className={CHAT_PANEL_CLASSES.messages}
+      >
         {messages.map((msg, index) => (
           <ChatMessageBubble
             key={index}
@@ -73,7 +98,7 @@ const ChatPanel = (props: ChatPanelProps) => {
             message={msg}
           />
         ))}
-      </Box>
+      </div>
       <Box className={CHAT_PANEL_CLASSES.input}>
         <ChatInput
           onAddMessage={onAddMessage}
@@ -82,7 +107,7 @@ const ChatPanel = (props: ChatPanelProps) => {
       </Box>
     </ChatPanelWrap>
   );
-};
+});
 
 export default Object.assign(ChatPanel, {
   classes: CHAT_PANEL_CLASSES,
