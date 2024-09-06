@@ -60,6 +60,11 @@ const isLabelTooLong = (label: string | undefined): label is string => {
   return false;
 };
 
+type ReadOnlyBasedMeta = (
+  | { type: 'hasNoEffect' }
+  | { type: 'markControlDisabled' }
+  | { type: 'overrideRender'; node: JSX.Element; }
+);
 export const useFormControl = (options: FormControlOptions): React.ReactElement => {
   const { control, render, onScreenDataChange, className } = options;
   const interview = React.useContext(InterviewContext);
@@ -68,6 +73,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
   const [helpHover, setHelpHover] = React.useState(false);
   const { attribute } = control;
   const { control: formControl } = useFormContext();
+  const [forId] = useState(() => Math.random().toString(36).substring(7));
 
   const renderExplanation = (props?: ExplanationProps) => {
     const otherProps = props;
@@ -94,25 +100,43 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
     );
   };
 
-  //@ts-ignore
-  if (control.readOnly) {
-    //@ts-ignore
-    if (control.labelDisplay === "automatic") {
-      //@ts-ignore
-      const label = `${control.label}:`;
-      const renderValue = options.renderValue ?? ((value: string) => value);
-      return (
+  const readOnlyBasedMeta = React.useMemo< ReadOnlyBasedMeta >(() => {
+    // if control type is not expected to have "readOnly" -> return
+    if(
+      control.type !== 'boolean'
+      && control.type !== 'currency'
+      && control.type !== 'date'
+      && control.type !== 'time'
+      && control.type !== 'datetime'
+      && control.type !== 'options'
+      && control.type !== 'number_of_instances'
+      && control.type !== 'text'
+    ) return { type: 'hasNoEffect' };
+
+    // if readOnly is falsy -> return
+    if(!control.readOnly) return { type: 'hasNoEffect' };
+
+    // if label display is not "automatic" -> control should be marked "disabled"
+    if(control.labelDisplay !== 'automatic') return { type: 'markControlDisabled' };
+
+    // at this point we are sure that we want to override render
+    const label = `${control.label}:`;
+    const renderValue = options.renderValue ?? ((value: string) => value);
+
+    return {
+      type: 'overrideRender',
+      node: (
         <ReadOnlyContainer>
           <Typography>{label}</Typography>
-          {/* @ts-ignore */}
-          <Typography>{renderValue(control.value)}</Typography>
+          <Typography>{renderValue(String(control.value))}</Typography>
           {renderExplanation()}
         </ReadOnlyContainer>
-      );
-    } else {
-      //@ts-ignore
-      control.disabled = true;
-    }
+      ),
+    };
+  }, [control]);
+
+  if(readOnlyBasedMeta.type === 'overrideRender') {
+    return readOnlyBasedMeta.node;
   }
 
   const sxForSeparateLabel =
@@ -143,7 +167,6 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
   }
 
   const inlineLabel = shouldInlineLabel ? label : undefined;
-  const [forId] = useState(() => Math.random().toString(36).substring(7));
 
   // @ts-ignore
   const name: string = attribute ?? control.entity;
@@ -186,8 +209,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
               className={className}
               // @ts-ignore
               title={control.label}
-              // @ts-ignore
-              disabled={control.disabled}
+              disabled={readOnlyBasedMeta.type === 'markControlDisabled' || ('disabled' in control && control.disabled)}
               onBlur={() => setFocus(false)}
               fullWidth
             >
