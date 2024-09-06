@@ -43,6 +43,7 @@ const CurrencyControlWidget = Object.assign(
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
+      renderValue: (value) => `${symbol || "$"} ${value}`,
       render: ({ onChange, forId, value, error, inlineLabel, renderExplanation }) => {
         const typedValue = value as CurrencyControl["value"];
 

@@ -3,7 +3,7 @@ import React from "react";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import type { ControlComponents } from "./index";
 
-const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "data_container" | "file" | "document"> = {
+const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "file" | "document"> = {
   boolean: "Boolean",
   currency: "Currency",
   date: "Date",
@@ -18,6 +18,7 @@ const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "da
   switch_container: "SwitchContainer",
   certainty_container: "CertaintyContainer",
   repeating_container: "RepeatingContainer",
+  data_container: "DataContainer",
 };
 
 export interface RenderControlProps extends ControlWidgetProps<Control> {

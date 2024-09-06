@@ -66,6 +66,7 @@ const TextControlWidget = Object.assign(
               error: error !== undefined,
               helperText: error?.message || " ",
               disabled: control.disabled,
+              inputProps: { readOnly: control.readOnly },
               ...maybeWithType,
               ...maybeWithMulti,
               ...textFieldProps,

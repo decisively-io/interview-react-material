@@ -5,6 +5,7 @@ import type { Control } from "@decisively-io/interview-sdk";
 import BooleanControlWidget, { type BooleanControlWidgetProps } from "./BooleanControlWidget";
 import CertaintyContainerWidget, { type CertaintyContainerControlWidgetProps } from "./CertaintyContainerWidget";
 import CurrencyControlWidget, { type CurrencyControlWidgetProps } from "./CurrencyControlWidget";
+import DataContainerWidget, { type DataContainerControlWidgetProps } from "./DataContainerWidget";
 import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWidget";
 import DateTimeControlWidget, { type DateTimeControlWidgetProps } from "./DateTimeControlWidget";
 import EntityControlWidget, { type EntityControlWidgetProps } from "./EntityControlWidget";
@@ -41,6 +42,7 @@ export interface ControlComponents {
   SwitchContainer?: React.ComponentType<SwitchContainerControlWidgetProps>;
   CertaintyContainer?: React.ComponentType<CertaintyContainerControlWidgetProps>;
   RepeatingContainer?: React.ComponentType<RepeatingContainerControlWidgetProps>;
+  DataContainer?: React.ComponentType<DataContainerControlWidgetProps>;
 }
 
 const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
@@ -58,6 +60,7 @@ const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
   SwitchContainer: SwitchContainerWidget,
   CertaintyContainer: CertaintyContainerWidget,
   RepeatingContainer: RepeatingContainerWidget,
+  DataContainer: DataContainerWidget,
 };
 
 const Controls = React.memo((props: ControlsProps) => {

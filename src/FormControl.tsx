@@ -28,11 +28,18 @@ const FormControlStyled = styled(BaseFormControl)`
   align-items: center;
 `;
 
+const ReadOnlyContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+`;
+
 export interface FormControlOptions {
   control: Control;
   className?: string;
   onScreenDataChange?: (data: Record<string, any>) => void;
   render: (state: FormControlRenderState) => React.ReactNode;
+  renderValue?: (value: string) => React.ReactNode;
 }
 
 export interface FormControlRenderState {
@@ -86,6 +93,27 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
       </ExplanationTooltip>
     );
   };
+
+  //@ts-ignore
+  if (control.readOnly) {
+    //@ts-ignore
+    if (control.labelDisplay === "automatic") {
+      //@ts-ignore
+      const label = `${control.label}:`;
+      const renderValue = options.renderValue ?? ((value: string) => value);
+      return (
+        <ReadOnlyContainer>
+          <Typography>{label}</Typography>
+          {/* @ts-ignore */}
+          <Typography>{renderValue(control.value)}</Typography>
+          {renderExplanation()}
+        </ReadOnlyContainer>
+      );
+    } else {
+      //@ts-ignore
+      control.disabled = true;
+    }
+  }
 
   const sxForSeparateLabel =
     "sxForSeparateLabel" in control &&
