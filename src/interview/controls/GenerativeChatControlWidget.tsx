@@ -1,9 +1,10 @@
 import type { GenerativeChatControl } from "@decisively-io/interview-sdk";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { useFormControl } from "../../FormControl";
-import type { ChatMessage } from "../../chat";
-import ChatPanel from "../../chat/ChatPanel";
+import type { ChatMessage } from "../chat";
+import ChatPanel from "../chat/ChatPanel";
+import { getChatFieldId } from "../../util";
 import { InterviewContext } from "../Interview";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
@@ -29,45 +30,49 @@ const GenerativeChatControlWidget = Object.assign(
 
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-    const initialMessage = async () => {
-      const payload = await session.chat(control.initialMessage, {
-        aiOptions: control.aiOptions,
-      });
-      setMessages([
-        {
-          self: false,
-          content: payload.message,
-        },
-      ]);
+    const addMessage = async (message: string) => {
+      try {
+        const payload = await session.chat(message, {
+          aiOptions: control.aiOptions,
+        });
+        setMessages([
+          ...messages,
+          {
+            self: false,
+            content: payload.message,
+          },
+        ]);
+      } catch (error) {
+        setMessages([...messages.slice(0, -1), { ...messages[messages.length - 1], failed: true }]);
+      }
     };
 
     useEffect(() => {
-      initialMessage();
+      addMessage(control.initialMessage);
     }, []);
 
     const setUserMessages = async (messages: ChatMessage[]) => {
       setMessages(messages);
       const newMessage = messages[messages.length - 1];
-      const payload = await session.chat(newMessage.content, {
-        aiOptions: control.aiOptions,
-      });
-      setMessages([
-        ...messages,
-        {
-          self: false,
-          content: payload.message,
-        },
-      ]);
+      await addMessage(newMessage.content);
     };
 
     const ref = useRef();
+    const { control: formControl } = useFormContext();
 
     return (
-      <StyledChatPanel
-        serverLoading={session.externalLoading}
-        ref={ref}
-        messages={messages}
-        setMessages={setUserMessages}
+      <Controller
+        name={getChatFieldId(control)}
+        control={formControl}
+        render={({ field }) => (
+          <StyledChatPanel
+            loading={session.externalLoading}
+            ref={ref}
+            disabled={Boolean(field.value || field.disabled)}
+            messages={messages}
+            setMessages={setUserMessages}
+          />
+        )}
       />
     );
   }),

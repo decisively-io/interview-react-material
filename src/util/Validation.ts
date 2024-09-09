@@ -25,7 +25,7 @@ import {
 } from "react-hook-form";
 import type * as Yup from "yup";
 import * as yup from "yup";
-import { deriveDateFromTimeComponent, requiredErrStr, resolveNowInDate } from "./controls";
+import { deriveDateFromTimeComponent, getChatFieldId, requiredErrStr, resolveNowInDate } from "./index";
 
 const setCustomValidity = (ref: Ref, fieldPath: string, errors: FieldErrors) => {
   if (ref && "reportValidity" in ref) {
@@ -83,8 +83,13 @@ const isNameInFieldArray = (names: InternalFieldName[], name: InternalFieldName)
   names.some((n) => n.startsWith(`${name}.`));
 
 const generateValidatorsForControls = (controls: RenderableControl[], values: any): Record<string, yup.AnySchema> => {
-  return controls.reduce((a, c) => {
-    switch (c.type) {
+  return controls.reduce((fields, control) => {
+    switch (control.type) {
+      case "generative_chat": {
+        fields[getChatFieldId(control)] = yup.boolean().required();
+        return fields;
+      }
+
       case "boolean":
       case "currency":
       case "time":
@@ -92,25 +97,25 @@ const generateValidatorsForControls = (controls: RenderableControl[], values: an
       case "text":
       case "date":
       case "options": {
-        a[c.attribute] = generateValidatorForControl(c);
-        return a;
+        fields[control.attribute] = generateValidatorForControl(control);
+        return fields;
       }
       case "switch_container": {
-        const controls = c.branch === "true" ? c.outcome_true : c.outcome_false;
+        const controls = control.branch === "true" ? control.outcome_true : control.outcome_false;
         if (controls) {
-          return Object.assign(a, generateValidatorsForControls(controls, values));
+          return Object.assign(fields, generateValidatorsForControls(controls, values));
         }
-        return a;
+        return fields;
       }
 
       case "number_of_instances": {
-        a[c.entity] = generateValidatorForControl(c);
-        return a;
+        fields[control.entity] = generateValidatorForControl(control);
+        return fields;
       }
       case "entity": {
-        const template: IEntity["template"] = c.template;
+        const template: IEntity["template"] = control.template;
 
-        a[c.entity] = yup.array(
+        fields[control.entity] = yup.array(
           yup.object({
             "@id": yup.string(),
 
@@ -128,10 +133,10 @@ const generateValidatorsForControls = (controls: RenderableControl[], values: an
           }),
         );
 
-        return a;
+        return fields;
       }
       default:
-        return a;
+        return fields;
     }
   }, {} as any);
 };

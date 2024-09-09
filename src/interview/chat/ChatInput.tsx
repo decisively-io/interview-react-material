@@ -10,11 +10,12 @@ export interface ChatInputProps {
   placeholder?: string;
   sendText?: string;
   onAddMessage: (newMessage: ChatMessage) => void;
-  serverLoading?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
 }
 
 const ChatInput = (props: ChatInputProps) => {
-  const { placeholder, sendText, onAddMessage, serverLoading } = {
+  const { placeholder, sendText, disabled, onAddMessage, serverLoading } = {
     placeholder: "",
     sendText: "Send",
     serverLoading: false,
@@ -34,8 +35,10 @@ const ChatInput = (props: ChatInputProps) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.nativeEvent.isComposing) return;
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      setResponse();
+      if (value) {
+        e.preventDefault();
+        setResponse();
+      }
       //chatController.sendMessage()
     }
   };
@@ -63,6 +66,7 @@ const ChatInput = (props: ChatInputProps) => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         autoFocus
+        disabled={disabled}
         multiline
         inputProps={{ onKeyDown: handleKeyDown }}
         variant="outlined"
@@ -71,7 +75,7 @@ const ChatInput = (props: ChatInputProps) => {
       <Button
         type="button"
         onClick={setResponse}
-        disabled={!value || serverLoading}
+        disabled={!value || serverLoading || disabled}
         variant="contained"
         color="primary"
         startIcon={<SendIcon />}

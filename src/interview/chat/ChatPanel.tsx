@@ -7,9 +7,10 @@ import ChatMessageBubble, { type ChatMessage } from "./ChatMessageBubble";
 export interface ChatPanelProps {
   messages: ChatMessage[];
   setMessages: (messages: ChatMessage[]) => void;
-  serverLoading?: boolean;
+  loading?: boolean;
   style?: React.CSSProperties;
   className?: string;
+  disabled?: boolean;
 }
 
 const CHAT_PANEL_CLASSES = {
@@ -63,7 +64,7 @@ export interface ChatPanelHandle {
 }
 
 const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
-  const { messages, setMessages, serverLoading, ...otherProps } = props;
+  const { messages, disabled, setMessages, loading, ...otherProps } = props;
 
   const scrollableRef = useRef<any>();
   const handle: ChatPanelHandle = {
@@ -101,8 +102,9 @@ const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
       </div>
       <Box className={CHAT_PANEL_CLASSES.input}>
         <ChatInput
+          disabled={disabled}
           onAddMessage={onAddMessage}
-          serverLoading={serverLoading}
+          loading={loading}
         />
       </Box>
     </ChatPanelWrap>

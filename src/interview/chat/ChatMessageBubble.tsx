@@ -3,6 +3,7 @@ import { Box, Grow, Typography } from "@material-ui/core";
 export interface ChatMessage {
   content: string;
   self: boolean;
+  failed?: boolean;
 }
 
 export interface ChatMessageBubbleProps {
@@ -27,20 +28,17 @@ const ChatMessageBubble = (props: ChatMessageBubbleProps) => {
           pl={message.self ? "20%" : 0}
           pr={message.self ? 0 : "20%"}
           display="flex"
-          justifyContent={message.self ? "flex-end" : "flex-start"}
+          flexDirection={"column"}
+          alignItems={message.self ? "flex-end" : "flex-start"}
           style={{ overflowWrap: "break-word" }}
         >
-          <Box
-            minWidth={0}
-            display="flex"
-            flexDirection="column"
-          >
+          {message.content ? (
             <Box
               maxWidth="100%"
               py={1}
               px={2}
-              bgcolor={message.self ? "primary.main" : "background.paper"}
-              color={message.self ? "primary.contrastText" : "text.primary"}
+              bgcolor={message.failed ? "#ddd" : message.self ? "primary.main" : "background.paper"}
+              color={message.self || message.failed ? "primary.contrastText" : "text.primary"}
               borderRadius={4}
               boxShadow={2}
             >
@@ -51,7 +49,16 @@ const ChatMessageBubble = (props: ChatMessageBubbleProps) => {
                 {message.content}
               </Typography>
             </Box>
-          </Box>
+          ) : null}
+          {message.failed ? (
+            <Typography
+              variant="body1"
+              color={"error"}
+              style={{ whiteSpace: "pre-wrap", fontSize: "0.9em" }}
+            >
+              {message.self ? "Failed to send message" : "Something went wrong"}
+            </Typography>
+          ) : null}
         </Box>
       </Box>
     </Grow>

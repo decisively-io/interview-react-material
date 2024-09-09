@@ -30,3 +30,5 @@ export {
   get,
   set,
 } from "react-hook-form";
+
+export * from "./chat";
