@@ -119,6 +119,7 @@ const EntityControlWidget = Object.assign(
       // remove instance from data
       chOnScreenData?.(update);
     };
+
     return (
       <Wrap className={className}>
         {control.label ? (
@@ -135,14 +136,14 @@ const EntityControlWidget = Object.assign(
           container
           direction="column"
         >
-          {instances?.map((field, index, arr) => {
+          {instances?.map((instance, index, arr) => {
             const shouldHideDelete = control.min !== undefined && arr.length === control.min;
 
             return (
               <Grid
                 item
                 container
-                key={(field as any)["@id"] || field.id}
+                key={(instance as any)["@id"] ?? instance.id}
                 alignItems="flex-start"
                 justifyContent="space-between"
                 className={fieldGrpClss._}
@@ -152,32 +153,28 @@ const EntityControlWidget = Object.assign(
                   item
                   xs={10}
                 >
-                  {field.controls.map((value, controlIndex) => {
-                    if (value.type === "typography") {
+                  {instance.controls.map((subControl, controlIndex) => {
+                    if (subControl.type === "typography") {
                       return (
                         <RenderControl
                           chOnScreenData={chOnScreenData}
                           key={controlIndex}
-                          control={value}
+                          control={subControl}
                           controlComponents={controlComponents}
                         />
                       );
                     }
 
-                    if ("attribute" in value || value.type === "entity") {
-                      const parent = control;
-                      const key = (value as any).attribute || (value as any).entity;
-                      const attribute = key.split("/").pop() as string;
+                    if ("attribute" in subControl || subControl.type === "entity") {
+                      const key = (subControl as any).attribute || (subControl as any).entity;
                       const path = key.includes("/")
                         ? key
                         : [parentPath ? `${parentPath}.${index}` : `${entity}.${index}`, key]
                             .filter((v) => v !== undefined)
                             .join(".");
                       const childControl = {
-                        ...value,
+                        ...subControl,
                         attribute: path,
-                        // @ts-ignore
-                        value: parent.value?.[index]?.[attribute],
                       } as Control;
 
                       const content = (
@@ -189,7 +186,7 @@ const EntityControlWidget = Object.assign(
                         />
                       );
 
-                      if (value.type === "entity") {
+                      if (subControl.type === "entity") {
                         return (
                           <Box
                             key={controlIndex}
@@ -202,7 +199,7 @@ const EntityControlWidget = Object.assign(
                       return content;
                     }
 
-                    console.log("Unsupported template control", value);
+                    console.log("Unsupported template control", subControl);
                     return null;
                   })}
                 </Grid>

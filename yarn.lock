@@ -455,12 +455,12 @@
   dependencies:
     "@date-io/core" "^1.3.13"
 
-"@decisively-io/interview-sdk@^0.9.34":
-  version "0.9.34"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.9.34/c0e87c375cb00f14f2036f3e993fb337d1f9f992"
-  integrity sha512-o0eyu+zrP3v4AeuI1+l1SfPDUZsoucx3eB4fVJCRClMfUK0Y0tKegX0AX9JZ8wNvgHUnBnbiM5r+/RRYlTVPIQ==
+"@decisively-io/interview-sdk@^0.9.38":
+  version "0.9.38"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.9.38/e84e615fa68d9e72feeb753c27b53e0c853edae7"
+  integrity sha512-i4tMCGKao3rziionl6OcaaA8V+mxuxggQtw74uNK5+wCjHOGRuxWtaEy1ILsTIo4QNqsSrKgJyiXf6tZpf20Vw==
   dependencies:
-    "@decisively-io/types-interview" "^0.5.3"
+    "@decisively-io/types-interview" "^0.5.4"
     axios "^0.26.1"
     date-fns "^2.28.0"
     lodash.debounce "^4.0.8"
@@ -469,10 +469,10 @@
     lodash.set "^4.3.2"
     uuid "^8.3.2"
 
-"@decisively-io/types-interview@^0.5.3":
-  version "0.5.3"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/types-interview/0.5.3/ecef6bc72e896ea802ca581197cdb28a97962692"
-  integrity sha512-J+Eg1XcxKJ//eSsPovnRNaM0gqVhPcBYBA6bjkBNAhARbD/ZRpzJ9uNi32zf1cg544G5BDBpAY17yRnfotVR1w==
+"@decisively-io/types-interview@^0.5.4":
+  version "0.5.4"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/types-interview/0.5.4/7a964ee5d5988dfa24503fdf82cca68490101932"
+  integrity sha512-B+RMj/K9LPlzzO7DvMlns2v6xIyPYS38Kr/sZwVSsEDVRHNnQ5IaHicQnhMOqujqSg2J48xckOtq1/bMyhKrKg==
 
 "@emotion/hash@^0.8.0":
   version "0.8.0"
