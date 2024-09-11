@@ -199,9 +199,12 @@ export const generateValidator =
         throw e;
       }
 
+      const errors = toNestErrors(parseErrorSchema(e, false), options ?? {});
+      //console.log(errors);
+
       return {
         values: {},
-        errors: toNestErrors(parseErrorSchema(e, false), options ?? {}),
+        errors: errors,
       };
     }
   };

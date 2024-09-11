@@ -1,4 +1,5 @@
 import { Box, Grow, Typography } from "@material-ui/core";
+import styled from "styled-components";
 
 export interface ChatMessage {
   content: string;
@@ -9,10 +10,38 @@ export interface ChatMessage {
 export interface ChatMessageBubbleProps {
   id: string;
   message: ChatMessage;
+  loading?: boolean;
 }
 
+const Bubble = styled(Box)`
+
+  @keyframes loading {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+
+  &[data-loading="true"] {
+    animation: loading 1s infinite;
+  }
+`;
+
 const ChatMessageBubble = (props: ChatMessageBubbleProps) => {
-  const { id, message } = props;
+  const { id, loading, message } = props;
+
+  let backgroundColor = message.self ? "primary.main" : "background.paper";
+  if (message.failed) {
+    backgroundColor = "#ddd";
+  } else if (loading) {
+    backgroundColor = "transparent";
+  }
+  const color = message.self || message.failed ? "primary.contrastText" : "text.primary";
 
   return (
     <Grow in>
@@ -33,13 +62,14 @@ const ChatMessageBubble = (props: ChatMessageBubbleProps) => {
           style={{ overflowWrap: "break-word" }}
         >
           {message.content ? (
-            <Box
+            <Bubble
               maxWidth="100%"
               py={1}
               px={2}
-              bgcolor={message.failed ? "#ddd" : message.self ? "primary.main" : "background.paper"}
-              color={message.self || message.failed ? "primary.contrastText" : "text.primary"}
+              bgcolor={backgroundColor}
+              color={color}
               borderRadius={4}
+              data-loading={loading ? "true" : undefined}
               boxShadow={2}
             >
               <Typography
@@ -48,7 +78,7 @@ const ChatMessageBubble = (props: ChatMessageBubbleProps) => {
               >
                 {message.content}
               </Typography>
-            </Box>
+            </Bubble>
           ) : null}
           {message.failed ? (
             <Typography

@@ -1,8 +1,8 @@
 import { Box } from "@material-ui/core";
 import React, { useEffect, useRef, useState, useImperativeHandle } from "react";
 import styled from "styled-components";
-import ChatInput from "./ChatInput";
-import ChatMessageBubble, { type ChatMessage } from "./ChatMessageBubble";
+import ChatInput, { type ChatInputProps } from "./ChatInput";
+import ChatMessageBubble, { type ChatMessage, type ChatMessageBubbleProps } from "./ChatMessageBubble";
 
 export interface ChatPanelProps {
   messages: ChatMessage[];
@@ -11,6 +11,11 @@ export interface ChatPanelProps {
   style?: React.CSSProperties;
   className?: string;
   disabled?: boolean;
+  responding?: boolean;
+  components?: {
+    input?: React.ComponentType<ChatInputProps>;
+    messageBubble?: React.ComponentType<ChatMessageBubbleProps>;
+  };
 }
 
 const CHAT_PANEL_CLASSES = {
@@ -64,7 +69,7 @@ export interface ChatPanelHandle {
 }
 
 const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
-  const { messages, disabled, setMessages, loading, ...otherProps } = props;
+  const { messages, responding, disabled, setMessages, loading, ...otherProps } = props;
 
   const scrollableRef = useRef<any>();
   const handle: ChatPanelHandle = {
@@ -86,6 +91,9 @@ const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
     setMessages([...messages]);
   };
 
+  const ChatMessageBubbleComponent = props.components?.messageBubble || ChatMessageBubble;
+  const ChatInputComponent = props.components?.input || ChatInput;
+
   return (
     <ChatPanelWrap {...otherProps}>
       <div
@@ -93,15 +101,25 @@ const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
         className={CHAT_PANEL_CLASSES.messages}
       >
         {messages.map((msg, index) => (
-          <ChatMessageBubble
+          <ChatMessageBubbleComponent
             key={index}
             id={`cu-msg-${index + 1}`}
             message={msg}
           />
         ))}
+        {responding ? (
+          <ChatMessageBubbleComponent
+            loading={true}
+            id={"__responding"}
+            message={{
+              self: false,
+              content: "Typing...",
+            }}
+          />
+        ) : null}
       </div>
       <Box className={CHAT_PANEL_CLASSES.input}>
-        <ChatInput
+        <ChatInputComponent
           disabled={disabled}
           onAddMessage={onAddMessage}
           loading={loading}

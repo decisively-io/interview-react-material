@@ -15,17 +15,16 @@ export interface ChatInputProps {
 }
 
 const ChatInput = (props: ChatInputProps) => {
-  const { placeholder, sendText, disabled, onAddMessage, serverLoading } = {
+  const { placeholder, sendText, disabled, onAddMessage, loading } = {
     placeholder: "",
     sendText: "Send",
-    serverLoading: false,
     ...props,
   };
 
   const [value, setValue] = useState("");
 
   const setResponse = () => {
-    if (serverLoading) return;
+    if (loading) return;
     onAddMessage({
       content: value,
       self: true,
@@ -75,12 +74,12 @@ const ChatInput = (props: ChatInputProps) => {
       <Button
         type="button"
         onClick={setResponse}
-        disabled={!value || serverLoading || disabled}
+        disabled={!value || loading || disabled}
         variant="contained"
         color="primary"
         startIcon={<SendIcon />}
       >
-        {serverLoading ? <div>Loading...</div> : sendText}
+        {loading ? <div>Loading...</div> : sendText}
       </Button>
     </Box>
   );

@@ -1,5 +1,3 @@
-const SideBar = () => {
-
-}
+const SideBar = () => {};
 
 export default SideBar;

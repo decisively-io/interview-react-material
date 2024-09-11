@@ -1,11 +1,11 @@
 import type { GenerativeChatControl } from "@decisively-io/interview-sdk";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, type ControllerRenderProps, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import type { ChatMessage } from "../chat";
-import ChatPanel from "../chat/ChatPanel";
 import { getChatFieldId } from "../../util";
 import { InterviewContext } from "../Interview";
+import type { ChatMessage } from "../chat";
+import ChatPanel from "../chat/ChatPanel";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 
@@ -26,15 +26,37 @@ const GenerativeChatControlWidget = Object.assign(
   React.memo((props: GenerativeChatControlWidgetProps) => {
     const { control, chOnScreenData, className } = props;
 
+    const fieldId = getChatFieldId(control);
+
     const { session } = useContext(InterviewContext);
 
     const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [responding, setResponding] = useState(false);
+    const [interactionId, setInteractionId] = useState<string | null>(null);
+    const [completed, setCompleted] = useState(false);
+    const fieldRef = useRef<ControllerRenderProps>();
 
     const addMessage = async (message: string) => {
+      setResponding(true);
       try {
-        const payload = await session.chat(message, {
+        const payload = await session.chat(control.goal, message, interactionId, {
           aiOptions: control.aiOptions,
         });
+        if (interactionId === undefined) {
+          setInteractionId(payload.interactionId);
+        }
+
+        // @ts-ignore
+        if (payload.status === "complete") {
+          setCompleted(true);
+          fieldRef.current?.onChange({
+            target: {
+              value: true,
+            },
+          });
+        }
+
+        setResponding(false);
         setMessages([
           ...messages,
           {
@@ -43,36 +65,40 @@ const GenerativeChatControlWidget = Object.assign(
           },
         ]);
       } catch (error) {
+        setResponding(false);
         setMessages([...messages.slice(0, -1), { ...messages[messages.length - 1], failed: true }]);
       }
     };
-
-    useEffect(() => {
-      addMessage(control.initialMessage);
-    }, []);
-
     const setUserMessages = async (messages: ChatMessage[]) => {
       setMessages(messages);
       const newMessage = messages[messages.length - 1];
       await addMessage(newMessage.content);
     };
 
+    useEffect(() => {
+      addMessage(control.initialMessage);
+    }, []);
+
     const ref = useRef();
     const { control: formControl } = useFormContext();
 
     return (
       <Controller
-        name={getChatFieldId(control)}
+        name={fieldId}
         control={formControl}
-        render={({ field }) => (
-          <StyledChatPanel
-            loading={session.externalLoading}
-            ref={ref}
-            disabled={Boolean(field.value || field.disabled)}
-            messages={messages}
-            setMessages={setUserMessages}
-          />
-        )}
+        render={({ field }) => {
+          fieldRef.current = field;
+          return (
+            <StyledChatPanel
+              responding={responding}
+              loading={session.externalLoading}
+              ref={ref}
+              disabled={Boolean(field.value || field.disabled || completed)}
+              messages={messages}
+              setMessages={setUserMessages}
+            />
+          );
+        }}
       />
     );
   }),
