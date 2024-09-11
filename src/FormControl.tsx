@@ -165,7 +165,8 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
             >
               {render({
                 onChange: handleChange,
-                value,
+                // @ts-ignore
+                value: value ?? control.value ?? control.default,
                 forId,
                 error,
                 inlineLabel,

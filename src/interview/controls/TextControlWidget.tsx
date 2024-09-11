@@ -17,16 +17,6 @@ const StyledTextField = styled(TextField)`
   flex: 1;
 `;
 
-const withFallback = (arg: IParam) =>
-  typeof arg.value === "string" ? (
-    <StyledTextField {...arg} />
-  ) : (
-    <StyledTextField
-      {...arg}
-      value=""
-    />
-  );
-
 const TextControlWidget = Object.assign(
   React.memo((props: TextControlWidgetProps) => {
     const { control, textFieldProps, chOnScreenData, className } = props;
@@ -57,19 +47,19 @@ const TextControlWidget = Object.assign(
 
         return (
           <>
-            {withFallback({
-              onChange: handleChange,
-              label: inlineLabel,
-              value: value,
-              variant: "outlined",
-              id: forId,
-              error: error !== undefined,
-              helperText: error?.message || " ",
-              disabled: control.disabled,
-              ...maybeWithType,
-              ...maybeWithMulti,
-              ...textFieldProps,
-            })}
+            <StyledTextField
+              onChange={handleChange}
+              label={inlineLabel}
+              value={value ?? ""}
+              variant={"outlined"}
+              id={forId}
+              error={error !== undefined}
+              helperText={error?.message || " "}
+              disabled={control.disabled}
+              {...maybeWithType}
+              {...maybeWithMulti}
+              {...textFieldProps}
+            />
 
             {renderExplanation()}
           </>
