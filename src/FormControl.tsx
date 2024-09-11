@@ -9,6 +9,7 @@ import { Controller, type FieldError, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { InterviewContext } from "./interview/Interview";
 import { MAX_INLINE_LABEL_LENGTH } from "./util";
+import { generateValidatorForControl } from "./util/Validation";
 
 export interface ExplanationProps {
   style?: React.CSSProperties;
@@ -124,6 +125,20 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
     <Controller
       control={formControl}
       name={name}
+      rules={{
+        validate: (value) => {
+          const schema = generateValidatorForControl(control as any);
+          if (!schema) {
+            return true;
+          }
+          try {
+            schema.validateSync(value);
+            return true;
+          } catch (e: any) {
+            return e.errors.join(", ");
+          }
+        },
+      }}
       // @ts-ignore
       defaultValue={control.value ?? control.default}
       render={({ field: { name, value, onChange }, fieldState: { error } }) => {

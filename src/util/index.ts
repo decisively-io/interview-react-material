@@ -8,10 +8,6 @@ import {
   formatDate,
 } from "@decisively-io/interview-sdk";
 
-export const getChatFieldId = (control: GenerativeChatControl) => {
-  return `_chat_${control.id}`;
-};
-
 export const VALUE_ROWS_CONST = "valueRows";
 
 export interface IEntityData {
@@ -80,6 +76,10 @@ export function normalizeControlsValue(
   return controls.reduce<ControlsValue>((a, control) => {
     if (control.type === "typography" || control.type === "file" || control.type === "image") {
       return a;
+    }
+
+    if (control.type === "generative_chat") {
+      return Object.assign(a, controlsValue[control.id]);
     }
 
     if (control.type === "switch_container") {

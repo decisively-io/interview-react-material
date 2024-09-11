@@ -1,10 +1,5 @@
 import {
-  type Control,
   DATE_FORMAT,
-  type IEntity,
-  type IFile,
-  type IImage,
-  type ITypography,
   type RenderableControl,
   TIME_FORMAT_12,
   TIME_FORMAT_24,
@@ -18,14 +13,11 @@ import {
   type InternalFieldName,
   type Ref,
   type ResolverOptions,
-  type ResolverResult,
-  appendErrors,
   get,
   set,
 } from "react-hook-form";
-import type * as Yup from "yup";
 import * as yup from "yup";
-import { deriveDateFromTimeComponent, getChatFieldId, requiredErrStr, resolveNowInDate } from "./index";
+import { deriveDateFromTimeComponent, requiredErrStr, resolveNowInDate } from "./index";
 
 const setCustomValidity = (ref: Ref, fieldPath: string, errors: FieldErrors) => {
   if (ref && "reportValidity" in ref) {
@@ -82,134 +74,7 @@ export const toNestErrors = <TFieldValues extends FieldValues>(
 const isNameInFieldArray = (names: InternalFieldName[], name: InternalFieldName) =>
   names.some((n) => n.startsWith(`${name}.`));
 
-const generateValidatorsForControls = (controls: RenderableControl[], values: any): Record<string, yup.AnySchema> => {
-  return controls.reduce((fields, control) => {
-    switch (control.type) {
-      case "generative_chat": {
-        fields[getChatFieldId(control)] = yup.boolean().required();
-        return fields;
-      }
-
-      case "boolean":
-      case "currency":
-      case "time":
-      case "datetime":
-      case "text":
-      case "date":
-      case "options": {
-        fields[control.attribute] = generateValidatorForControl(control);
-        return fields;
-      }
-      case "switch_container": {
-        const controls = control.branch === "true" ? control.outcome_true : control.outcome_false;
-        if (controls) {
-          return Object.assign(fields, generateValidatorsForControls(controls, values));
-        }
-        return fields;
-      }
-
-      case "number_of_instances": {
-        fields[control.entity] = generateValidatorForControl(control);
-        return fields;
-      }
-      case "entity": {
-        const template: IEntity["template"] = control.template;
-
-        fields[control.entity] = yup.array(
-          yup.object({
-            "@id": yup.string(),
-
-            ...template.reduce<Record<string, yup.AnySchema>>((a, it) => {
-              if (it.type === "file" || it.type === "image" || it.type === "typography") {
-                return a;
-              }
-
-              a[it.type === "number_of_instances" ? it.entity : (it as any).attribute] = generateValidatorForControl(
-                it as any,
-              );
-
-              return a;
-            }, {} as any),
-          }),
-        );
-
-        return fields;
-      }
-      default:
-        return fields;
-    }
-  }, {} as any);
-};
-
-export type Resolver = <TFieldValues extends FieldValues, TContext>(
-  values: TFieldValues,
-  context: TContext | undefined,
-  options: ResolverOptions<TFieldValues>,
-) => Promise<ResolverResult<TFieldValues>>;
-
-/**
- * Why `path!` ? because it could be `undefined` in some case
- * https://github.com/jquense/yup#validationerrorerrors-string--arraystring-value-any-path-string
- */
-const parseErrorSchema = (error: Yup.ValidationError, validateAllFieldCriteria: boolean) => {
-  return (error.inner || []).reduce<Record<string, FieldError>>((previous, error) => {
-    // biome-ignore lint/style/noNonNullAssertion: borrowed from lib
-    if (!previous[error.path!]) {
-      // biome-ignore lint/style/noNonNullAssertion: borrowed from lib
-      previous[error.path!] = { message: error.message, type: error.type! };
-    }
-
-    if (validateAllFieldCriteria) {
-      // biome-ignore lint/style/noNonNullAssertion: borrowed from lib
-      const types = previous[error.path!].types;
-      // biome-ignore lint/style/noNonNullAssertion: borrowed from lib
-      const messages = types?.[error.type!];
-
-      // biome-ignore lint/style/noNonNullAssertion: borrowed from lib
-      previous[error.path!] = appendErrors(
-        // biome-ignore lint/style/noNonNullAssertion: borrowed from lib
-        error.path!,
-        validateAllFieldCriteria,
-        previous,
-        // biome-ignore lint/style/noNonNullAssertion: borrowed from lib
-        error.type!,
-        messages ? ([] as string[]).concat(messages as string[], error.message) : error.message,
-      ) as FieldError;
-    }
-
-    return previous;
-  }, {});
-};
-
-export const generateValidator =
-  (controls: RenderableControl[]): Resolver =>
-  async (values, context, options) => {
-    try {
-      const shape = generateValidatorsForControls(controls, values);
-      const schema = yup.object().shape(shape).required();
-
-      const result = await schema.validate(values, Object.assign({ abortEarly: false }, {}, { context }));
-
-      return {
-        values: result,
-        errors: {},
-      };
-    } catch (e: any) {
-      if (!e.inner) {
-        throw e;
-      }
-
-      const errors = toNestErrors(parseErrorSchema(e, false), options ?? {});
-      //console.log(errors);
-
-      return {
-        values: {},
-        errors: errors,
-      };
-    }
-  };
-
-function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography | IImage | IFile>): yup.AnySchema {
+export const generateValidatorForControl = (c: RenderableControl): yup.AnySchema | undefined => {
   switch (c.type) {
     case "boolean": {
       const { required } = c;
@@ -454,7 +319,8 @@ function generateValidatorForControl(c: Exclude<Control, IEntity | ITypography |
 
       return withType;
     }
+
     default:
-      return yup.string();
+      return undefined;
   }
-}
+};

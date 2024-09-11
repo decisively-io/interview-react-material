@@ -1,8 +1,8 @@
 import type { GenerativeChatControl } from "@decisively-io/interview-sdk";
+import deepmerge from "deepmerge";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, type ControllerRenderProps, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { getChatFieldId } from "../../util";
 import { InterviewContext } from "../Interview";
 import type { ChatMessage } from "../chat";
 import ChatPanel from "../chat/ChatPanel";
@@ -26,7 +26,7 @@ const GenerativeChatControlWidget = Object.assign(
   React.memo((props: GenerativeChatControlWidgetProps) => {
     const { control, chOnScreenData, className } = props;
 
-    const fieldId = getChatFieldId(control);
+    const fieldId = control.id;
 
     const { session } = useContext(InterviewContext);
 
@@ -34,7 +34,8 @@ const GenerativeChatControlWidget = Object.assign(
     const [responding, setResponding] = useState(false);
     const [interactionId, setInteractionId] = useState<string | null>(null);
     const [completed, setCompleted] = useState(false);
-    const fieldRef = useRef<ControllerRenderProps>();
+    const [data, setData] = useState({});
+    const form = useFormContext();
 
     const addMessage = async (message: string) => {
       setResponding(true);
@@ -42,18 +43,17 @@ const GenerativeChatControlWidget = Object.assign(
         const payload = await session.chat(control.goal, message, interactionId, {
           aiOptions: control.aiOptions,
         });
-        if (interactionId === undefined) {
+        if (interactionId === null) {
           setInteractionId(payload.interactionId);
         }
 
-        // @ts-ignore
+        const newData = deepmerge(data, payload.processedData ?? {});
+        setData(newData);
+        chOnScreenData?.(newData);
+
         if (payload.status === "complete") {
           setCompleted(true);
-          fieldRef.current?.onChange({
-            target: {
-              value: true,
-            },
-          });
+          form.setValue(fieldId, newData);
         }
 
         setResponding(false);
@@ -86,8 +86,10 @@ const GenerativeChatControlWidget = Object.assign(
       <Controller
         name={fieldId}
         control={formControl}
+        rules={{
+          required: true,
+        }}
         render={({ field }) => {
-          fieldRef.current = field;
           return (
             <StyledChatPanel
               responding={responding}

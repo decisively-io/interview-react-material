@@ -14,7 +14,6 @@ import React, { useContext } from "react";
 import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
-import { generateValidator } from "../util/Validation";
 import { InterviewContext } from "./Interview";
 import ChatPanel from "./chat/ChatPanel";
 import Controls, { type ControlComponents } from "./controls";
@@ -214,12 +213,10 @@ const Content = Object.assign(
     } = props;
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
-    const resolver = generateValidator(controls);
 
     const interviewContext = useContext(InterviewContext);
 
     const methods = useForm({
-      resolver,
       defaultValues,
       mode: rhfMode,
       reValidateMode: rhfReValidateMode,
