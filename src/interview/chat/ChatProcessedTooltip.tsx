@@ -44,7 +44,7 @@ const ChatProcessedTooltip = (props: ChatProcessedTooltipProps) => {
   }
 
   return (
-    <Tooltip
+    itemCount ? <Tooltip
       title={<List>{children}</List>}
       PopperProps={{
         modifiers: [
@@ -61,9 +61,9 @@ const ChatProcessedTooltip = (props: ChatProcessedTooltipProps) => {
         variant="caption"
         color="textSecondary"
       >
-        Collected {itemCount} items
+        Collected {itemCount} item{itemCount === 1 ? "" : "s"}
       </Typography>
-    </Tooltip>
+    </Tooltip> : null
   );
 };
 
