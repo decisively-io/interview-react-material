@@ -1,6 +1,6 @@
 import type { ResponseData, Session } from "@decisively-io/interview-sdk";
 import { type SessionInstance, transformResponse } from "@decisively-io/interview-sdk";
-import { CssBaseline, ThemeProvider, createTheme } from "@material-ui/core";
+import { CssBaseline, ThemeProvider, Typography, createTheme } from "@material-ui/core";
 import React, { useCallback, useState } from "react";
 import ReactDom from "react-dom";
 import * as Parts from "../parts";
@@ -8,6 +8,88 @@ import TextControlRender from "../parts/controls/TextControlWidget";
 import * as FontNS from "../parts/font";
 import { session as dataSession } from "./data";
 import { PWD, provider } from "./interviews";
+import styled from "styled-components";
+
+
+
+const TestWrap = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 4.5rem;
+  border: 1px solid black;
+  padding: 1rem;
+  background-color: #F9F9F9;
+`;
+const TestCol = styled.div`
+  display: flex;
+  gap: 2rem;
+  flex-grow: 1;
+`;
+const TestLabelCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`;
+const Label = styled(Typography)`
+  /* font-family: Montserrat; */
+  font-size: 0.875rem;
+  line-height: 1.2;
+  color: #A3A3A3;
+`;
+const TestValueCol = styled( TestLabelCol )`
+
+`;
+const Value = styled(Label)`
+  color: #000000;
+`;
+
+const Test = () => {
+  type LabelValue = { label: string; value: string };
+  type Data = LabelValue[][];
+
+  const data: Data = [
+    [
+      { label: 'First name', value: 'John Micheal Smith' },
+      { label: 'Last name', value: 'Smith' },
+      { label: 'Passport Number', value: 'XXXXXX' },
+      { label: 'Date of Birth', value: 'XXXXXX' },
+    ],
+    [
+      { label: 'Street Address', value: 'xx Street Avenue' },
+      { label: 'City', value: 'Sydney' },
+      { label: 'Postal / Zip Code ', value: '1234' },
+      { label: 'Country', value: 'Australia' },
+    ],
+    [
+      { label: 'Email', value: 'John.m.smith@email.com' },
+      { label: 'Phone', value: '+61 490123 456' },
+    ],
+  ]
+  return (
+    <div style={{ padding: '2rem' }}>
+      <TestWrap>
+        {
+          data.map((col, i) => {
+            const labels = col.map(it => it.label);
+            const values = col.map(it => it.value);
+
+            return (
+              <TestCol key={i}>
+                <TestLabelCol>
+                  { labels.map((it, i) => <Label key={i}>{ it }</Label>) }
+                </TestLabelCol>
+
+                <TestValueCol>
+                  { values.map((it, i) => <Value key={i}>{ it }</Value>)}
+                </TestValueCol>
+              </TestCol>
+            );
+          })
+        }
+      </TestWrap>
+    </div>
+  );
+}
 
 const APP_DIV_ID = "app";
 const rootDiv = (() => {
@@ -108,6 +190,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {/* <Test /> */}
       <Parts.Root
         // getSession={getSession}
         session={dataSession as any}

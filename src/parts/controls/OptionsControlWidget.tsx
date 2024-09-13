@@ -59,7 +59,7 @@ const OptionsControlWidget = Object.assign(
       control,
       className: finalClsnm,
       onScreenDataChange: chOnScreenData,
-      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
+      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation, disabled }) => {
         const typedValue = value as OptionsControl["value"];
 
         const setValueRadio: NonNullable<React.ComponentProps<typeof RadioGroup>["onChange"]> = ({
@@ -146,7 +146,7 @@ const OptionsControlWidget = Object.assign(
                     }}
                   />
                 )}
-                disabled={control.disabled}
+                disabled={control.disabled || disabled}
                 {...autocompleteProps}
               />
             )}

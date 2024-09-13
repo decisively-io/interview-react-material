@@ -50,7 +50,7 @@ const TextControlWidget = Object.assign(
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
-      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
+      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation, disabled }) => {
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           onChange(e.target.value);
         };
@@ -65,7 +65,7 @@ const TextControlWidget = Object.assign(
               id: forId,
               error: error !== undefined,
               helperText: error?.message || " ",
-              disabled: control.disabled,
+              disabled: control.disabled || disabled,
               ...maybeWithType,
               ...maybeWithMulti,
               ...textFieldProps,

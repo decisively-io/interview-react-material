@@ -38,7 +38,7 @@ const DateTimeControlWidget = Object.assign(
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
-      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => (
+      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation, disabled }) => (
         <>
           <StyledDateTimePicker
             label={inlineLabel}
@@ -53,7 +53,7 @@ const DateTimeControlWidget = Object.assign(
             minutesStep={minutes_increment}
             maxDate={maxDate}
             minDate={minDate}
-            disabled={control.disabled}
+            disabled={control.disabled || disabled}
             {...dateTimePickerProps}
           />
 

@@ -49,7 +49,6 @@ export interface FormControlRenderState {
   error: FieldError | undefined;
   inlineLabel: string | undefined;
   renderExplanation: (props?: ExplanationProps) => React.ReactNode;
-  disabled?: boolean;
 }
 
 const isLabelTooLong = (label: string | undefined): label is string => {
@@ -78,30 +77,6 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
   const { attribute } = controlInProps;
   const { control: formControl } = useFormContext();
   const [forId] = useState(() => Math.random().toString(36).substring(7));
-
-  const renderExplanation = (props?: ExplanationProps) => {
-    const otherProps = props;
-    if (!( 'showExplanation' in controlInProps && controlInProps.showExplanation) || !explanation) {
-      return null;
-    }
-
-    return (
-      <ExplanationTooltip
-        placement={"bottom-start"}
-        open={focus || helpHover}
-        title={explanation || "no explanation"}
-        {...otherProps}
-      >
-        {/* biome-ignore lint: it's fine not having onFocus */}
-        <div
-          onMouseOver={() => setHelpHover(true)}
-          onMouseLeave={() => setHelpHover(false)}
-        >
-          <HelpOutline />
-        </div>
-      </ExplanationTooltip>
-    );
-  };
 
   const readOnlyBasedMeta = React.useMemo< ReadOnlyBasedMeta >(() => {
     const controlLocal =  controlInProps;
@@ -146,6 +121,30 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
     : controlInProps;
 
 
+  const renderExplanation = (props?: ExplanationProps) => {
+    const otherProps = props;
+    if (!( 'showExplanation' in control && control.showExplanation) || !explanation) {
+      return null;
+    }
+
+    return (
+      <ExplanationTooltip
+        placement={"bottom-start"}
+        open={focus || helpHover}
+        title={explanation || "no explanation"}
+        {...otherProps}
+      >
+        {/* biome-ignore lint: it's fine not having onFocus */}
+        <div
+          onMouseOver={() => setHelpHover(true)}
+          onMouseLeave={() => setHelpHover(false)}
+        >
+          <HelpOutline />
+        </div>
+      </ExplanationTooltip>
+    );
+  };
+
   if(readOnlyBasedMeta.type === 'overrideRender') {
     return readOnlyBasedMeta.node;
   }
@@ -181,6 +180,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
 
   // @ts-ignore
   const name: string = attribute ?? control.entity;
+  console.log(5555, control, ('disabled' in control && control.disabled));
 
   return (
     <Controller
@@ -230,7 +230,6 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
                 error,
                 inlineLabel,
                 renderExplanation,
-                disabled: ('disabled' in control && control.disabled),
               })}
             </FormControlStyled>
           </>

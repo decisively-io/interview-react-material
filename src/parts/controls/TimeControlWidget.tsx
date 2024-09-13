@@ -34,7 +34,7 @@ const TimeControlWidget = Object.assign(
       className: className,
       onScreenDataChange: chOnScreenData,
       // renderValue: (value) => `${value}`, // TODO: figure out how to convert 24 hour time to am/pm format if amPmFormat is ture
-      render: ({ onChange, value, error, forId, inlineLabel, renderExplanation }) => {
+      render: ({ onChange, value, error, forId, inlineLabel, renderExplanation, disabled }) => {
         const typedValue = value as TimeControl["value"];
         const compValue = typeof typedValue === "string" ? new Date(`1970-01-01T${value}`) : null;
 
@@ -52,7 +52,7 @@ const TimeControlWidget = Object.assign(
               ampm={Boolean(amPmFormat)}
               minutesStep={minutes_increment}
               views={allowSeconds ? allViews : secondLessViews}
-              disabled={control.disabled}
+              disabled={control.disabled || disabled}
               {...timePickerProps}
             />
 

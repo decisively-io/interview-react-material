@@ -44,7 +44,7 @@ const CurrencyControlWidget = Object.assign(
       className: className,
       onScreenDataChange: chOnScreenData,
       renderValue: (value) => `${symbol || "$"} ${value}`,
-      render: ({ onChange, forId, value, error, inlineLabel, renderExplanation }) => {
+      render: ({ onChange, forId, value, error, inlineLabel, renderExplanation, disabled }) => {
         const typedValue = value as CurrencyControl["value"];
 
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +62,7 @@ const CurrencyControlWidget = Object.assign(
               error: error !== undefined,
               helperText: error?.message || " ",
               InputProps,
-              disabled: control.disabled,
+              disabled: control.disabled || disabled,
               ...textFieldProps,
             })}
 
