@@ -1,10 +1,9 @@
-import type { GenerativeChatControl } from "@decisively-io/interview-sdk";
+import type { ChatMessage, GenerativeChatControl } from "@decisively-io/interview-sdk";
 import deepmerge from "deepmerge";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, type ControllerRenderProps, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import { InterviewContext } from "../Interview";
-import type { ChatMessage } from "../chat";
 import ChatPanel from "../chat/ChatPanel";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
@@ -47,7 +46,7 @@ const GenerativeChatControlWidget = Object.assign(
           setInteractionId(payload.interactionId);
         }
 
-        const newData = deepmerge(data, payload.processedData ?? {});
+        const newData = deepmerge(data, payload.processed.data ?? {});
         setData(newData);
         chOnScreenData?.(newData);
 
@@ -57,6 +56,12 @@ const GenerativeChatControlWidget = Object.assign(
         }
 
         setResponding(false);
+
+        const userMessage = messages[messages.length - 1];
+        if (userMessage) {
+          userMessage.processed = payload.processed;
+        }
+
         setMessages([
           ...messages,
           {

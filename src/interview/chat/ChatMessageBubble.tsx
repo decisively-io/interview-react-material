@@ -1,11 +1,8 @@
+import type { ChatMessage } from "@decisively-io/interview-sdk";
 import { Box, Grow, Typography } from "@material-ui/core";
+import React from "react";
 import styled from "styled-components";
-
-export interface ChatMessage {
-  content: string;
-  self: boolean;
-  failed?: boolean;
-}
+import ChatProcessedTooltip from "./ChatProcessedTooltip";
 
 export interface ChatMessageBubbleProps {
   id: string;
@@ -84,10 +81,15 @@ const ChatMessageBubble = (props: ChatMessageBubbleProps) => {
             <Typography
               variant="body1"
               color={"error"}
-              style={{ whiteSpace: "pre-wrap", fontSize: "0.9em" }}
+              style={{
+                whiteSpace: "pre-wrap",
+                fontSize: "0.9em",
+              }}
             >
               {message.self ? "Failed to send message" : "Something went wrong"}
             </Typography>
+          ) : message.processed ? (
+            <ChatProcessedTooltip processed={message.processed} />
           ) : null}
         </Box>
       </Box>

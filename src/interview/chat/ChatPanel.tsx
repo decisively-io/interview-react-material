@@ -1,8 +1,9 @@
+import type { ChatMessage } from "@decisively-io/interview-sdk";
 import { Box } from "@material-ui/core";
 import React, { useEffect, useRef, useState, useImperativeHandle } from "react";
 import styled from "styled-components";
 import ChatInput, { type ChatInputProps } from "./ChatInput";
-import ChatMessageBubble, { type ChatMessage, type ChatMessageBubbleProps } from "./ChatMessageBubble";
+import ChatMessageBubble, { type ChatMessageBubbleProps } from "./ChatMessageBubble";
 
 export interface ChatPanelProps {
   messages: ChatMessage[];

@@ -1,8 +1,8 @@
+import type { ChatMessage } from "@decisively-io/interview-sdk";
 import { Box, Button, TextField } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import type React from "react";
 import { useState } from "react";
-import type { ChatMessage } from "./ChatMessageBubble";
 
 //import { LoadingDotsJSX } from "@icons";
 
