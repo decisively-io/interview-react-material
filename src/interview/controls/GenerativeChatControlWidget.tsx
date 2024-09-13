@@ -46,7 +46,7 @@ const GenerativeChatControlWidget = Object.assign(
           setInteractionId(payload.interactionId);
         }
 
-        const newData = deepmerge(data, payload.processed.data ?? {});
+        const newData = deepmerge(data, payload.processed?.data ?? {});
         setData(newData);
         chOnScreenData?.(newData);
 
