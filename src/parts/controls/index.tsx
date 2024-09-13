@@ -19,6 +19,7 @@ import SwitchContainerWidget, { type SwitchContainerControlWidgetProps } from ".
 import TextControlWidget, { type TextControlWidgetProps } from "./TextControlWidget";
 import TimeControlWidget, { type TimeControlWidgetProps } from "./TimeControlWidget";
 import TypographyControlWidget, { type TypographyControlWidgetProps } from "./TypographyControlWidget";
+import FileControlWidget, { type FileControlWidgetProps } from "./FileControlWidget";
 
 export interface ControlsProps {
   controls: Control[];
@@ -41,6 +42,7 @@ export interface ControlComponents {
   SwitchContainer?: React.ComponentType<SwitchContainerControlWidgetProps>;
   CertaintyContainer?: React.ComponentType<CertaintyContainerControlWidgetProps>;
   RepeatingContainer?: React.ComponentType<RepeatingContainerControlWidgetProps>;
+  File?: React.ComponentType< FileControlWidgetProps >;
 }
 
 const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
@@ -58,6 +60,7 @@ const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
   SwitchContainer: SwitchContainerWidget,
   CertaintyContainer: CertaintyContainerWidget,
   RepeatingContainer: RepeatingContainerWidget,
+  File: FileControlWidget,
 };
 
 const Controls = React.memo((props: ControlsProps) => {

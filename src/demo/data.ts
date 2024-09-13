@@ -35,6 +35,11 @@ export const session: Session = {
         // default: '4567890',
       },
       {
+        type: 'file',
+        attribute: 'attr-file',
+        id: 'attr-file-id',
+      },
+      {
         type: "entity",
         id: "entity1-UUID",
         min: 1,
