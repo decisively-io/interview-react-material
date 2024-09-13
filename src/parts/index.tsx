@@ -9,6 +9,8 @@ import Frame from "./Frame";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
 import type { ThemedCompProps, ThemedComponent } from "./themes/types";
+import type { UploadFile } from './controls/FileControlWidget_types';
+import { InterviewContext, fallbackUploadFile } from './InterviewContext';
 
 export const defaultStep: Session["steps"][0] = {
   complete: false,
@@ -31,6 +33,7 @@ export interface RootProps {
   controlComponents?: ControlComponents;
   rhfMode?: ContentProps["rhfMode"];
   rhfReValidateMode?: ContentProps["rhfReValidateMode"];
+  uploadFile: UploadFile;
 }
 
 export interface RootState {
@@ -40,21 +43,12 @@ export interface RootState {
   nextDisabled: boolean;
 }
 
-export interface InterviewContextState {
-  registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;
-  getExplanation: (attribute: string) => string | undefined;
-  session: Session;
-}
-
-export const InterviewContext = React.createContext<InterviewContextState>({
-  registerFormMethods: () => {},
-  session: {} as Session,
-  getExplanation: () => undefined,
-});
 
 export class Root<P extends RootProps = RootProps> extends React.Component<P, RootState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Root`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
+
+  uploadFile: RootProps[ 'uploadFile' ] = fallbackUploadFile;
 
   constructor(props: P) {
     super(props);
@@ -65,6 +59,8 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
       isRequestPending: false,
       nextDisabled: false,
     };
+
+    this.uploadFile = props.uploadFile || this.uploadFile;
   }
 
   // ===================================================================================

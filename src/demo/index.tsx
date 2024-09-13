@@ -123,6 +123,7 @@ const App = () => {
           },
         }}
         rhfMode="onChange"
+        uploadFile={() => Promise.resolve({ reference: Math.random().toString() })}
       />
     </ThemeProvider>
   );

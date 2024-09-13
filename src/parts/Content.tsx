@@ -16,7 +16,7 @@ import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
 import { generateValidator } from "../util/Validation";
 import Controls, { type ControlComponents } from "./controls";
-import { InterviewContext } from "./index";
+import { InterviewContext } from "./InterviewContext";
 
 export const classes = {
   ">formWrap": {
