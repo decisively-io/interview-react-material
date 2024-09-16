@@ -17,11 +17,17 @@ export const session: Session = {
     title: "Screen 1",
     controls: [
       {
-        type: 'file',
-        attribute: 'attr-file',
-        id: 'attr-file-id',
-        label: 'Add identity document(-s)',
-        labelDisplay: 'separate',
+        type: "file",
+        attribute: "attr-file",
+        id: "attr-file-id",
+        label: "Add identity document(-s)",
+        labelDisplay: "separate",
+        // max: 2,
+        // file_type: [
+        //   '.txt',
+        //   '.json',
+        // ],
+        // max_size: 0.005,
       },
 
       // {
@@ -352,4 +358,10 @@ export const session: Session = {
       title: "Outcome?",
     },
   ],
+  // @ts-ignore
+  save(...args: unknown[]) {
+    console.info(args);
+
+    return Promise.resolve(this);
+  },
 };

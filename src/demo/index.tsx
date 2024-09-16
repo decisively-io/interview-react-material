@@ -4,6 +4,7 @@ import { CssBaseline, ThemeProvider, createTheme } from "@material-ui/core";
 import React, { useCallback, useState } from "react";
 import ReactDom from "react-dom";
 import * as Parts from "../parts";
+import type { UploadFileRtrn } from "../parts/controls/FileControlWidget_types";
 import TextControlRender from "../parts/controls/TextControlWidget";
 import * as FontNS from "../parts/font";
 import { session as dataSession } from "./data";
@@ -123,7 +124,26 @@ const App = () => {
           },
         }}
         rhfMode="onChange"
-        uploadFile={() => Promise.resolve({ reference: Math.random().toString() })}
+        uploadFile={({ name }) => {
+          console.log(`uploading file "${name}" to temporary storage`);
+
+          return new Promise<UploadFileRtrn>((r) => {
+            setTimeout(() => {
+              console.log("upload finished");
+              const id = Math.random().toString();
+
+              r({ reference: `data:id={${id}};base64,${btoa(name)}`, id });
+            }, 1_000);
+          });
+        }}
+        removeFile={(ref) => {
+          console.log(`removing file with ref: ${ref}`);
+
+          return new Promise((r) => void setTimeout(r, 1_000));
+        }}
+        onFileTooBig={(f) => {
+          alert(`file ${f.name} is too big`);
+        }}
       />
     </ThemeProvider>
   );

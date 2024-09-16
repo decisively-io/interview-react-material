@@ -377,7 +377,7 @@
   dependencies:
     "@date-io/core" "^1.3.13"
 
-"@decisively-io/interview-sdk@0.9.44":
+"@decisively-io/interview-sdk@^0.9.38":
   version "0.9.44"
   resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.9.44/e1190c4ba09e786e54a5afce881e39f87099ec53#e1190c4ba09e786e54a5afce881e39f87099ec53"
   integrity sha512-Mqpeme3dDa+fmDSwMl/LfOVRHJogHXrDiZt/wu3fyDSXjd8xOANaUH2hcG8GzXOrlXxrHrFv66lwG8tyKqrc9Q==

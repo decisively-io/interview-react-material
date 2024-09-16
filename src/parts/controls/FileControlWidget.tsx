@@ -1,16 +1,48 @@
-import React from "react";
+import { type FileAttributeValue, isFileAttributeValue } from "@decisively-io/interview-sdk";
+import type { FileControl } from "@decisively-io/interview-sdk";
 import IconButton from "@material-ui/core/IconButton";
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Typography from "@material-ui/core/Typography";
-import { FileAttributeValue, isFileAttributeValue } from '@decisively-io/interview-sdk'
+import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from "@material-ui/icons/Delete";
+import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
-import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import type { FileControl } from "@decisively-io/interview-sdk";
 import { useInterviewContext } from "../InterviewContext";
-import { UploadFileArg } from "./FileControlWidget_types";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import type { UploadFileArg, UploadFileRtrn } from "./FileControlWidget_types";
 
+//# region base64Utils
+
+/**
+ * taken from https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem \
+ *
+ * original examples from mdn:
+ *    __bytesToBase64(new TextEncoder().encode("a Ā 𐀀 文 🦄")); // "YSDEgCDwkICAIOaWhyDwn6aE"
+ *    new TextDecoder().decode(__base64ToBytes("YSDEgCDwkICAIOaWhyDwn6aE")); // "a Ā 𐀀 文 🦄"
+ */
+function __base64ToBytes(base64: string): Uint8Array {
+  const binString = atob(base64);
+  return Uint8Array.from(binString, (m) => m.codePointAt(0) || 0);
+}
+
+// function __bytesToBase64(bytes: Uint8Array) {
+//   const binString = Array.from(bytes, b => String.fromCodePoint(b) ).join("");
+//   return btoa(binString);
+// }
+
+// slightly tweaked and more usable encode/decode methods
+
+// const encodeToBase64 = (jsStr: string) => __bytesToBase64(new TextEncoder().encode(jsStr));
+const decodeFromBase64 = (base64Str: string) => new TextDecoder().decode(__base64ToBytes(base64Str));
+
+//# endregion
+
+const getNameFromRef = (ref: UploadFileRtrn["reference"]) => {
+  const base64Indx = ref.indexOf("base64,");
+  const nameBase64 = ref.slice(base64Indx + 7).trim();
+
+  return decodeFromBase64(nameBase64);
+};
 
 const Wrap = styled.div`
   display: flex;
@@ -43,26 +75,25 @@ const SmallIconBtn = styled(IconButton)`
   }
 `;
 
-const toBase64 = (file: File): Promise< string > => new Promise((resolve, reject) => {
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
-  reader.onerror = reject;
-});
+const toBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : "");
+    reader.onerror = reject;
+  });
 
-
-export interface FileControlWidgetProps extends ControlWidgetProps< FileControl > {
-
-};
+export type FileControlWidgetProps = ControlWidgetProps<FileControl>;
 
 export default (p: FileControlWidgetProps) => {
   const { control, chOnScreenData } = p;
-  const { uploadFile } = useInterviewContext();
+  const { file_type, max = 1, max_size } = control;
+  const { uploadFile, onFileTooBig, removeFile } = useInterviewContext();
 
-  const hiddenInputRef = React.useRef< HTMLInputElement >(null);
+  const hiddenInputRef = React.useRef<HTMLInputElement>(null);
   const triggerAddFile = React.useCallback(() => {
     const { current } = hiddenInputRef;
-    if(current === null) return;
+    if (current === null) return;
 
     current.click();
   }, []);
@@ -72,14 +103,18 @@ export default (p: FileControlWidgetProps) => {
     // className: className,
     onScreenDataChange: chOnScreenData,
     render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
-      const normalizedValue: FileAttributeValue = isFileAttributeValue(value)
-        ? value
-        : { type: 'file', value: [] };
+      const normalizedValue: FileAttributeValue = isFileAttributeValue(value) ? value : { type: "file", value: [] };
 
-      const uploadFileHandler: React.ChangeEventHandler<HTMLInputElement> = e => {
+      const uploadFileHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         (async () => {
           const [file] = (e.currentTarget.files || []) as File[];
-          if(!file) return;
+          if (!file) return;
+
+          if (normalizedValue.value.some((it) => getNameFromRef(it) === file.name)) return;
+
+          if (max_size !== undefined && max_size * 1_000_000 < file.size) {
+            return void onFileTooBig(file);
+          }
 
           const result = await toBase64(file);
           const uploadaArg: UploadFileArg = {
@@ -88,54 +123,53 @@ export default (p: FileControlWidgetProps) => {
           };
 
           const uploadRes = await uploadFile(uploadaArg);
-          const newRefValue = `data:id=${ uploadRes.reference };base64,${btoa(file.name)}`;
           const nextValue: FileAttributeValue = {
             ...normalizedValue,
-            value: normalizedValue.value.concat(newRefValue)
+            value: normalizedValue.value.concat(uploadRes.reference),
           };
 
           onChange(nextValue);
         })();
       };
 
-      const deleteFile = (refValue: FileAttributeValue[ 'value' ][0]) => {
-        const nextValue: FileAttributeValue = {
-          ...normalizedValue,
-          value: normalizedValue.value.filter(it => it !== refValue),
-        };
-        onChange(nextValue);
-      }
+      const deleteFile = (refValue: FileAttributeValue["value"][0]) => {
+        (async function removeFileHandler() {
+          await removeFile(refValue);
+
+          const nextValue: FileAttributeValue = {
+            ...normalizedValue,
+            value: normalizedValue.value.filter((it) => it !== refValue),
+          };
+          onChange(nextValue);
+        })();
+      };
 
       return (
         <Wrap>
           <HiddenInput
-            type='file'
-            ref={ hiddenInputRef }
+            type="file"
+            ref={hiddenInputRef}
             onChange={uploadFileHandler}
+            accept={file_type === undefined || file_type.length === 0 ? undefined : file_type.join(", ")}
           />
 
           <FilesWrap>
-            {normalizedValue.value.map(it => {
-              const base64Indx = it.indexOf('base64,');
-              const nameBase64 = it.slice(base64Indx + 7).trim();
+            {normalizedValue.value.map((it) => (
+              <FileRow key={it}>
+                <SmallIconBtn onClick={() => deleteFile(it)}>
+                  <DeleteIcon />
+                </SmallIconBtn>
 
-              return (
-                <FileRow key={it}>
-                  <SmallIconBtn onClick={() => deleteFile(it)}>
-                    <DeleteIcon />
-                  </SmallIconBtn>
-
-                  <Typography>
-                    { atob(nameBase64) }
-                  </Typography>
-                </FileRow>
-              )
-            })}
+                <Typography>{getNameFromRef(it)}</Typography>
+              </FileRow>
+            ))}
           </FilesWrap>
 
-          <StyledIconButton onClick={triggerAddFile}>
-            <AddIcon />
-          </StyledIconButton>
+          {max <= normalizedValue.value.length ? null : (
+            <StyledIconButton onClick={triggerAddFile}>
+              <AddIcon />
+            </StyledIconButton>
+          )}
         </Wrap>
       );
     },

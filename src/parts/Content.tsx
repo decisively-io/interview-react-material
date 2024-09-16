@@ -15,8 +15,8 @@ import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
 import { generateValidator } from "../util/Validation";
-import Controls, { type ControlComponents } from "./controls";
 import { InterviewContext } from "./InterviewContext";
+import Controls, { type ControlComponents } from "./controls";
 
 export const classes = {
   ">formWrap": {

@@ -8,6 +8,7 @@ import CurrencyControlWidget, { type CurrencyControlWidgetProps } from "./Curren
 import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWidget";
 import DateTimeControlWidget, { type DateTimeControlWidgetProps } from "./DateTimeControlWidget";
 import EntityControlWidget, { type EntityControlWidgetProps } from "./EntityControlWidget";
+import FileControlWidget, { type FileControlWidgetProps } from "./FileControlWidget";
 import ImageControlWidget, { type ImageControlWidgetProps } from "./ImageControlWidget";
 import NumberOfInstancesControlWidget, {
   type NumberOfInstancesControlWidgetProps,
@@ -19,7 +20,6 @@ import SwitchContainerWidget, { type SwitchContainerControlWidgetProps } from ".
 import TextControlWidget, { type TextControlWidgetProps } from "./TextControlWidget";
 import TimeControlWidget, { type TimeControlWidgetProps } from "./TimeControlWidget";
 import TypographyControlWidget, { type TypographyControlWidgetProps } from "./TypographyControlWidget";
-import FileControlWidget, { type FileControlWidgetProps } from "./FileControlWidget";
 
 export interface ControlsProps {
   controls: Control[];
@@ -42,7 +42,7 @@ export interface ControlComponents {
   SwitchContainer?: React.ComponentType<SwitchContainerControlWidgetProps>;
   CertaintyContainer?: React.ComponentType<CertaintyContainerControlWidgetProps>;
   RepeatingContainer?: React.ComponentType<RepeatingContainerControlWidgetProps>;
-  File?: React.ComponentType< FileControlWidgetProps >;
+  File?: React.ComponentType<FileControlWidgetProps>;
 }
 
 const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {

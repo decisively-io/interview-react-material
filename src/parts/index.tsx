@@ -6,11 +6,16 @@ import { DISPLAY_NAME_PREFIX } from "../Constants";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
+import {
+  InterviewContext,
+  type InterviewContextState,
+  fallbackOnFileTooBig,
+  fallbackRemoveFile,
+  fallbackUploadFile,
+} from "./InterviewContext";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
 import type { ThemedCompProps, ThemedComponent } from "./themes/types";
-import type { UploadFile } from './controls/FileControlWidget_types';
-import { InterviewContext, fallbackUploadFile } from './InterviewContext';
 
 export const defaultStep: Session["steps"][0] = {
   complete: false,
@@ -33,7 +38,9 @@ export interface RootProps {
   controlComponents?: ControlComponents;
   rhfMode?: ContentProps["rhfMode"];
   rhfReValidateMode?: ContentProps["rhfReValidateMode"];
-  uploadFile: UploadFile;
+  uploadFile: InterviewContextState["uploadFile"];
+  removeFile: InterviewContextState["removeFile"];
+  onFileTooBig?: InterviewContextState["onFileTooBig"];
 }
 
 export interface RootState {
@@ -43,12 +50,15 @@ export interface RootState {
   nextDisabled: boolean;
 }
 
-
 export class Root<P extends RootProps = RootProps> extends React.Component<P, RootState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Root`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
 
-  uploadFile: RootProps[ 'uploadFile' ] = fallbackUploadFile;
+  uploadFile: RootProps["uploadFile"] = fallbackUploadFile;
+
+  removeFile: RootProps["removeFile"] = fallbackRemoveFile;
+
+  onFileTooBig: NonNullable<RootProps["onFileTooBig"]> = fallbackOnFileTooBig;
 
   constructor(props: P) {
     super(props);
@@ -61,6 +71,8 @@ export class Root<P extends RootProps = RootProps> extends React.Component<P, Ro
     };
 
     this.uploadFile = props.uploadFile || this.uploadFile;
+    this.removeFile = props.removeFile || this.removeFile;
+    this.onFileTooBig = props.onFileTooBig || this.onFileTooBig;
   }
 
   // ===================================================================================
