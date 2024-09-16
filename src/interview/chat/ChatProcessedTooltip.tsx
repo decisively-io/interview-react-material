@@ -43,8 +43,8 @@ const ChatProcessedTooltip = (props: ChatProcessedTooltipProps) => {
     }
   }
 
-  return (
-    itemCount ? <Tooltip
+  return itemCount ? (
+    <Tooltip
       title={<List>{children}</List>}
       PopperProps={{
         modifiers: [
@@ -63,8 +63,8 @@ const ChatProcessedTooltip = (props: ChatProcessedTooltipProps) => {
       >
         Collected {itemCount} item{itemCount === 1 ? "" : "s"}
       </Typography>
-    </Tooltip> : null
-  );
+    </Tooltip>
+  ) : null;
 };
 
 export default ChatProcessedTooltip;

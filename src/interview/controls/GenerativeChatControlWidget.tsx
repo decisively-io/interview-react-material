@@ -58,7 +58,7 @@ const GenerativeChatControlWidget = Object.assign(
         setResponding(false);
 
         const userMessage = messages[messages.length - 1];
-        if (userMessage) {
+        if (userMessage && control.showDataInline) {
           userMessage.processed = payload.processed;
         }
 
@@ -92,7 +92,7 @@ const GenerativeChatControlWidget = Object.assign(
         name={fieldId}
         control={formControl}
         rules={{
-          required: true,
+          required: control.required,
         }}
         render={({ field }) => {
           return (
