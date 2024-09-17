@@ -3,6 +3,7 @@ import { Box } from "@material-ui/core";
 import React, { useEffect, useRef, useState, useImperativeHandle } from "react";
 import styled from "styled-components";
 import ChatInput, { type ChatInputProps } from "./ChatInput";
+import ChatInputCompact from "./ChatInputCompact";
 import ChatMessageBubble, { type ChatMessageBubbleProps } from "./ChatMessageBubble";
 
 export interface ChatPanelProps {
@@ -17,6 +18,13 @@ export interface ChatPanelProps {
     input?: React.ComponentType<ChatInputProps>;
     messageBubble?: React.ComponentType<ChatMessageBubbleProps>;
   };
+  additionalAction?: {
+    icon?: React.ReactNode;
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+  };
+  compact?: boolean;
 }
 
 const CHAT_PANEL_CLASSES = {
@@ -70,7 +78,16 @@ export interface ChatPanelHandle {
 }
 
 const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
-  const { messages, responding, disabled, setMessages, loading, ...otherProps } = props;
+  const {
+    messages,
+    responding,
+    disabled,
+    setMessages,
+    loading,
+    additionalAction,
+    compact = false,
+    ...otherProps
+  } = props;
 
   const scrollableRef = useRef<any>();
   const handle: ChatPanelHandle = {
@@ -93,7 +110,7 @@ const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
   };
 
   const ChatMessageBubbleComponent = props.components?.messageBubble || ChatMessageBubble;
-  const ChatInputComponent = props.components?.input || ChatInput;
+  const ChatInputComponent = props.components?.input || (compact ? ChatInputCompact : ChatInput);
 
   return (
     <ChatPanelWrap {...otherProps}>
@@ -124,6 +141,7 @@ const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
           disabled={disabled}
           onAddMessage={onAddMessage}
           loading={loading}
+          additionalAction={additionalAction}
         />
       </Box>
     </ChatPanelWrap>

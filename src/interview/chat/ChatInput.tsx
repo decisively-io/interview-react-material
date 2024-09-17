@@ -12,10 +12,16 @@ export interface ChatInputProps {
   onAddMessage: (newMessage: ChatMessage) => void;
   loading?: boolean;
   disabled?: boolean;
+  additionalAction?: {
+    icon?: React.ReactNode;
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+  };
 }
 
 const ChatInput = (props: ChatInputProps) => {
-  const { placeholder, sendText, disabled, onAddMessage, loading } = {
+  const { placeholder, sendText, disabled, onAddMessage, loading, additionalAction } = {
     placeholder: "",
     sendText: "Send",
     ...props,
@@ -81,6 +87,18 @@ const ChatInput = (props: ChatInputProps) => {
       >
         {loading ? <div>Loading...</div> : sendText}
       </Button>
+      {additionalAction ? (
+        <Button
+          type="button"
+          onClick={additionalAction.onClick}
+          disabled={loading || disabled || (additionalAction.disabled ?? false)}
+          variant="contained"
+          color="secondary"
+          startIcon={additionalAction.icon}
+        >
+          {additionalAction.label}
+        </Button>
+      ) : null}
     </Box>
   );
 };
