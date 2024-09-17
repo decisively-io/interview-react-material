@@ -38,7 +38,7 @@ const BooleanControlWidget = Object.assign(
                   id={forId}
                   checked={typedValue || false}
                   indeterminate={typeof typedValue !== "boolean"}
-                  disabled={checkboxProps ? checkboxProps.disabled: disabled }
+                  disabled={checkboxProps ? checkboxProps.disabled : disabled}
                   {...checkboxProps}
                 />
               }

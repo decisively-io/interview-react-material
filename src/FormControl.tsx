@@ -61,14 +61,13 @@ const isLabelTooLong = (label: string | undefined): label is string => {
   return false;
 };
 
-type ReadOnlyBasedMeta = (
-  | { type: 'hasNoEffect' }
+type ReadOnlyBasedMeta =
+  | { type: "hasNoEffect" }
   | {
-    type: 'markControlDisabled';
-    ctrlWithDisabledTrue: Control;
-  }
-  | { type: 'overrideRender'; node: JSX.Element; }
-);
+      type: "markControlDisabled";
+      ctrlWithDisabledTrue: Control;
+    }
+  | { type: "overrideRender"; node: JSX.Element };
 export const useFormControl = (options: FormControlOptions): React.ReactElement => {
   const { control: controlInProps, render, onScreenDataChange, className } = options;
   const interview = React.useContext(InterviewContext);
@@ -81,7 +80,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
 
   const renderExplanation = (props?: ExplanationProps) => {
     const otherProps = props;
-    if (!( 'showExplanation' in controlInProps && controlInProps.showExplanation) || !explanation) {
+    if (!("showExplanation" in controlInProps && controlInProps.showExplanation) || !explanation) {
       return null;
     }
 
@@ -103,26 +102,27 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
     );
   };
 
-  const readOnlyBasedMeta = React.useMemo< ReadOnlyBasedMeta >(() => {
-    const controlLocal =  controlInProps;
+  const readOnlyBasedMeta = React.useMemo<ReadOnlyBasedMeta>(() => {
+    const controlLocal = controlInProps;
     // if control type is not expected to have "readOnly" -> return
-    if(
-      controlLocal.type !== 'boolean'
-      && controlLocal.type !== 'currency'
-      && controlLocal.type !== 'date'
-      && controlLocal.type !== 'time'
-      && controlLocal.type !== 'datetime'
-      && controlLocal.type !== 'options'
-      && controlLocal.type !== 'number_of_instances'
-      && controlLocal.type !== 'text'
-    ) return { type: 'hasNoEffect' };
+    if (
+      controlLocal.type !== "boolean" &&
+      controlLocal.type !== "currency" &&
+      controlLocal.type !== "date" &&
+      controlLocal.type !== "time" &&
+      controlLocal.type !== "datetime" &&
+      controlLocal.type !== "options" &&
+      controlLocal.type !== "number_of_instances" &&
+      controlLocal.type !== "text"
+    )
+      return { type: "hasNoEffect" };
 
     // if readOnly is falsy -> return
-    if(!controlLocal.readOnly) return { type: 'hasNoEffect' };
+    if (!controlLocal.readOnly) return { type: "hasNoEffect" };
 
     // if label display is not "automatic" -> control should be marked "disabled"
-    if(controlLocal.labelDisplay !== 'automatic') {
-      return { type: 'markControlDisabled', ctrlWithDisabledTrue: { ...controlLocal, disabled: true } };
+    if (controlLocal.labelDisplay !== "automatic") {
+      return { type: "markControlDisabled", ctrlWithDisabledTrue: { ...controlLocal, disabled: true } };
     }
 
     // at this point we are sure that we want to override render
@@ -130,7 +130,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
     const renderValue = options.renderValue ?? ((value: string) => value);
 
     return {
-      type: 'overrideRender',
+      type: "overrideRender",
       node: (
         <ReadOnlyContainer>
           <Typography>{label}</Typography>
@@ -141,12 +141,10 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
     };
   }, [controlInProps]);
 
-  const control = readOnlyBasedMeta.type === 'markControlDisabled'
-    ? readOnlyBasedMeta.ctrlWithDisabledTrue
-    : controlInProps;
+  const control =
+    readOnlyBasedMeta.type === "markControlDisabled" ? readOnlyBasedMeta.ctrlWithDisabledTrue : controlInProps;
 
-
-  if(readOnlyBasedMeta.type === 'overrideRender') {
+  if (readOnlyBasedMeta.type === "overrideRender") {
     return readOnlyBasedMeta.node;
   }
 
@@ -218,8 +216,8 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
                 setFocus(true);
               }}
               className={className}
-              title={'label' in control ? control.label : undefined}
-              disabled={('disabled' in control && control.disabled)}
+              title={"label" in control ? control.label : undefined}
+              disabled={"disabled" in control && control.disabled}
               onBlur={() => setFocus(false)}
               fullWidth
             >
@@ -230,7 +228,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
                 error,
                 inlineLabel,
                 renderExplanation,
-                disabled: ('disabled' in control && control.disabled),
+                disabled: "disabled" in control && control.disabled,
               })}
             </FormControlStyled>
           </>
