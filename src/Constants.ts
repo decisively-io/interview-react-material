@@ -76,6 +76,10 @@ export const CLASS_NAMES = {
     VARIANT_RADIO: "asRadio_udecnm",
     VARIANT_AUTO_COMPLETE: "autocomplete_n5JJ8qT",
   },
+
+  SIDEBAR: {
+    CONTAINER: "container_3J9Z9w",
+  },
 } as const;
 
 export const DEFAULT_STEP: Session["steps"][0] = {

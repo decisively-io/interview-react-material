@@ -3,6 +3,7 @@ import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decis
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
+import type { SidebarOverrides } from "../sidebar/SidebarPanel";
 import type { ThemedCompProps, ThemedComponent } from "../themes/types";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";
@@ -19,6 +20,7 @@ export interface InterviewProps {
   controlComponents?: ControlComponents;
   rhfMode?: ContentProps["rhfMode"];
   rhfReValidateMode?: ContentProps["rhfReValidateMode"];
+  sidebarOverrides?: SidebarOverrides;
 }
 
 export interface InterviewState {
@@ -224,6 +226,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       content = (
         // @ts-ignore
         <ThemedComp
+          sidebarOverrides={this.props.sidebarOverrides}
           menu={menuProps}
           content={contentProps}
         />
@@ -231,6 +234,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
     } else {
       content = (
         <Frame
+          sidebarOverrides={this.props.sidebarOverrides}
           contentJSX={
             <Content
               key={contentProps.keyForRemount}
