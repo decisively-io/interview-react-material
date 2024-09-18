@@ -45,7 +45,7 @@ export interface ControlComponents {
   GenerativeChat?: React.ComponentType<GenerativeChatControlWidgetProps>;
 }
 
-const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
+const DEFAULT_CONTROL_COMPONENTS: Required<ControlComponents> = {
   Boolean: BooleanControlWidget,
   Currency: CurrencyControlWidget,
   Date: DateControlWidget,
