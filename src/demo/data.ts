@@ -1,5 +1,16 @@
 import type { Session } from "@decisively-io/interview-sdk";
-import { defaultStep } from "../parts";
+
+const defaultStep: Session["steps"][0] = {
+  complete: false,
+  context: { entity: "" },
+  current: false,
+  id: "",
+  skipped: false,
+  title: "",
+  visitable: true,
+  visited: false,
+  steps: [],
+};
 
 export const session: Session = {
   data: { "@parent": "" } as any,
@@ -22,11 +33,11 @@ export const session: Session = {
         id: "attr-file-id",
         label: "Add identity document(-s)",
         labelDisplay: "separate",
-        // max: 2,
-        // file_type: [
-        //   '.txt',
-        //   '.json',
-        // ],
+        max: 2,
+        file_type: [
+          ".txt",
+          // '.json',
+        ],
         // max_size: 0.005,
       },
 

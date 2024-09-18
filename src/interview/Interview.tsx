@@ -38,7 +38,6 @@ export interface InterviewState {
   nextDisabled: boolean;
 }
 
-
 export default class Interview<P extends InterviewProps = InterviewProps> extends React.Component<P, InterviewState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Interview`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
