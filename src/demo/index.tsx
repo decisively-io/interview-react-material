@@ -133,7 +133,7 @@ const App = () => {
               console.log("upload finished");
               const id = Math.random().toString();
 
-              r({ reference: `data:id={${id}};base64,${btoa(name)}`, id });
+              r({ reference: `data:id=${id};base64,${btoa(name)}`, id });
             }, 1_000);
           });
         }}

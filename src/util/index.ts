@@ -74,7 +74,7 @@ export function normalizeControlsValue(
   controls: Screen["controls"],
 ): typeof controlsValue {
   return controls.reduce<ControlsValue>((a, control) => {
-    if (control.type === "typography" || control.type === "file" || control.type === "image") {
+    if (control.type === "typography" || control.type === "image") {
       return a;
     }
 
