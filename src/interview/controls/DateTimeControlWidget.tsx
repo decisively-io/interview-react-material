@@ -64,13 +64,7 @@ const DateTimeControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/DateTimeControlWidget`,
-    /*** @deprecated use `DateTimeControlWidget` directly */
-    _: null as any as React.ComponentType<DateTimeControlWidgetProps>,
   },
 );
-DateTimeControlWidget._ = DateTimeControlWidget;
-
-/*** @deprecated use `DateTimeControlWidget` directly */
-export const _ = DateTimeControlWidget;
 
 export default DateTimeControlWidget;

@@ -133,12 +133,7 @@ const DateControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Date`,
-    /*** @deprecated use `DateControlWidget` directly instead */
-    _: null as any as React.ComponentType<DateControlWidgetProps>,
   },
 );
-DateControlWidget._ = DateControlWidget;
-
-export const _ = DateControlWidget;
 
 export default DateControlWidget;

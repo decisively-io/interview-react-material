@@ -69,13 +69,7 @@ const TextControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Text`,
-    /*** @deprecated use `TextControlWidget` directly */
-    _: null as any as React.ComponentType<TextControlWidgetProps>,
   },
 );
-TextControlWidget._ = TextControlWidget;
-
-/*** @deprecated use `TextControlWidget` directly */
-export const _ = TextControlWidget;
 
 export default TextControlWidget;

@@ -63,13 +63,7 @@ const TimeControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/TimeControlWidget`,
-    /*** @deprecated use `TimeControlWidget` directly */
-    _: null as any as React.ComponentType<TimeControlWidgetProps>,
   },
 );
-TimeControlWidget._ = TimeControlWidget;
-
-/*** @deprecated use `TimeControlWidget` directly */
-export const _ = TimeControlWidget;
 
 export default TimeControlWidget;

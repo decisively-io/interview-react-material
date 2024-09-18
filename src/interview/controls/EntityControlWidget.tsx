@@ -14,45 +14,28 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import styled from "styled-components";
+import { CLASS_NAMES } from "../../Constants";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
 import type { ControlComponents } from "./index";
 
-export const classes = {
-  ">h": "heading_jQlatn",
-
-  ">fieldGroups": {
-    _: "fieldGroups_bpLNPY",
-
-    ">fieldGroup": {
-      _: "fieldGroup_0HTULO",
-
-      ">fieldControls": "fieldControls_OkY7Py",
-      ">fieldActions": "fieldActions_7nxMEV",
-    },
-  },
-
-  ">add": "addIconBtn_CIglRA",
-};
-
-const fieldGrpsClss = classes[">fieldGroups"];
-const fieldGrpClss = classes[">fieldGroups"][">fieldGroup"];
-
 const Wrap = styled.div`
-  >.${classes[">h"]} {
+  > .${CLASS_NAMES.ENTITY_CONTROL.HEADING} {
     margin-bottom: 1rem;
   }
 
-  >.${classes[">fieldGroups"]._} {
-    >.${fieldGrpClss._} {
+  > .${CLASS_NAMES.ENTITY_CONTROL.FIELD_GROUPS} {
+    > .${CLASS_NAMES.ENTITY_CONTROL.FIELD_GROUP} {
       &:not(:last-child) {
         margin-bottom: 1rem;
         border-bottom: 1px solid #e5e5e5;
       }
 
-      >.${fieldGrpClss[">fieldControls"]} {
-        >* { margin-bottom: 1rem; }
+      > .${CLASS_NAMES.ENTITY_CONTROL.FIELD_CONTROLS} {
+        > * {
+          margin-bottom: 1rem;
+        }
       }
     }
   }
@@ -124,7 +107,7 @@ const EntityControlWidget = Object.assign(
       <Wrap className={className}>
         {control.label ? (
           <Typography
-            className={classes[">h"]}
+            className={CLASS_NAMES.ENTITY_CONTROL.HEADING}
             variant="h5"
           >
             {control.label}
@@ -132,7 +115,7 @@ const EntityControlWidget = Object.assign(
         ) : null}
 
         <Grid
-          className={fieldGrpsClss._}
+          className={CLASS_NAMES.ENTITY_CONTROL.FIELD_GROUPS}
           container
           direction="column"
         >
@@ -146,10 +129,10 @@ const EntityControlWidget = Object.assign(
                 key={(instance as any)["@id"] ?? instance.id}
                 alignItems="flex-start"
                 justifyContent="space-between"
-                className={fieldGrpClss._}
+                className={CLASS_NAMES.ENTITY_CONTROL.FIELD_GROUP}
               >
                 <Grid
-                  className={fieldGrpClss[">fieldControls"]}
+                  className={CLASS_NAMES.ENTITY_CONTROL.FIELD_CONTROLS}
                   item
                   xs={10}
                 >
@@ -206,7 +189,7 @@ const EntityControlWidget = Object.assign(
 
                 {shouldHideDelete ? null : (
                   <Grid
-                    className={fieldGrpClss[">fieldActions"]}
+                    className={CLASS_NAMES.ENTITY_CONTROL.FIELD_ACTIONS}
                     item
                     container
                     justifyContent="center"
@@ -223,7 +206,10 @@ const EntityControlWidget = Object.assign(
         </Grid>
 
         {canAddMore === false ? null : (
-          <IconButton onClick={handleAdd}>
+          <IconButton
+            onClick={handleAdd}
+            className={CLASS_NAMES.ENTITY_CONTROL.ADD_BUTTON}
+          >
             <AddIcon />
           </IconButton>
         )}
@@ -232,14 +218,7 @@ const EntityControlWidget = Object.assign(
   },
   {
     displayName: `${DISPLAY_NAME_PREFIX}/EntityControlWidget`,
-    classes,
-    /*** @deprecated use `EntityControlWidget` directly */
-    _: null as any as React.ComponentType<EntityControlWidgetProps>,
   },
 );
-EntityControlWidget._ = EntityControlWidget;
-
-/*** @deprecated use `EntityControlWidget` directly */
-export const _ = EntityControlWidget;
 
 export default EntityControlWidget;

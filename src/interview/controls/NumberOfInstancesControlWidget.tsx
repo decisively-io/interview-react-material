@@ -55,13 +55,7 @@ const NumberOfInstancesControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/NumberOfInstancesControlWidget`,
-    /*** @deprecated use `NumberOfInstancesControlWidget` directly */
-    _: null as any as React.ComponentType<NumberOfInstancesControlWidgetProps>,
   },
 );
-NumberOfInstancesControlWidget._ = NumberOfInstancesControlWidget;
-
-/*** @deprecated use `NumberOfInstancesControlWidget` directly */
-export const _ = NumberOfInstancesControlWidget;
 
 export default NumberOfInstancesControlWidget;

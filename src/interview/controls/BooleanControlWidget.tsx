@@ -58,13 +58,7 @@ const BooleanControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Boolean`,
-    /*** @deprecated use `Boolean` directly */
-    _: undefined as any as React.ComponentType<BooleanControlWidgetProps>,
   },
 );
-BooleanControlWidget._ = BooleanControlWidget;
-
-/*** @deprecated use `Boolean` directly */
-export const _ = BooleanControlWidget;
 
 export default BooleanControlWidget;
