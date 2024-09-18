@@ -36,7 +36,7 @@ const SwitchContainerControlWidget = (props: SwitchContainerControlWidgetProps) 
         return it;
       }
 
-      return { ...it, attribute: parentPathParts.concat(it.attribute).join(".") };
+      return { ...it, attribute: parentPathParts.concat(it.attribute).join(attribute.includes("/") ? "/" : ".") };
     });
   }, [controls, attribute]);
 

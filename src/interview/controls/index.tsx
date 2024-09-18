@@ -9,6 +9,7 @@ import DataContainerWidget, { type DataContainerControlWidgetProps } from "./Dat
 import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWidget";
 import DateTimeControlWidget, { type DateTimeControlWidgetProps } from "./DateTimeControlWidget";
 import EntityControlWidget, { type EntityControlWidgetProps } from "./EntityControlWidget";
+import GenerativeChatControlWidget, { type GenerativeChatControlWidgetProps } from "./GenerativeChatControlWidget";
 import ImageControlWidget, { type ImageControlWidgetProps } from "./ImageControlWidget";
 import NumberOfInstancesControlWidget, {
   type NumberOfInstancesControlWidgetProps,
@@ -43,9 +44,10 @@ export interface ControlComponents {
   CertaintyContainer?: React.ComponentType<CertaintyContainerControlWidgetProps>;
   RepeatingContainer?: React.ComponentType<RepeatingContainerControlWidgetProps>;
   DataContainer?: React.ComponentType<DataContainerControlWidgetProps>;
+  GenerativeChat?: React.ComponentType<GenerativeChatControlWidgetProps>;
 }
 
-const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
+const DEFAULT_CONTROL_COMPONENTS: Required<ControlComponents> = {
   Boolean: BooleanControlWidget,
   Currency: CurrencyControlWidget,
   Date: DateControlWidget,
@@ -61,6 +63,7 @@ const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
   CertaintyContainer: CertaintyContainerWidget,
   RepeatingContainer: RepeatingContainerWidget,
   DataContainer: DataContainerWidget,
+  GenerativeChat: GenerativeChatControlWidget,
 };
 
 const Controls = React.memo((props: ControlsProps) => {

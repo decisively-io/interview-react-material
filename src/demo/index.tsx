@@ -3,9 +3,9 @@ import { type SessionInstance, transformResponse } from "@decisively-io/intervie
 import { CssBaseline, ThemeProvider, Typography, createTheme } from "@material-ui/core";
 import React, { useCallback, useState } from "react";
 import ReactDom from "react-dom";
-import * as Parts from "../parts";
-import TextControlRender from "../parts/controls/TextControlWidget";
-import * as FontNS from "../parts/font";
+import * as FontNS from "../font";
+import * as Parts from "../interview";
+import TextControlRender from "../interview/controls/TextControlWidget";
 import { session as dataSession } from "./data";
 import { PWD, provider } from "./interviews";
 
@@ -52,6 +52,7 @@ const stripSession = (s: SessionInstance): Session => ({
   context: s.context,
   data: s.data,
   explanations: s.explanations,
+  interactionId: "",
 });
 
 const App = () => {

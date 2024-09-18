@@ -14,11 +14,23 @@ import React, { useContext } from "react";
 import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
-import { generateValidator } from "../util/Validation";
+import { InterviewContext } from "./Interview";
+import ChatPanel from "./chat/ChatPanel";
 import Controls, { type ControlComponents } from "./controls";
-import { InterviewContext } from "./index";
 
 export const classes = {
+  formWrap: "formWrap_2NgTRe",
+  form: "form_eyu2Bt",
+  heading: "heading_U1LjQu",
+  controls: "controls_Uj4EDN",
+  btns: "btns_fiwac2",
+  back: "back_Qt7DZ6",
+  submit: "submit_qOUndF",
+  next: "next_ggiip5",
+
+  /**
+   * @deprecated - use `formWrap` instead
+   */
   ">formWrap": {
     _: "formWrap_2NgTRe",
 
@@ -28,6 +40,9 @@ export const classes = {
       ">controls": "controls_Uj4EDN",
     },
   },
+  /**
+   * @deprecated - use `btns` instead
+   */
   ">btns": {
     _: "btns_fiwac2",
 
@@ -54,10 +69,17 @@ const Wrap = styled.form`
 
     > .${formClss._} {
       margin: 0 auto;
+      height: 100%;
       padding: 1.5rem 2rem;
       max-width: 43.75rem;
       display: flex;
       flex-direction: column;
+
+        > .${classes.controls} {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
 
       > .${formClss[">h"]} {
@@ -191,12 +213,10 @@ const Content = Object.assign(
     } = props;
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
-    const resolver = generateValidator(controls);
 
     const interviewContext = useContext(InterviewContext);
 
     const methods = useForm({
-      resolver,
       defaultValues,
       mode: rhfMode,
       reValidateMode: rhfReValidateMode,

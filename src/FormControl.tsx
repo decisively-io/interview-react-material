@@ -7,8 +7,9 @@ import HelpOutline from "@material-ui/icons/HelpOutline";
 import React, { useState } from "react";
 import { Controller, type FieldError, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { InterviewContext } from "./parts";
+import { InterviewContext } from "./interview/Interview";
 import { MAX_INLINE_LABEL_LENGTH } from "./util";
+import { generateValidatorForControl } from "./util/Validation";
 
 export interface ExplanationProps {
   style?: React.CSSProperties;
@@ -184,6 +185,20 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
     <Controller
       control={formControl}
       name={name}
+      rules={{
+        validate: (value) => {
+          const schema = generateValidatorForControl(control as any);
+          if (!schema) {
+            return true;
+          }
+          try {
+            schema.validateSync(value);
+            return true;
+          } catch (e: any) {
+            return e.errors.join(", ");
+          }
+        },
+      }}
       // @ts-ignore
       defaultValue={control.value ?? control.default}
       render={({ field: { name, value, onChange }, fieldState: { error } }) => {
@@ -223,7 +238,8 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
             >
               {render({
                 onChange: handleChange,
-                value,
+                // @ts-ignore
+                value: value ?? control.value ?? control.default,
                 forId,
                 error,
                 inlineLabel,

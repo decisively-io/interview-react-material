@@ -8,7 +8,7 @@ import { DateTimePicker, type DateTimePickerProps } from "@material-ui/pickers";
 import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
-import { resolveNowInDate } from "../../util/controls";
+import { resolveNowInDate } from "../../util";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 

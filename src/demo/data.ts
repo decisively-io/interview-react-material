@@ -1,8 +1,15 @@
 import type { Session } from "@decisively-io/interview-sdk";
-import { defaultStep } from "../parts";
+import { defaultStep } from "../interview/Interview";
 
 export const session: Session = {
   data: { "@parent": "" } as any,
+  interactionId: "",
+  // @ts-ignore
+  save(...args: unknown[]) {
+    console.log(args);
+
+    return Promise.resolve(this);
+  },
   explanations: {
     textEmailOrNumberAttr21: "hi",
     booleanAttribute2: "test",

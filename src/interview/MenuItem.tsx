@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
 import React from "react";
 import { DISPLAY_NAME_PREFIX, MENU_CLASS_NAMES, SHOW_UNVISITED_MENU_ITEMS } from "../Constants";
-import { makeStyles } from "../parts/themes/types";
+import { makeStyles } from "../themes/types";
 
 const useStyles = makeStyles((theme) => ({
   nestedItem: {

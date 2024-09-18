@@ -31,7 +31,7 @@ const Col = styled.table`
 `;
 
 const Label = styled(Typography)`
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.2;
   color: #A3A3A3;
   white-space: nowrap;
