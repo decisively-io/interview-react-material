@@ -5,10 +5,12 @@ import type { Control } from "@decisively-io/interview-sdk";
 import BooleanControlWidget, { type BooleanControlWidgetProps } from "./BooleanControlWidget";
 import CertaintyContainerWidget, { type CertaintyContainerControlWidgetProps } from "./CertaintyContainerWidget";
 import CurrencyControlWidget, { type CurrencyControlWidgetProps } from "./CurrencyControlWidget";
+import DataContainerWidget, { type DataContainerControlWidgetProps } from "./DataContainerWidget";
 import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWidget";
 import DateTimeControlWidget, { type DateTimeControlWidgetProps } from "./DateTimeControlWidget";
 import EntityControlWidget, { type EntityControlWidgetProps } from "./EntityControlWidget";
 import FileControlWidget, { type FileControlWidgetProps } from "./FileControlWidget";
+import GenerativeChatControlWidget, { type GenerativeChatControlWidgetProps } from "./GenerativeChatControlWidget";
 import ImageControlWidget, { type ImageControlWidgetProps } from "./ImageControlWidget";
 import NumberOfInstancesControlWidget, {
   type NumberOfInstancesControlWidgetProps,
@@ -43,9 +45,11 @@ export interface ControlComponents {
   CertaintyContainer?: React.ComponentType<CertaintyContainerControlWidgetProps>;
   RepeatingContainer?: React.ComponentType<RepeatingContainerControlWidgetProps>;
   File?: React.ComponentType<FileControlWidgetProps>;
+  DataContainer?: React.ComponentType<DataContainerControlWidgetProps>;
+  GenerativeChat?: React.ComponentType<GenerativeChatControlWidgetProps>;
 }
 
-const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
+const DEFAULT_CONTROL_COMPONENTS: Required<ControlComponents> = {
   Boolean: BooleanControlWidget,
   Currency: CurrencyControlWidget,
   Date: DateControlWidget,
@@ -61,6 +65,8 @@ const DEFAULT_CONTROL_COMPONENTS: ControlComponents = {
   CertaintyContainer: CertaintyContainerWidget,
   RepeatingContainer: RepeatingContainerWidget,
   File: FileControlWidget,
+  DataContainer: DataContainerWidget,
+  GenerativeChat: GenerativeChatControlWidget,
 };
 
 const Controls = React.memo((props: ControlsProps) => {

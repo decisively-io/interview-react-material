@@ -8,7 +8,7 @@ import type { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
-import { resolveNowInDate } from "../../util/controls";
+import { resolveNowInDate } from "../../util";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 
@@ -52,7 +52,7 @@ const DateControlWidget = Object.assign(
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
-      render: ({ onChange, forId, value, error, inlineLabel, renderExplanation }) => {
+      render: ({ onChange, forId, value, error, inlineLabel, renderExplanation, disabled }) => {
         const typedValue = value as DateControl["value"];
         const manualInputProps: TextFieldProps = {
           label: inlineLabel,
@@ -62,7 +62,7 @@ const DateControlWidget = Object.assign(
           variant: "outlined",
           onChange,
           fullWidth: true,
-          disabled: control.disabled,
+          disabled: control.disabled || disabled,
         };
 
         const handleChange = (d: MaterialUiPickersDate) => {
@@ -86,7 +86,7 @@ const DateControlWidget = Object.assign(
                 maxDate: resolvedMax && new Date(resolvedMax),
                 minDate: resolvedMin && new Date(resolvedMin),
                 inputVariant: "outlined",
-                disabled: control.disabled,
+                disabled: control.disabled || disabled,
                 style: datePickerStyle,
                 inputRef: datePickerRef,
                 ...datePickerProps,
@@ -133,12 +133,7 @@ const DateControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Date`,
-    /*** @deprecated use `DateControlWidget` directly instead */
-    _: null as any as React.ComponentType<DateControlWidgetProps>,
   },
 );
-DateControlWidget._ = DateControlWidget;
-
-export const _ = DateControlWidget;
 
 export default DateControlWidget;

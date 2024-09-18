@@ -26,13 +26,7 @@ export const ImageControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Image`,
-    /*** @deprecated use `ImageControlWidget` directly */
-    _: null as any as React.ComponentType<ImageControlWidgetProps>,
   },
 );
-ImageControlWidget._ = ImageControlWidget;
-
-/*** @deprecated use `ImageControlWidget` directly */
-export const _ = ImageControlWidget;
 
 export default ImageControlWidget;

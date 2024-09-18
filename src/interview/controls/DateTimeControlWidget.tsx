@@ -8,7 +8,7 @@ import { DateTimePicker, type DateTimePickerProps } from "@material-ui/pickers";
 import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
-import { resolveNowInDate } from "../../util/controls";
+import { resolveNowInDate } from "../../util";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 
@@ -38,7 +38,7 @@ const DateTimeControlWidget = Object.assign(
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
-      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => (
+      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation, disabled }) => (
         <>
           <StyledDateTimePicker
             label={inlineLabel}
@@ -53,7 +53,7 @@ const DateTimeControlWidget = Object.assign(
             minutesStep={minutes_increment}
             maxDate={maxDate}
             minDate={minDate}
-            disabled={control.disabled}
+            disabled={control.disabled || disabled}
             {...dateTimePickerProps}
           />
 
@@ -64,13 +64,7 @@ const DateTimeControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/DateTimeControlWidget`,
-    /*** @deprecated use `DateTimeControlWidget` directly */
-    _: null as any as React.ComponentType<DateTimeControlWidgetProps>,
   },
 );
-DateTimeControlWidget._ = DateTimeControlWidget;
-
-/*** @deprecated use `DateTimeControlWidget` directly */
-export const _ = DateTimeControlWidget;
 
 export default DateTimeControlWidget;

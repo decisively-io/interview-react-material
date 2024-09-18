@@ -33,7 +33,8 @@ const TimeControlWidget = Object.assign(
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
-      render: ({ onChange, value, error, forId, inlineLabel, renderExplanation }) => {
+      // renderValue: (value) => `${value}`, // TODO: figure out how to convert 24 hour time to am/pm format if amPmFormat is ture
+      render: ({ onChange, value, error, forId, inlineLabel, renderExplanation, disabled }) => {
         const typedValue = value as TimeControl["value"];
         const compValue = typeof typedValue === "string" ? new Date(`1970-01-01T${value}`) : null;
 
@@ -51,7 +52,7 @@ const TimeControlWidget = Object.assign(
               ampm={Boolean(amPmFormat)}
               minutesStep={minutes_increment}
               views={allowSeconds ? allViews : secondLessViews}
-              disabled={control.disabled}
+              disabled={control.disabled || disabled}
               {...timePickerProps}
             />
 
@@ -63,13 +64,7 @@ const TimeControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/TimeControlWidget`,
-    /*** @deprecated use `TimeControlWidget` directly */
-    _: null as any as React.ComponentType<TimeControlWidgetProps>,
   },
 );
-TimeControlWidget._ = TimeControlWidget;
-
-/*** @deprecated use `TimeControlWidget` directly */
-export const _ = TimeControlWidget;
 
 export default TimeControlWidget;

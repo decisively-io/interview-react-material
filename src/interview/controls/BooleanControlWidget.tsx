@@ -22,7 +22,7 @@ const BooleanControlWidget = Object.assign(
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
-      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
+      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation, disabled }) => {
         const typedValue = value as BooleanControl["value"];
 
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,11 +38,13 @@ const BooleanControlWidget = Object.assign(
                   id={forId}
                   checked={typedValue || false}
                   indeterminate={typeof typedValue !== "boolean"}
+                  disabled={checkboxProps ? checkboxProps.disabled : disabled}
                   {...checkboxProps}
                 />
               }
               htmlFor={forId}
               label={inlineLabel}
+              disabled={props.formControlLabelProps ? props.formControlLabelProps.disabled : disabled}
               {...props.formControlLabelProps}
             />
 
@@ -58,13 +60,7 @@ const BooleanControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Boolean`,
-    /*** @deprecated use `Boolean` directly */
-    _: undefined as any as React.ComponentType<BooleanControlWidgetProps>,
   },
 );
-BooleanControlWidget._ = BooleanControlWidget;
-
-/*** @deprecated use `Boolean` directly */
-export const _ = BooleanControlWidget;
 
 export default BooleanControlWidget;

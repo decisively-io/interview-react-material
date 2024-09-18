@@ -40,7 +40,7 @@ const TextControlWidget = Object.assign(
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
-      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
+      render: ({ onChange, value, forId, error, inlineLabel, renderExplanation, disabled }) => {
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           onChange(e.target.value);
         };
@@ -55,7 +55,7 @@ const TextControlWidget = Object.assign(
               id={forId}
               error={error !== undefined}
               helperText={error?.message || " "}
-              disabled={control.disabled}
+              disabled={control.disabled || disabled}
               {...maybeWithType}
               {...maybeWithMulti}
               {...textFieldProps}
@@ -69,13 +69,7 @@ const TextControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Text`,
-    /*** @deprecated use `TextControlWidget` directly */
-    _: null as any as React.ComponentType<TextControlWidgetProps>,
   },
 );
-TextControlWidget._ = TextControlWidget;
-
-/*** @deprecated use `TextControlWidget` directly */
-export const _ = TextControlWidget;
 
 export default TextControlWidget;
