@@ -60,7 +60,7 @@ const Wrap = styled.div`
   padding: 1rem 0;
   overflow: auto;
 
-  .${CLASS_NAMES.MENU.LIST_ITEM} {
+  .${CLASS_NAMES.MENU.LIST} {
     flex-grow: 1;
     overflow: auto;
   }
