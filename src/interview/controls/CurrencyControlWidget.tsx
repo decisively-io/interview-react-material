@@ -74,13 +74,7 @@ const CurrencyControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/Currency`,
-    /*** @deprecated use `Currency` directly instead */
-    _: null as any as React.ComponentType<CurrencyControlWidgetProps>,
   },
 );
-CurrencyControlWidget._ = CurrencyControlWidget;
-
-/*** @deprecated use `Currency` directly instead */
-export const _ = CurrencyControlWidget;
 
 export default CurrencyControlWidget;

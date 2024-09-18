@@ -7,14 +7,13 @@ import TextField, { type TextFieldProps } from "@material-ui/core/TextField";
 import Autocomplete, { type AutocompleteProps, createFilterOptions } from "@material-ui/lab/Autocomplete";
 import React from "react";
 import styled from "styled-components";
+import { CLASS_NAMES } from "../../Constants";
 import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 
 const filter = createFilterOptions<Option>();
-export const asRadioClsnm = "asRadio_udecnm";
-export const autocompleteClsnm = "autocomplete_n5JJ8qT";
 
 export interface OptionsControlWidgetProps extends ControlWidgetProps<OptionsControl> {
   autocompleteProps?: AutocompleteProps<Option, false, false, true>;
@@ -53,7 +52,12 @@ const OptionsControlWidget = Object.assign(
       [options],
     );
 
-    const finalClsnm = [asRadio ? asRadioClsnm : autocompleteClsnm, className].filter(Boolean).join(" ");
+    const finalClsnm = [
+      asRadio ? CLASS_NAMES.OPTIONS_CONTROL.VARIANT_RADIO : CLASS_NAMES.OPTIONS_CONTROL.VARIANT_AUTO_COMPLETE,
+      className,
+    ]
+      .filter(Boolean)
+      .join(" ");
 
     return useFormControl({
       control,
@@ -159,13 +163,7 @@ const OptionsControlWidget = Object.assign(
   }),
   {
     displayName: `${DISPLAY_NAME_PREFIX}/OptionsControlWidget`,
-    /*** @deprecated use `OptionsControlWidget` directly */
-    _: null as any as React.ComponentType<OptionsControlWidgetProps>,
   },
 );
-OptionsControlWidget._ = OptionsControlWidget;
-
-/*** @deprecated use `OptionsControlWidget` directly */
-export const _ = OptionsControlWidget;
 
 export default OptionsControlWidget;

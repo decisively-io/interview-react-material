@@ -13,43 +13,40 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import React, { useContext } from "react";
 import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
-import { DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
+import { CLASS_NAMES, DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
 import { InterviewContext } from "./Interview";
-import ChatPanel from "./chat/ChatPanel";
 import Controls, { type ControlComponents } from "./controls";
 
+/**
+ * @deprecated - use `CLASS_NAMES.CONTENT` instead
+ */
 export const classes = {
-  formWrap: "formWrap_2NgTRe",
-  form: "form_eyu2Bt",
-  heading: "heading_U1LjQu",
-  controls: "controls_Uj4EDN",
-  btns: "btns_fiwac2",
-  back: "back_Qt7DZ6",
-  submit: "submit_qOUndF",
-  next: "next_ggiip5",
+  formWrap: CLASS_NAMES.CONTENT.FORM_WRAP,
+  form: CLASS_NAMES.CONTENT.FORM,
+  heading: CLASS_NAMES.CONTENT.FORM_HEADING,
+  controls: CLASS_NAMES.CONTENT.FORM_CONTROLS,
+  btns: CLASS_NAMES.CONTENT.BUTTONS,
+  back: CLASS_NAMES.CONTENT.BUTTONS_BACK,
+  submit: CLASS_NAMES.CONTENT.BUTTONS_SUBMIT,
+  next: CLASS_NAMES.CONTENT.BUTTONS_NEXT,
 
-  /**
-   * @deprecated - use `formWrap` instead
-   */
   ">formWrap": {
-    _: "formWrap_2NgTRe",
+    _: CLASS_NAMES.CONTENT.FORM_WRAP,
 
     ">form": {
-      _: "form_eyu2Bt",
-      ">h": "heading_U1LjQu",
-      ">controls": "controls_Uj4EDN",
+      _: CLASS_NAMES.CONTENT.FORM,
+      ">h": CLASS_NAMES.CONTENT.FORM_HEADING,
+      ">controls": CLASS_NAMES.CONTENT.FORM_CONTROLS,
     },
   },
-  /**
-   * @deprecated - use `btns` instead
-   */
-  ">btns": {
-    _: "btns_fiwac2",
 
-    ">back": "back_Qt7DZ6",
+  ">btns": {
+    _: CLASS_NAMES.CONTENT.BUTTONS,
+
+    ">back": CLASS_NAMES.CONTENT.BUTTONS_BACK,
     ">submit": {
-      _: "submit_qOUndF",
-      ">next": "next_ggiip5",
+      _: CLASS_NAMES.CONTENT.BUTTONS_SUBMIT,
+      ">next": CLASS_NAMES.CONTENT.BUTTONS_NEXT,
     },
   },
 };
@@ -63,11 +60,11 @@ const Wrap = styled.form`
   flex-direction: column;
   overflow: auto;
 
-  > .${classes[">formWrap"]._} {
+  > .${CLASS_NAMES.CONTENT.FORM_WRAP} {
     flex-grow: 1;
     overflow: auto;
 
-    > .${formClss._} {
+    > .${CLASS_NAMES.CONTENT.FORM} {
       margin: 0 auto;
       height: 100%;
       padding: 1.5rem 2rem;
@@ -75,31 +72,31 @@ const Wrap = styled.form`
       display: flex;
       flex-direction: column;
 
-        > .${classes.controls} {
+        > .${CLASS_NAMES.CONTENT.FORM_CONTROLS} {
             height: 100%;
             display: flex;
             flex-direction: column;
         }
 
 
-      > .${formClss[">h"]} {
+      > .${CLASS_NAMES.CONTENT.FORM_HEADING} {
         margin-bottom: 1.5rem;
       }
     }
   }
 
-  > .${classes[">btns"]._} {
+  > .${CLASS_NAMES.CONTENT.BUTTONS} {
     padding: 1rem 2rem;
     width: 100%;
     border-top: 1px solid #E5E5E5;
     display: flex;
     justify-content: space-between;
 
-    > .${submitClss._} {
+    > .${CLASS_NAMES.CONTENT.BUTTONS_SUBMIT} {
       display: flex;
       align-items: center;
 
-      > .${submitClss[">next"]} {
+      > .${CLASS_NAMES.CONTENT.BUTTONS_NEXT} {
         margin-left: 1rem;
       }
     }
@@ -261,16 +258,16 @@ const Content = Object.assign(
             onSubmit={methods.handleSubmit(onSubmit)}
             className={className}
           >
-            <div className={classes[">formWrap"]._}>
-              <div className={formClss._}>
+            <div className={CLASS_NAMES.CONTENT.FORM_WRAP}>
+              <div className={CLASS_NAMES.CONTENT.FORM}>
                 <Typography
                   variant="h4"
-                  className={formClss[">h"]}
+                  className={CLASS_NAMES.CONTENT.FORM_HEADING}
                 >
                   {pageTitle}
                 </Typography>
 
-                <StyledControlsWrap className={formClss[">controls"]}>
+                <StyledControlsWrap className={CLASS_NAMES.CONTENT.FORM_CONTROLS}>
                   <Controls
                     controlComponents={controlComponents}
                     controls={screen?.controls || []}
@@ -280,20 +277,20 @@ const Content = Object.assign(
               </div>
             </div>
             {(next || back) && (
-              <div className={classes[">btns"]._}>
+              <div className={CLASS_NAMES.CONTENT.BUTTONS}>
                 {back && (
                   <Button
                     size="medium"
                     variant="outlined"
                     disabled={backDisabled}
                     onClick={onBack}
-                    className={classes[">btns"][">back"]}
+                    className={CLASS_NAMES.CONTENT.BUTTONS_BACK}
                   >
                     <Typography>Back</Typography>
                   </Button>
                 )}
                 {next && (
-                  <div className={submitClss._}>
+                  <div className={CLASS_NAMES.CONTENT.BUTTONS_SUBMIT}>
                     {isSubmitting && <CircularProgress size="2rem" />}
                     <Button
                       size="medium"

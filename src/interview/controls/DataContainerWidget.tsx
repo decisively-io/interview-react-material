@@ -10,7 +10,6 @@ const Wrap = styled.div`
   flex-wrap: wrap;
   gap: 1rem 4.5rem;
   padding: 1rem;
-  background-color: #F9F9F9;
 `;
 /**
  * it seems that each column with data is a perfect candidate for a table\
@@ -58,7 +57,7 @@ export interface DataContainerControlWidgetProps extends ControlWidgetProps<Rend
 
 const DataContainerControlWidget = (props: DataContainerControlWidgetProps) => {
   const { control } = props;
-  const { columns: colNr, controls } = control;
+  const { columns: colNr = 1, controls } = control;
 
   const labelsAndValues = React.useMemo(
     () =>

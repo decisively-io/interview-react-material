@@ -8,7 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
 import React from "react";
-import { DISPLAY_NAME_PREFIX, MENU_CLASS_NAMES, SHOW_UNVISITED_MENU_ITEMS } from "../Constants";
+import { CLASS_NAMES, DISPLAY_NAME_PREFIX, SHOW_UNVISITED_MENU_ITEMS } from "../Constants";
 import { makeStyles } from "../themes/types";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,8 +39,6 @@ export const isStepVisibleInMenu = (step: Step): boolean => {
   return step.visited || step.current;
 };
 
-const clssItem = MENU_CLASS_NAMES[">list"][">item"];
-
 const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
   const classes = useStyles();
   const { step, status, level = 0, avatarContent, onClick } = props;
@@ -56,9 +54,9 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
   const classNameForLevel = getClassNameForLevel(level);
   const AvatarJSX = React.useMemo(
     () => (
-      <Avatar className={clsx(clssItem[">avatar"]._, classNameForLevel)}>
+      <Avatar className={clsx(CLASS_NAMES.MENU.LIST_ITEM_AVATAR, classNameForLevel)}>
         <Typography
-          className={clssItem[">avatar"][">T"]}
+          className={CLASS_NAMES.MENU.LIST_ITEM_AVATAR_TEXT}
           variant="h4"
         >
           {avatarContent || "-"}
@@ -71,15 +69,15 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
   const open = React.useMemo(() => containsCurrentStep(step), [step]);
 
   const itemClassName = clsx(
-    clssItem._,
+    CLASS_NAMES.MENU.LIST_ITEM,
     classNameForLevel,
-    open && clssItem["&.active"],
-    step.complete && !step.skipped && clssItem["&.complete"],
-    step.visited && clssItem["&.visited"],
+    open && CLASS_NAMES.MENU.LIST_ITEM_ACTIVE,
+    step.complete && !step.skipped && CLASS_NAMES.MENU.LIST_ITEM_COMPLETE,
+    step.visited && CLASS_NAMES.MENU.LIST_ITEM_VISITED,
   );
-  const textClassName = clsx(clssItem[">text"], classNameForLevel);
-  const collapseClassName = clsx(MENU_CLASS_NAMES[">list"][">collapse"], classNameForLevel);
-  const listClassName = clsx(MENU_CLASS_NAMES[">list"]._, getClassNameForLevel(level + 1));
+  const textClassName = clsx(CLASS_NAMES.MENU.LIST_ITEM_TEXT, classNameForLevel);
+  const collapseClassName = clsx(CLASS_NAMES.MENU.LIST_COLLAPSE, classNameForLevel);
+  const listClassName = clsx(CLASS_NAMES.MENU.LIST, getClassNameForLevel(level + 1));
 
   const canNavigate = step.complete || step.visited || step.current;
   const disableNavigation = !canNavigate || step.skipped;

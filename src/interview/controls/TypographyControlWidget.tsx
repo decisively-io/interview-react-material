@@ -108,13 +108,7 @@ export const TypographyControlWidget = Object.assign(
   }),
   {
     displayName: DISPLAY_NAME,
-    /*** @deprecated use `TypographyControlWidget` directly instead */
-    _: null as any as React.ComponentType<TypographyControlWidgetProps>,
   },
 );
-TypographyControlWidget._ = TypographyControlWidget;
-
-/*** @deprecated use `TypographyControlWidget` directly instead */
-export const _ = TypographyControlWidget;
 
 export default TypographyControlWidget;

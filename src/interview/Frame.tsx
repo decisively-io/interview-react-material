@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { DISPLAY_NAME_PREFIX } from "../Constants";
+import { CLASS_NAMES, DISPLAY_NAME_PREFIX } from "../Constants";
 
+/**
+ * @deprecated - use `CLASS_NAMES.FRAME` instead
+ */
 export const classes = {
-  ">menu": "menu_aBBc89",
-  ">content": "content_KQ3zSZ",
+  ">menu": CLASS_NAMES.FRAME.MENU,
+  ">content": CLASS_NAMES.FRAME.CONTENT,
 };
 
 const Wrap = styled.div`
@@ -12,13 +15,13 @@ const Wrap = styled.div`
   display: flex;
   overflow: auto;
 
-  > .${classes[">menu"]} {
+  > .${CLASS_NAMES.FRAME.MENU} {
     min-width: 20rem;
     max-width: 20rem;
     border-right: 1px solid #E5E5E5;
   }
 
-  > .${classes[">content"]} {
+  > .${CLASS_NAMES.FRAME.CONTENT} {
     overflow: auto;
     flex-grow: 1;
   }
@@ -35,8 +38,8 @@ const Frame = Object.assign(
     const { menuJSX, contentJSX, className } = props;
     return (
       <Wrap className={className}>
-        {menuJSX && <div className={classes[">menu"]}>{menuJSX}</div>}
-        <div className={classes[">content"]}>{contentJSX}</div>
+        {menuJSX && <div className={CLASS_NAMES.FRAME.MENU}>{menuJSX}</div>}
+        <div className={CLASS_NAMES.FRAME.CONTENT}>{contentJSX}</div>
       </Wrap>
     );
   }),
