@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "demo": "parcel src/demo/index.html",
+    "demo": "parcel --no-cache src/demo/index.html",
     "test": "jest",
     "prepublishOnly": "npm run check:fix && npm run test && npm run build",
     "dev": "tsc --watch",

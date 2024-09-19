@@ -52,7 +52,7 @@ const DateControlWidget = Object.assign(
       control,
       className: className,
       onScreenDataChange: chOnScreenData,
-      render: ({ onChange, forId, value, error, inlineLabel, renderExplanation }) => {
+      render: ({ onChange, forId, value, error, inlineLabel, renderExplanation, disabled }) => {
         const typedValue = value as DateControl["value"];
         const manualInputProps: TextFieldProps = {
           label: inlineLabel,
@@ -62,7 +62,7 @@ const DateControlWidget = Object.assign(
           variant: "outlined",
           onChange,
           fullWidth: true,
-          disabled: control.disabled,
+          disabled: control.disabled || disabled,
         };
 
         const handleChange = (d: MaterialUiPickersDate) => {
@@ -86,7 +86,7 @@ const DateControlWidget = Object.assign(
                 maxDate: resolvedMax && new Date(resolvedMax),
                 minDate: resolvedMin && new Date(resolvedMin),
                 inputVariant: "outlined",
-                disabled: control.disabled,
+                disabled: control.disabled || disabled,
                 style: datePickerStyle,
                 inputRef: datePickerRef,
                 ...datePickerProps,

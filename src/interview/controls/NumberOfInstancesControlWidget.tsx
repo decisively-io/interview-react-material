@@ -36,7 +36,7 @@ const NumberOfInstancesControlWidget = Object.assign(
     return useFormControl({
       control,
       className: className,
-      render: ({ onChange, forId, value, error, inlineLabel }) => {
+      render: ({ onChange, forId, value, error, inlineLabel, disabled }) => {
         const typedValue = value as Value;
 
         return withFallback({
@@ -47,7 +47,7 @@ const NumberOfInstancesControlWidget = Object.assign(
           id: forId,
           error: error !== undefined,
           helperText: error?.message || " ",
-          disabled: control.disabled,
+          disabled: control.disabled || disabled,
           ...textFieldProps,
         });
       },
