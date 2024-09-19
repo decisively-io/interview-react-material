@@ -1,4 +1,4 @@
-import type { RenderableDataContainerControl } from "@decisively-io/interview-sdk";
+import { type RenderableDataContainerControl, getNameFromFileAttributeRef } from "@decisively-io/interview-sdk";
 import { Typography } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
@@ -9,7 +9,6 @@ const Wrap = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 1rem 4.5rem;
-  padding: 1rem;
 `;
 /**
  * it seems that each column with data is a perfect candidate for a table\
@@ -85,7 +84,7 @@ const DataContainerControlWidget = (props: DataContainerControlWidgetProps) => {
         const value = ((): string[] => {
           if (it.type === "file") {
             // TODO finalize this when file control branch is merged in
-            return [];
+            return (it.value || { fileRefs: [] }).fileRefs.map((it) => getNameFromFileAttributeRef(it));
           }
 
           if (it.type === "currency") {
@@ -142,7 +141,9 @@ const DataContainerControlWidget = (props: DataContainerControlWidgetProps) => {
                   </td>
 
                   <td>
-                    <ValueLabel>{String(value)}</ValueLabel>
+                    {value.map((it, i) => (
+                      <ValueLabel key={i}>{it}</ValueLabel>
+                    ))}
                   </td>
                 </tr>
               ))}

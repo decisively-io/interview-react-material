@@ -4,6 +4,7 @@ import {
   isFileAttributeValue,
 } from "@decisively-io/interview-sdk";
 import type { FileControl } from "@decisively-io/interview-sdk";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
@@ -76,9 +77,9 @@ export default (p: FileControlWidgetProps) => {
     render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
       const normalizedValue: FileAttributeValue = isFileAttributeValue(value) ? value : { fileRefs: [] };
 
-      const uploadFileHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+      const uploadFileHandler: React.ChangeEventHandler<HTMLInputElement> = ({ currentTarget }) => {
         (async () => {
-          const [file] = (e.currentTarget.files || []) as File[];
+          const [file] = (currentTarget.files || []) as File[];
           if (!file) return;
 
           if (normalizedValue.fileRefs.some((it) => getNameFromFileAttributeRef(it) === file.name)) return;
@@ -100,6 +101,8 @@ export default (p: FileControlWidgetProps) => {
           };
 
           onChange(nextValue);
+          // clear file input so that we can select the same file again (if necessary)
+          currentTarget.value = "";
         })();
       };
 
@@ -140,6 +143,10 @@ export default (p: FileControlWidgetProps) => {
             <StyledIconButton onClick={triggerAddFile}>
               <AddIcon />
             </StyledIconButton>
+          )}
+
+          {error === undefined || error.message === undefined ? null : (
+            <FormHelperText error>{error.message}</FormHelperText>
           )}
         </Wrap>
       );
