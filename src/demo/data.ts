@@ -1,15 +1,19 @@
 import type { Session } from "@decisively-io/interview-sdk";
-import { defaultStep } from "../interview/Interview";
+
+const defaultStep: Session["steps"][0] = {
+  complete: false,
+  context: { entity: "" },
+  current: false,
+  id: "",
+  skipped: false,
+  title: "",
+  visitable: true,
+  visited: false,
+  steps: [],
+};
 
 export const session: Session = {
   data: { "@parent": "" } as any,
-  interactionId: "",
-  // @ts-ignore
-  save(...args: unknown[]) {
-    console.log(args);
-
-    return Promise.resolve(this);
-  },
   explanations: {
     textEmailOrNumberAttr21: "hi",
     booleanAttribute2: "test",
@@ -23,79 +27,20 @@ export const session: Session = {
     id: "screen1",
     title: "Screen 1",
     controls: [
-      // {
-      //   type: 'data_container',
-      //   columns: 3,
-      //   id: 'data_container1_id',
-      //   label: 'Test label 2',
-      //   controls: [
-      //     {
-      //       type: 'text',
-      //       attribute: 'data_container1_text_attr',
-      //       id: 'data_container1_text_attr_id',
-      //       readOnly: true,
-      //     },
-      //     {
-      //       type: 'date',
-      //       attribute: 'data_container1_date_attr',
-      //       id: 'data_container1_date_attr_id',
-      //       readOnly: true,
-      //     },
-      //     {
-      //       type: 'time',
-      //       attribute: 'data_container1_time_attr',
-      //       id: 'data_container1_time_attr_id',
-      //       readOnly: true,
-      //     },
-      //     {
-      //       type: 'boolean',
-      //       attribute: 'data_container1_boolean_attr',
-      //       id: 'data_container1_boolean_attr_id',
-      //       readOnly: true,
-      //     },
-      //   ]
-      // },
-      // {
-      //   type: 'data_container',
-      //   columns: 3,
-      //   id: 'data_container2_id',
-      //   label: 'Test label 1',
-      //   controls: [
-      //     {
-      //       type: 'text',
-      //       attribute: 'data_container2_text_attr',
-      //       id: 'data_container2_text_attr_id',
-      //       readOnly: true,
-      //       label: 'Label 1',
-      //       labelDisplay: 'automatic',
-      //     },
-      //     {
-      //       type: 'date',
-      //       attribute: 'data_container2_date_attr',
-      //       id: 'data_container2_date_attr_id',
-      //       readOnly: true,
-      //       label: 'Label 2',
-      //       labelDisplay: 'automatic',
-      //     },
-      //     {
-      //       type: 'time',
-      //       attribute: 'data_container2_time_attr',
-      //       id: 'data_container2_time_attr_id',
-      //       readOnly: true,
-      //       label: 'Label 3',
-      //       labelDisplay: 'automatic',
-      //     },
-      //     {
-      //       type: 'boolean',
-      //       attribute: 'data_container2_boolean_attr',
-      //       id: 'data_container2_boolean_attr_id',
-      //       readOnly: true,
-      //       label: 'Label 4',
-      //       labelDisplay: 'automatic',
-      //     },
-      //   ]
-      // },
-
+      {
+        type: "file",
+        attribute: "attr-file",
+        id: "attr-file-id",
+        label: "Add identity document(-s)",
+        labelDisplay: "separate",
+        max: 2,
+        file_type: [
+          ".txt",
+          // '.json',
+        ],
+        // max_size: 0.005,
+        required: true,
+      },
       {
         id: "faa57800-227a-473a-b30a-c12eed0eaef4",
         label: "Submitted Data",
@@ -208,6 +153,21 @@ export const session: Session = {
             readOnly: true,
             value: "test 2 value",
             // value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.            ',
+          },
+          {
+            id: "fileid",
+            type: "file",
+            required: true,
+            attribute: "fileaattr",
+            label: "File control (10)",
+            labelDisplay: "automatic",
+            showExplanation: false,
+            value: {
+              fileRefs: [
+                "data:id=53eefeab-b0a4-40de-83d5-7eb063c909d2;base64,cmVhbGx5IGxvbmcgZmlsZW5hbWUgdG8gdGVzdCBvdmVyZmxvdyBvZiB0aGUgZmlsZSBjb250cm9sIGluIGRhdGEgY29udGFpbmVyLnR4dA==",
+                "data:id=6bbf79d2-6e84-49cc-9473-3bc3c3dfbcc1;base64,dGVzdC5qc29u",
+              ],
+            },
           },
         ],
         columns: 2,
@@ -541,4 +501,10 @@ export const session: Session = {
       title: "Outcome?",
     },
   ],
+  // @ts-ignore
+  save(...args: unknown[]) {
+    console.info(args);
+
+    return Promise.resolve(this);
+  },
 };

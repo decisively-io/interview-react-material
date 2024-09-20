@@ -4,6 +4,7 @@ import {
   TIME_FORMAT_12,
   TIME_FORMAT_24,
   formatDate,
+  isFileAttributeValue,
 } from "@decisively-io/interview-sdk";
 import {
   type Field,
@@ -318,6 +319,28 @@ export const generateValidatorForControl = (c: RenderableControl): yup.AnySchema
       );
 
       return withType;
+    }
+    case "file": {
+      const { required } = c;
+
+      if (required !== true) return undefined;
+
+      const requiredSchema = yup
+        .mixed()
+        .nullable()
+        .test("isNotEmpty", "Required", (v) => {
+          if (v === null || v === undefined) return false;
+
+          if (isFileAttributeValue(v) === false) {
+            // no idea how this would happen, but need to report at least soemthing
+            console.error("0RsLCXOHdW | Interview-react-material: not a file attrib value");
+            return false;
+          }
+
+          return v.fileRefs.length > 0;
+        });
+
+      return requiredSchema;
     }
 
     default:

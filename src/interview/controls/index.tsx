@@ -9,6 +9,7 @@ import DataContainerWidget, { type DataContainerControlWidgetProps } from "./Dat
 import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWidget";
 import DateTimeControlWidget, { type DateTimeControlWidgetProps } from "./DateTimeControlWidget";
 import EntityControlWidget, { type EntityControlWidgetProps } from "./EntityControlWidget";
+import FileControlWidget, { type FileControlWidgetProps } from "./FileControlWidget";
 import GenerativeChatControlWidget, { type GenerativeChatControlWidgetProps } from "./GenerativeChatControlWidget";
 import ImageControlWidget, { type ImageControlWidgetProps } from "./ImageControlWidget";
 import NumberOfInstancesControlWidget, {
@@ -43,6 +44,7 @@ export interface ControlComponents {
   SwitchContainer?: React.ComponentType<SwitchContainerControlWidgetProps>;
   CertaintyContainer?: React.ComponentType<CertaintyContainerControlWidgetProps>;
   RepeatingContainer?: React.ComponentType<RepeatingContainerControlWidgetProps>;
+  File?: React.ComponentType<FileControlWidgetProps>;
   DataContainer?: React.ComponentType<DataContainerControlWidgetProps>;
   GenerativeChat?: React.ComponentType<GenerativeChatControlWidgetProps>;
 }
@@ -62,6 +64,7 @@ const DEFAULT_CONTROL_COMPONENTS: Required<ControlComponents> = {
   SwitchContainer: SwitchContainerWidget,
   CertaintyContainer: CertaintyContainerWidget,
   RepeatingContainer: RepeatingContainerWidget,
+  File: FileControlWidget,
   DataContainer: DataContainerWidget,
   GenerativeChat: GenerativeChatControlWidget,
 };

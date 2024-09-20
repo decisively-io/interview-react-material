@@ -8,6 +8,13 @@ import type { ThemedCompProps, ThemedComponent } from "../themes/types";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
+import {
+  InterviewContext,
+  type InterviewContextState,
+  fallbackOnFileTooBig,
+  fallbackRemoveFile,
+  fallbackUploadFile,
+} from "./InterviewContext";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
 
@@ -20,6 +27,9 @@ export interface InterviewProps {
   controlComponents?: ControlComponents;
   rhfMode?: ContentProps["rhfMode"];
   rhfReValidateMode?: ContentProps["rhfReValidateMode"];
+  uploadFile: InterviewContextState["uploadFile"];
+  removeFile: InterviewContextState["removeFile"];
+  onFileTooBig?: InterviewContextState["onFileTooBig"];
   sidebarOverrides?: SidebarOverrides;
 }
 
@@ -30,23 +40,15 @@ export interface InterviewState {
   nextDisabled: boolean;
 }
 
-export interface InterviewContextState {
-  registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;
-  getExplanation: (attribute: string) => string | undefined;
-  session: SessionInstance;
-  sidebarOverrides: SidebarOverrides;
-}
-
-export const InterviewContext = React.createContext<InterviewContextState>({
-  registerFormMethods: () => {},
-  session: {} as SessionInstance,
-  getExplanation: () => undefined,
-  sidebarOverrides: {},
-});
-
 export default class Interview<P extends InterviewProps = InterviewProps> extends React.Component<P, InterviewState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Interview`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
+
+  uploadFile: InterviewProps["uploadFile"] = fallbackUploadFile;
+
+  removeFile: InterviewProps["removeFile"] = fallbackRemoveFile;
+
+  onFileTooBig: NonNullable<InterviewProps["onFileTooBig"]> = fallbackOnFileTooBig;
 
   constructor(props: P) {
     super(props);
@@ -57,6 +59,10 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       isRequestPending: false,
       nextDisabled: false,
     };
+
+    this.uploadFile = props.uploadFile || this.uploadFile;
+    this.removeFile = props.removeFile || this.removeFile;
+    this.onFileTooBig = props.onFileTooBig || this.onFileTooBig;
   }
 
   // ===================================================================================

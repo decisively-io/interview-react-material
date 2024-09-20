@@ -5,6 +5,7 @@ import React, { useCallback, useState } from "react";
 import ReactDom from "react-dom";
 import * as FontNS from "../font";
 import * as Parts from "../interview";
+import type { UploadFileRtrn } from "../interview/controls/FileControlWidget_types";
 import TextControlRender from "../interview/controls/TextControlWidget";
 import { session as dataSession } from "./data";
 import { PWD, provider } from "./interviews";
@@ -124,6 +125,26 @@ const App = () => {
           },
         }}
         rhfMode="onChange"
+        uploadFile={({ name }) => {
+          console.log(`uploading file "${name}" to temporary storage`);
+
+          return new Promise<UploadFileRtrn>((r) => {
+            setTimeout(() => {
+              console.log("upload finished");
+              const id = Math.random().toString();
+
+              r({ reference: `data:id=${id};base64,${btoa(name)}`, id });
+            }, 1_000);
+          });
+        }}
+        removeFile={(ref) => {
+          console.log(`removing file with ref: ${ref}`);
+
+          return new Promise((r) => void setTimeout(r, 1_000));
+        }}
+        onFileTooBig={(f) => {
+          alert(`file ${f.name} is too big`);
+        }}
       />
     </ThemeProvider>
   );

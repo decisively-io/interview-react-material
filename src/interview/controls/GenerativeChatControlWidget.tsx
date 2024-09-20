@@ -3,7 +3,7 @@ import deepmerge from "deepmerge";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, type ControllerRenderProps, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { InterviewContext } from "../Interview";
+import { InterviewContext } from "../InterviewContext";
 import ChatPanel from "../chat/ChatPanel";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
