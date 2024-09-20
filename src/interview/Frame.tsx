@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { CLASS_NAMES, DISPLAY_NAME_PREFIX } from "../Constants";
 import SidebarPanel, { type SidebarOverrides } from "../sidebar/SidebarPanel";
-import { InterviewContext } from "./Interview";
 
 /**
  * @deprecated - use `CLASS_NAMES.FRAME` instead

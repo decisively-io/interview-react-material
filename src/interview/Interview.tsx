@@ -175,6 +175,9 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
           registerFormMethods: this.registerFormMethods.bind(this),
           session: this.session,
           getExplanation: this.getExplanation.bind(this),
+          uploadFile: this.uploadFile.bind(this),
+          onFileTooBig: this.onFileTooBig.bind(this),
+          removeFile: this.removeFile.bind(this),
           sidebarOverrides: this.props.sidebarOverrides || {},
         }}
       >
