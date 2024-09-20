@@ -14,13 +14,28 @@ const EntityCardContainer = styled(Card)`
   padding: 1rem;
   min-height: 6rem;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
 `;
 
 const EntityCard = (props: EntityCardProps) => {
   const { entity, data } = props;
   const title = data?.titleAttributeDescription && entity[data.titleAttributeDescription];
-  return <EntityCardContainer>{title && <Typography variant={"h6"}>{title}</Typography>}</EntityCardContainer>;
+  return (
+    <EntityCardContainer>
+      {title && <Typography variant={"h6"}>{title}</Typography>}
+      {data?.descriptionAttributes?.map((attr) => (
+        <Typography
+          key={attr.value}
+          variant={"body2"}
+        >
+          {attr.label ? `${attr.label}: ` : ""}
+          {entity[attr.value]}
+        </Typography>
+      ))}
+    </EntityCardContainer>
+  );
 };
 
 const SidebarEntityList: SidebarComponent<RenderableEntityListSidebar> = ({ sidebar }) => {
