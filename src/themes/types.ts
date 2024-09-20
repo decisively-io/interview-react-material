@@ -9,7 +9,6 @@ export interface ThemedComponentProps {
   content: ContentProps & { keyForRemount: string };
   className?: string;
   themeProducer?: (outerTheme: Theme) => Theme;
-  sidebarOverrides?: SidebarOverrides;
 }
 
 /**

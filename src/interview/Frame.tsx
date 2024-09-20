@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { CLASS_NAMES, DISPLAY_NAME_PREFIX } from "../Constants";
-import SidebarPanel, { type SidebarOverrides, SidebarPanelProps } from "../sidebar/SidebarPanel";
+import SidebarPanel, { type SidebarOverrides } from "../sidebar/SidebarPanel";
 import { InterviewContext } from "./Interview";
 
 /**
@@ -33,24 +33,17 @@ export interface FrameProps {
   menuJSX?: React.ReactNode;
   contentJSX: React.ReactNode;
   className?: string;
-  sidebarOverrides?: SidebarOverrides;
 }
 
 const Frame = Object.assign(
   React.memo((props: FrameProps) => {
-    const { menuJSX, contentJSX, className, sidebarOverrides } = props;
+    const { menuJSX, contentJSX, className } = props;
 
-    const { session } = useContext(InterviewContext);
     return (
       <Wrap className={className}>
         {menuJSX && <div className={CLASS_NAMES.FRAME.MENU}>{menuJSX}</div>}
         <div className={CLASS_NAMES.FRAME.CONTENT}>{contentJSX}</div>
-        {session.screen.sidebar ? (
-          <SidebarPanel
-            overrides={sidebarOverrides}
-            sidebar={session.screen.sidebar}
-          />
-        ) : null}
+        <SidebarPanel />
       </Wrap>
     );
   }),

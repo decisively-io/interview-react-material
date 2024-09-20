@@ -455,10 +455,10 @@
   dependencies:
     "@date-io/core" "^1.3.13"
 
-"@decisively-io/interview-sdk@^0.11.0-alpha.9":
-  version "0.11.0-alpha.9"
-  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.11.0-alpha.9/ed2a55ce8e84374a5c2472ee62d2c9a3ce533da2"
-  integrity sha512-1iRfa/3u8AGlnYSGa8pn+dB/x3Sclo66IHcPAGK7UnZbsqQWsa0RxeZghtC5bwI1cWYE4r9LdlG8sR0zEAGIsg==
+"@decisively-io/interview-sdk@^0.11.0-alpha.12":
+  version "0.11.0-alpha.12"
+  resolved "https://npm.pkg.github.com/download/@decisively-io/interview-sdk/0.11.0-alpha.12/ab499f29a5ccc695e0c88122a9062f00a7cce84a"
+  integrity sha512-/hRwvM7wsUQE3DVy303+47bl2LQcr1oXw7b2H+BDkHO91C3WCeWwremzCogbufT/uuNmQChG/Dtv+0xUPPEpjA==
   dependencies:
     axios "^0.26.1"
     date-fns "^2.28.0"
@@ -4349,6 +4349,11 @@ timsort@^0.3.0:
 
 tiny-warning@^1.0.2:
   version "1.0.3"
+
+title-case@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.npmjs.org/title-case/-/title-case-4.3.2.tgz"
+  integrity sha512-I/nkcBo73mO42Idfv08jhInV61IMb61OdIFxk+B4Gu1oBjWBPOLmhZdsli+oJCVaD+86pYQA93cJfFt224ZFAA==
 
 tmpl@1.0.5:
   version "1.0.5"

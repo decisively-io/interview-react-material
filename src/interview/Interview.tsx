@@ -34,12 +34,14 @@ export interface InterviewContextState {
   registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;
   getExplanation: (attribute: string) => string | undefined;
   session: SessionInstance;
+  sidebarOverrides: SidebarOverrides;
 }
 
 export const InterviewContext = React.createContext<InterviewContextState>({
   registerFormMethods: () => {},
   session: {} as SessionInstance,
   getExplanation: () => undefined,
+  sidebarOverrides: {},
 });
 
 export default class Interview<P extends InterviewProps = InterviewProps> extends React.Component<P, InterviewState> {
@@ -161,7 +163,18 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
   // ===================================================================================
 
   renderWrapper = (content: React.ReactNode): React.ReactNode => {
-    return <InterviewContext.Provider value={this}>{content}</InterviewContext.Provider>;
+    return (
+      <InterviewContext.Provider
+        value={{
+          registerFormMethods: this.registerFormMethods.bind(this),
+          session: this.session,
+          getExplanation: this.getExplanation.bind(this),
+          sidebarOverrides: this.props.sidebarOverrides || {},
+        }}
+      >
+        {content}
+      </InterviewContext.Provider>
+    );
   };
 
   render() {
@@ -226,7 +239,6 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       content = (
         // @ts-ignore
         <ThemedComp
-          sidebarOverrides={this.props.sidebarOverrides}
           menu={menuProps}
           content={contentProps}
         />
@@ -234,7 +246,6 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
     } else {
       content = (
         <Frame
-          sidebarOverrides={this.props.sidebarOverrides}
           contentJSX={
             <Content
               key={contentProps.keyForRemount}
