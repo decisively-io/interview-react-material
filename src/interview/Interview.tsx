@@ -1,4 +1,4 @@
-import type { AttributeValues, Session } from "@decisively-io/interview-sdk";
+import type { AttributeValues, InterviewProvider, Session } from "@decisively-io/interview-sdk";
 import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
@@ -18,6 +18,8 @@ import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
 
 export interface InterviewProps {
+  interviewProvider: InterviewProvider;
+  //--- session started from the client
   session: SessionInstance;
   onDataChange?: (data: AttributeValues, name: string | undefined) => void;
   // flag to indicate that the component is loading data from an external source
@@ -237,6 +239,8 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
         />
       );
     } else {
+
+      console.log("====> Interview.tsx this.props.interviewProvider", this.props.interviewProvider);
       content = (
         <Frame
           contentJSX={
@@ -244,6 +248,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
               key={contentProps.keyForRemount}
               onDataChange={onDataChange}
               {...contentProps}
+              interviewProvider={this.props.interviewProvider}
             />
           }
           menuJSX={<Menu {...menuProps} />}

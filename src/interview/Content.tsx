@@ -4,6 +4,7 @@ import {
   type ControlsValue,
   type Screen,
   type Step,
+  type InterviewProvider,
   deriveDefaultControlsValue,
 } from "@decisively-io/interview-sdk";
 import { CircularProgress } from "@material-ui/core";
@@ -110,6 +111,15 @@ const Wrap = styled.form`
   }
 `;
 
+export const NestedInterviewContainer = styled.div`
+  ${LOADING_ANIMATION_CSS}
+
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: auto;
+`;
+
 export const StyledControlsWrap = styled.div`
   ${LOADING_ANIMATION_CSS}
 
@@ -176,6 +186,7 @@ export const StyledControlsWrap = styled.div`
 `;
 
 export interface ContentRootProps {
+  interviewProvider: InterviewProvider;
   controlComponents?: ControlComponents;
   className?: string;
   step: Step | null;
@@ -207,6 +218,7 @@ const Content = Object.assign(
       onDataChange,
       rhfMode = "onSubmit",
       rhfReValidateMode = "onChange",
+      interviewProvider,
     } = props;
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
@@ -272,6 +284,7 @@ const Content = Object.assign(
                     controlComponents={controlComponents}
                     controls={screen?.controls || []}
                     chOnScreenData={chOnScreenData}
+                    interviewProvider={interviewProvider}
                   />
                 </StyledControlsWrap>
               </div>

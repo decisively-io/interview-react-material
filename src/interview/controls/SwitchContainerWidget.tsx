@@ -12,7 +12,7 @@ export interface SwitchContainerControlWidgetProps extends ControlWidgetProps<Re
 }
 
 const SwitchContainerControlWidget = (props: SwitchContainerControlWidgetProps) => {
-  const { control, chOnScreenData, controlComponents, className } = props;
+  const { control, chOnScreenData, controlComponents, interviewProvider, className } = props;
   const { outcome_true, outcome_false, branch, condition, attribute } = control;
 
   const controls = (branch === "true" ? outcome_true : outcome_false) || [];
@@ -50,6 +50,7 @@ const SwitchContainerControlWidget = (props: SwitchContainerControlWidgetProps) 
         : mappedControls.map((value, controlIndex) => {
             return (
               <RenderControl
+                interviewProvider={interviewProvider}
                 chOnScreenData={chOnScreenData}
                 key={controlIndex}
                 control={value}

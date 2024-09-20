@@ -1,4 +1,4 @@
-import { type RenderableDataContainerControl, getNameFromFileAttributeRef } from "@decisively-io/interview-sdk";
+import type { RenderableDataContainerControl } from "@decisively-io/interview-sdk";
 import { Typography } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
@@ -84,7 +84,7 @@ const DataContainerControlWidget = (props: DataContainerControlWidgetProps) => {
         const value = ((): string[] => {
           if (it.type === "file") {
             // TODO finalize this when file control branch is merged in
-            return (it.value || { fileRefs: [] }).fileRefs.map((it) => getNameFromFileAttributeRef(it));
+            return ((it as any).value || { fileRefs: [] }).fileRefs.map((it: any) => (it));
           }
 
           if (it.type === "currency") {

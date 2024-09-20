@@ -1,7 +1,6 @@
 import React from "react";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
-
-import type { Control } from "@decisively-io/interview-sdk";
+import type { Control, InterviewProvider } from "@decisively-io/interview-sdk";
 import BooleanControlWidget, { type BooleanControlWidgetProps } from "./BooleanControlWidget";
 import CertaintyContainerWidget, { type CertaintyContainerControlWidgetProps } from "./CertaintyContainerWidget";
 import CurrencyControlWidget, { type CurrencyControlWidgetProps } from "./CurrencyControlWidget";
@@ -22,11 +21,13 @@ import SwitchContainerWidget, { type SwitchContainerControlWidgetProps } from ".
 import TextControlWidget, { type TextControlWidgetProps } from "./TextControlWidget";
 import TimeControlWidget, { type TimeControlWidgetProps } from "./TimeControlWidget";
 import TypographyControlWidget, { type TypographyControlWidgetProps } from "./TypographyControlWidget";
+import InterviewContainerWidget, { type InterviewContainerControlWidgetProps } from "./InterviewContainerWidget";
 
 export interface ControlsProps {
   controls: Control[];
   controlComponents?: ControlComponents;
   chOnScreenData?: any;
+  interviewProvider: InterviewProvider;
 }
 
 export interface ControlComponents {
@@ -44,6 +45,7 @@ export interface ControlComponents {
   SwitchContainer?: React.ComponentType<SwitchContainerControlWidgetProps>;
   CertaintyContainer?: React.ComponentType<CertaintyContainerControlWidgetProps>;
   RepeatingContainer?: React.ComponentType<RepeatingContainerControlWidgetProps>;
+  InterviewContainer?: React.ComponentType<InterviewContainerControlWidgetProps>;
   File?: React.ComponentType<FileControlWidgetProps>;
   DataContainer?: React.ComponentType<DataContainerControlWidgetProps>;
   GenerativeChat?: React.ComponentType<GenerativeChatControlWidgetProps>;
@@ -64,15 +66,14 @@ const DEFAULT_CONTROL_COMPONENTS: Required<ControlComponents> = {
   SwitchContainer: SwitchContainerWidget,
   CertaintyContainer: CertaintyContainerWidget,
   RepeatingContainer: RepeatingContainerWidget,
+  InterviewContainer: InterviewContainerWidget,
   File: FileControlWidget,
   DataContainer: DataContainerWidget,
   GenerativeChat: GenerativeChatControlWidget,
 };
 
 const Controls = React.memo((props: ControlsProps) => {
-  const { controls, controlComponents, chOnScreenData } = props;
-
-  // console.log("====> screen.controls.upper", controls);
+  const { controls, controlComponents, chOnScreenData, interviewProvider } = props;
 
   const resolvedControlComponents = {
     ...DEFAULT_CONTROL_COMPONENTS,
@@ -86,6 +87,7 @@ const Controls = React.memo((props: ControlsProps) => {
           control={it}
           chOnScreenData={chOnScreenData}
           controlComponents={resolvedControlComponents}
+          interviewProvider={interviewProvider}
         />
       ))}
     </>
