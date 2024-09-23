@@ -3,6 +3,7 @@ import { Card } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import styled from "styled-components";
 import { titleCase } from "title-case";
+import ValueRender from "../commons/ValueRender";
 import type { SidebarComponent } from "./SidebarPanel";
 
 export interface EntityCardProps {
@@ -24,14 +25,14 @@ const EntityCard = (props: EntityCardProps) => {
   const title = data?.titleAttributeDescription && entity[data.titleAttributeDescription];
   return (
     <EntityCardContainer>
-      {title && <Typography variant={"h6"}>{title}</Typography>}
+      {title && <Typography variant={"h6"}>{<ValueRender value={title} />}</Typography>}
       {data?.descriptionAttributes?.map((attr) => (
         <Typography
           key={attr.value}
           variant={"body2"}
         >
           {attr.label ? `${attr.label}: ` : ""}
-          {entity[attr.value]}
+          <ValueRender value={entity[attr.value]} />
         </Typography>
       ))}
     </EntityCardContainer>

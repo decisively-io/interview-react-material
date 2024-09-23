@@ -27,8 +27,8 @@ export interface InterviewProps {
   controlComponents?: ControlComponents;
   rhfMode?: ContentProps["rhfMode"];
   rhfReValidateMode?: ContentProps["rhfReValidateMode"];
-  uploadFile: InterviewContextState["uploadFile"];
-  removeFile: InterviewContextState["removeFile"];
+  uploadFile?: InterviewContextState["uploadFile"];
+  removeFile?: InterviewContextState["removeFile"];
   onFileTooBig?: InterviewContextState["onFileTooBig"];
   sidebarOverrides?: SidebarOverrides;
 }
@@ -175,9 +175,9 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
           registerFormMethods: this.registerFormMethods.bind(this),
           session: this.session,
           getExplanation: this.getExplanation.bind(this),
-          uploadFile: this.uploadFile.bind(this),
+          uploadFile: this.uploadFile?.bind(this) || fallbackUploadFile,
           onFileTooBig: this.onFileTooBig.bind(this),
-          removeFile: this.removeFile.bind(this),
+          removeFile: this.removeFile?.bind(this) || fallbackRemoveFile,
           sidebarOverrides: this.props.sidebarOverrides || {},
         }}
       >
