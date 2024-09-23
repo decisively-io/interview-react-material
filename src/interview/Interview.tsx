@@ -240,7 +240,6 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       );
     } else {
 
-      console.log("====> Interview.tsx this.props.interviewProvider", this.props.interviewProvider);
       content = (
         <Frame
           contentJSX={
@@ -251,6 +250,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
               interviewProvider={this.props.interviewProvider}
             />
           }
+          // the sidebar with the numbers...
           menuJSX={<Menu {...menuProps} />}
         />
       );

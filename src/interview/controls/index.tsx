@@ -27,7 +27,7 @@ export interface ControlsProps {
   controls: Control[];
   controlComponents?: ControlComponents;
   chOnScreenData?: any;
-  interviewProvider: InterviewProvider;
+  interviewProvider: InterviewProvider | null;
 }
 
 export interface ControlComponents {

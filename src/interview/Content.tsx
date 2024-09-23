@@ -118,6 +118,16 @@ export const NestedInterviewContainer = styled.div`
   flex-direction: column;
   flex-grow: 1;
   overflow: auto;
+
+  border: 1px solid grey;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  width: 100%;
+
+  scrollbar-width: thin;
+  scrollbar-color: grey transparent;
+  overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 export const StyledControlsWrap = styled.div`
