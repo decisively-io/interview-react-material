@@ -15,8 +15,9 @@ import React, { useContext } from "react";
 import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { CLASS_NAMES, DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
-import { InterviewContext } from "./InterviewContext";
+import { InterviewContext } from "../providers/InterviewContext";
 import Controls, { type ControlComponents } from "./controls";
+import { useApp } from "../hooks/HooksApp";
 
 /**
  * @deprecated - use `CLASS_NAMES.CONTENT` instead
@@ -55,7 +56,8 @@ export const classes = {
 const formClss = classes[">formWrap"][">form"];
 const submitClss = classes[">btns"][">submit"];
 
-const Wrap = styled.form`
+// const Wrap = styled.form`
+const Wrap = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -128,6 +130,8 @@ export const NestedInterviewContainer = styled.div`
   scrollbar-color: grey transparent;
   overflow-y: auto;
   overflow-x: hidden;
+
+  max-height: 60vh
 `;
 
 export const StyledControlsWrap = styled.div`
@@ -210,6 +214,7 @@ export interface ContentRootProps {
   onDataChange?: (data: AttributeValues, name: string | undefined) => void;
   rhfMode?: UseFormProps["mode"];
   rhfReValidateMode?: UseFormProps["reValidateMode"];
+  interactionId: string;
 }
 
 const Content = Object.assign(
@@ -229,11 +234,31 @@ const Content = Object.assign(
       rhfMode = "onSubmit",
       rhfReValidateMode = "onChange",
       interviewProvider,
+      interactionId,
     } = props;
+    const {
+      registerInterview,
+      markInteractionAsComplete,
+      checkInteractionBelowStillRunning,
+    } = useApp();
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
 
     const interviewContext = useContext(InterviewContext);
+
+    const formRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+      if (formRef.current) {
+        registerInterview(formRef, interactionId);
+      }
+    }, []);
+
+    React.useEffect(() => {
+      if (!next) {
+        markInteractionAsComplete(interactionId);
+      }
+    }, [next]);
 
     const methods = useForm({
       defaultValues,
@@ -275,8 +300,11 @@ const Content = Object.assign(
 
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <FormProvider {...methods}>
+        <FormProvider
+          {...methods}
+        >
           <Wrap
+            ref={formRef}
             onSubmit={methods.handleSubmit(onSubmit)}
             className={className}
           >
@@ -317,10 +345,12 @@ const Content = Object.assign(
                     {isSubmitting && <CircularProgress size="2rem" />}
                     <Button
                       size="medium"
-                      type="submit"
+                      // type="submit"
+                      // onClick={methods.handleSubmit(onSubmit)}
+                      onClick={onSubmit}
                       variant="contained"
                       color="primary"
-                      disabled={nextDisabled || (!methods.formState.isValid && methods.formState.isSubmitted)}
+                      disabled={nextDisabled || (!methods.formState.isValid && methods.formState.isSubmitted) || checkInteractionBelowStillRunning(interactionId)}
                       className={submitClss[">next"]}
                     >
                       <Typography>Next</Typography>

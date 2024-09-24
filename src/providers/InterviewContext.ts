@@ -2,7 +2,7 @@ import type { SessionInstance } from "@decisively-io/interview-sdk";
 import type { ControlsValue } from "@decisively-io/interview-sdk";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
-import type { OnFileTooBig, RemoveFile, UploadFile } from "./controls/FileControlWidget_types";
+import type { OnFileTooBig, RemoveFile, UploadFile } from "../interview/controls/FileControlWidget_types";
 
 export interface InterviewContextState {
   registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;

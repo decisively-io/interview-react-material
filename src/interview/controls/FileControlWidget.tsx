@@ -12,7 +12,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
-import { useInterviewContext } from "../InterviewContext";
+import { useInterviewContext } from "../../providers/InterviewContext";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import type { UploadFileArg, UploadFileRtrn } from "./FileControlWidget_types";
 

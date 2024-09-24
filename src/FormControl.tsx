@@ -7,7 +7,7 @@ import HelpOutline from "@material-ui/icons/HelpOutline";
 import React, { useState } from "react";
 import { Controller, type FieldError, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { InterviewContext } from "./interview/InterviewContext";
+import { InterviewContext } from "./providers/InterviewContext";
 import { MAX_INLINE_LABEL_LENGTH } from "./util";
 import { generateValidatorForControl } from "./util/Validation";
 

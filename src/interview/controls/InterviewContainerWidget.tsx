@@ -24,7 +24,7 @@ type ContainerState = {
 
 const InterviewContainerWidget = React.memo((props: InterviewContainerControlWidgetProps) => {
 
-  const { control, chOnScreenData, controlComponents, className, interviewProvider } = props;
+  const { control, controlComponents, className, interviewProvider } = props;
   const {
     interviewRef,
     initialData = "",
@@ -167,7 +167,9 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
 
     const normalized = normalizeControlsValue(data, session.screen.controls);
 
-    if (data[parentPropName]) normalized[parentPropName] = data[parentPropName];
+    if (data[parentPropName]) {
+      normalized[parentPropName] = data[parentPropName];
+    }
 
     session.save(normalized).then((s) => {
       console.log("next success, resetting");
@@ -186,6 +188,10 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
     console.log("asdasdads");
   };
 
+  const onDataChangeAll = (data: AttributeValues) => {
+    console.log("asdasdads_ALL");
+  };
+
   const lastStep = !session
     ? false
     : isLastStep(session.steps || [], session.screen.id) && session.status !== "in-progress";
@@ -193,6 +199,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   // -- rendering
 
   /**
+   * @deprecated
    * This is just the controls with wrapping elements
    */
   const renderControls = () => {
@@ -257,11 +264,12 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
           lastStep ||
           session.externalLoading
         }
-        chOnScreenData={chOnScreenData}
+        // chOnScreenData={onDataChangeAll}
         // rhfMode="onChange"
         // rhfReValidateMode="onChange"
         // biome-ignore lint/style/noNonNullAssertion: <explanation>
         interviewProvider={interviewProvider!}
+        interactionId={session.interactionId}
       />
     );
   }

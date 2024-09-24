@@ -13,9 +13,10 @@ import {
   fallbackOnFileTooBig,
   fallbackRemoveFile,
   fallbackUploadFile,
-} from "./InterviewContext";
+} from "../providers/InterviewContext";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
+import UberProvider from "../providers/UberProvider";
 
 export interface InterviewProps {
   interviewProvider: InterviewProvider;
@@ -169,7 +170,13 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
   // ===================================================================================
 
   renderWrapper = (content: React.ReactNode): React.ReactNode => {
-    return <InterviewContext.Provider value={this}>{content}</InterviewContext.Provider>;
+    return (
+      <UberProvider
+        registration={this}
+      >
+        {content}
+      </UberProvider>
+    );
   };
 
   render() {
@@ -248,6 +255,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
               onDataChange={onDataChange}
               {...contentProps}
               interviewProvider={this.props.interviewProvider}
+              interactionId={session.interactionId}
             />
           }
           // the sidebar with the numbers...
