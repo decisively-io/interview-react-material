@@ -1,7 +1,7 @@
-import type { RenderableSidebar, Sidebar, SidebarType } from "@decisively-io/interview-sdk";
+import type { RenderableSidebar, SidebarType } from "@decisively-io/interview-sdk";
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { CLASS_NAMES } from "../Constants";
+import { CLASS_NAMES, LOADING_ANIMATION_CSS } from "../Constants";
 import { InterviewContext } from "../interview";
 import SidebarEntityList from "./SidebarEntityList";
 
@@ -16,6 +16,8 @@ export type SidebarOverrides = Record<string, SidebarComponent>;
 export interface SidebarPanelProps {}
 
 const Wrap = styled.div`
+  ${LOADING_ANIMATION_CSS}
+
   height: 100%;
   min-width: 360px;
   max-width: 500px;
@@ -34,17 +36,24 @@ const TYPE_COMPONENTS: Record<SidebarType, SidebarComponent> = {
 const SidebarPanel = (props: SidebarPanelProps) => {
   const interview = useContext(InterviewContext);
   const { session, sidebarOverrides } = interview;
-  const sidebar = session?.screen?.sidebar;
-  if (!sidebar) {
+  const sidebars = session?.screen?.sidebars;
+  if (!sidebars?.length) {
     return null;
   }
-  const override = sidebar.id && sidebarOverrides?.[sidebar.id];
 
-  const sidebarComponent = override ?? TYPE_COMPONENTS[sidebar.type];
+  const anyLoading = sidebars.some((sidebar) => sidebar.loading);
 
   return (
-    <Wrap className={CLASS_NAMES.SIDEBAR.CONTAINER}>
-      {sidebarComponent ? React.createElement(sidebarComponent, { sidebar }) : null}
+    <Wrap
+      data-loading={anyLoading ? "true" : undefined}
+      className={CLASS_NAMES.SIDEBAR.CONTAINER}
+    >
+      {sidebars.map((sidebar) => {
+        const override = sidebar.id && sidebarOverrides?.[sidebar.id];
+
+        const sidebarComponent = override ?? TYPE_COMPONENTS[sidebar.type];
+        return sidebarComponent ? React.createElement(sidebarComponent, { sidebar, key: sidebar.id }) : null;
+      })}
     </Wrap>
   );
 };

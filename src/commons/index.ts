@@ -1,1 +1,1 @@
-export {default as ValueRender} from "./ValueRender";
+export { default as ValueRender } from "./ValueRender";
