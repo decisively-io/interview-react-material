@@ -1,17 +1,24 @@
 import type React from "react";
 import AppProvider from "./AppProvider";
-import type { InterviewContextState } from "./InterviewContext";
+import { InterviewContext, type InterviewContextState } from "./InterviewContext";
 
 interface UberProviderProps {
   registration: InterviewContextState;
+  sessionId: string;
 }
 
-const UberProvider = ({ children }: React.PropsWithChildren<UberProviderProps>) => {
+const UberProvider = ({ children, registration, sessionId }: React.PropsWithChildren<UberProviderProps>) => {
 
   return (
-    <AppProvider>
-      {children}
-    </AppProvider>
+    <InterviewContext.Provider
+      value={registration}
+    >
+      <AppProvider
+        sessionId={sessionId}
+      >
+        {children}
+      </AppProvider>
+    </InterviewContext.Provider>
   );
 };
 

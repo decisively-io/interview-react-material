@@ -173,6 +173,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
     return (
       <UberProvider
         registration={this}
+        sessionId={this.session.sessionId}
       >
         {content}
       </UberProvider>

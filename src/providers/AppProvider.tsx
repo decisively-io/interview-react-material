@@ -4,11 +4,13 @@ import React from "react";
 const LogGroup = "AppProvider";
 
 export interface AppProviderState {
-
+  /** this is the session started by the client */
+  sessionId: string | null;
 }
 
 export interface AppProviderCtx extends AppProviderState {
   registerInterview: (ref: React.RefObject<HTMLDivElement>, interactionId: string) => void;
+  deRegisterInterview: (interactionId: string) => void;
   markInteractionAsComplete: (interactionId: string) => void;
   checkInteractionBelowStillRunning: (parentInteractionId: string) => boolean;
 }
@@ -18,7 +20,9 @@ const defaultFn = () => {
 };
 
 const defaultProviderState: AppProviderCtx = {
+  sessionId: null,
   registerInterview: defaultFn,
+  deRegisterInterview: defaultFn,
   markInteractionAsComplete: defaultFn,
   checkInteractionBelowStillRunning: defaultFn,
 };
@@ -26,7 +30,7 @@ const defaultProviderState: AppProviderCtx = {
 export const AppCtx: React.Context<AppProviderCtx> = React.createContext(defaultProviderState);
 
 // biome-ignore lint/complexity/noBannedTypes: <because>
-const AppProvider: React.FC<React.PropsWithChildren<{}>> = (props): JSX.Element => {
+const AppProvider: React.FC<React.PropsWithChildren<{sessionId: string}>> = (props): JSX.Element => {
 
   const [runningInterviews, setRunningInterviews] = React.useState<{
     ref: React.RefObject<HTMLDivElement>,
@@ -68,6 +72,15 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = (props): JSX.Element 
     console.log(LogGroup, `registered interaction: ${interactionId} at depth ${domDepthElement}`);
   };
 
+  const deRegisterInterview = (interactionId: string) => {
+
+    setRunningInterviews((prev) => {
+      return prev.filter((ri) => ri.interactionId !== interactionId);
+    });
+
+    console.log(LogGroup, `de-registered interaction: ${interactionId}`);
+  };
+
   const markInteractionAsComplete = (interactionId: string) => {
 
     setRunningInterviews((prev) => {
@@ -100,51 +113,11 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = (props): JSX.Element 
 
   // -- rendering
 
-  const renderFullScreenLoading = () => {
-
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          width: "100%",
-        }}
-      >
-        <CircularProgress
-          size={80}
-        />
-      </div>
-    );
-  };
-
-  const renderLoadingOverlay = () => {
-
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "rgba(0, 0, 0, 0.1)",
-          zIndex: 9000,
-          // pointerEvents: "none", // this is allowing clicks to go through
-        }}
-        onClick={(e) => {
-          // console.log("blocked!");
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      />
-    );
-  };
-
   return (
     <AppCtx.Provider value={{
+      sessionId: props.sessionId,
       registerInterview,
+      deRegisterInterview,
       markInteractionAsComplete,
       checkInteractionBelowStillRunning,
     }}>

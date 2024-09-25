@@ -8,7 +8,9 @@ export const useApp = () => {
   const appCtxValue = React.useContext<AppProviderCtx>(AppCtx);
 
   return ({
+    sessionId: appCtxValue.sessionId,
     registerInterview: appCtxValue.registerInterview,
+    deRegisterInterview: appCtxValue.deRegisterInterview,
     markInteractionAsComplete: appCtxValue.markInteractionAsComplete,
     checkInteractionBelowStillRunning: appCtxValue.checkInteractionBelowStillRunning,
   });

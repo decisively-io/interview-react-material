@@ -1,4 +1,4 @@
-import { getCurrentStep, type AttributeValues, type ControlsValue, type InterviewProvider, type RenderableInterviewContainerControl, type RenderableRepeatingContainerControl, type Session, type SessionInstance } from "@decisively-io/interview-sdk";
+import { getCurrentStep, type SessionConfig, type ControlsValue, type RenderableInterviewContainerControl, type RenderableRepeatingContainerControl, type Session, type SessionInstance } from "@decisively-io/interview-sdk";
 import clsx from "clsx";
 import React from "react";
 import Content, { NestedInterviewContainer, StyledControlsWrap } from "../Content";
@@ -9,6 +9,7 @@ import type { ControlComponents } from "./index";
 import Controls from "./index";
 import { CLASS_NAMES, DEFAULT_STEP } from "../../Constants";
 import { normalizeControlsValue } from "../../util";
+import { useApp } from "../../hooks/HooksApp";
 
 export interface InterviewContainerControlWidgetProps extends ControlWidgetProps<RenderableInterviewContainerControl> {
   controlComponents: ControlComponents;
@@ -28,6 +29,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   const {
     interviewRef,
     initialData = "",
+    required = false,
   } = control;
 
   const [ session, setSession ] = React.useState<SessionInstance | null>(null);
@@ -38,6 +40,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
     isRequestPending: false,
     nextDisabled: false,
   });
+  const { sessionId } = useApp();
 
   console.log("====> interview_container control", control);
 
@@ -69,24 +72,23 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
         try {
           const { interactionMode } = interviewRef;
 
-          if (interactionMode === "same-session") {
-            // same session, new INTERACTION
-            // TODO I need to just lightly mod the SDK for this
-            throw new Error("Not implemented");
-          } else if (interactionMode === "new-session" || interactionMode === "different-project") {
-            // same model, new SESSION (i.e. completely new interview, independent of the current one)
+          if (["same-session", "new-session", "different-project"].includes(interactionMode)) {
+            const createOpts = {
+              interview: interviewRef.interviewId,
+              initialData: initalDataMarshalled,
+            } as SessionConfig;
+            if (interactionMode === "same-session" && !sessionId) {
+              throw new Error("sessionId is required for same-session interaction mode");
+            } else if (interactionMode === "same-session") {
+              createOpts.sessionId = sessionId || "";
+            }
+
             const res = await interviewProvider.create(
               interviewRef.projectId,
-              {
-                interview: interviewRef.interviewId,
-                initialData: initalDataMarshalled,
-                // release: TODO,
-                // debug: false,
-              },
-              () => { console.log("197: interviewProvider.create callback") }
+              createOpts,
+              // () => { console.log("196: interviewProvider.create callback") }
             );
 
-            console.log("====> interviewProvider.create", res);
             setSession(res);
           } else {
             throw new Error(`Invalid interaction mode: ${interactionMode}`);
@@ -129,7 +131,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
 
   // -- session mgmt
 
-  const __back = (data: ControlsValue, reset: () => unknown) => {
+  const goBack = (data: ControlsValue, reset: () => unknown) => {
     if (!session) {
       return;
     }
@@ -151,7 +153,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
     });
   };
 
-  const __next = (data: ControlsValue, reset: () => unknown) => {
+  const goNext = (data: ControlsValue, reset: () => unknown) => {
 
     if (!session) {
       return;
@@ -184,41 +186,45 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
     });
   };
 
-  const onDataChange = (data: AttributeValues, name: string | undefined) => {
-    console.log("asdasdads");
-  };
-
-  const onDataChangeAll = (data: AttributeValues) => {
-    console.log("asdasdads_ALL");
-  };
-
   const lastStep = !session
     ? false
     : isLastStep(session.steps || [], session.screen.id) && session.status !== "in-progress";
 
   // -- rendering
 
-  /**
-   * @deprecated
-   * This is just the controls with wrapping elements
-   */
-  const renderControls = () => {
+  const renderOverlay = () => {
 
-    return (
-      <StyledControlsWrap
-        className={CLASS_NAMES.CONTENT.FORM_CONTROLS}
-      >
-        <Controls
-          // if we are self-referencing, we don't want to pass the interviewProvider, otherwise we'll create an infinite loop
-          // we could pass the "level", but interviews will only be 1 level deep if they are a self-reference
-          interviewProvider={isSelfReferencing ? null : interviewProvider}
-          controlComponents={controlComponents}
-          controls={session?.screen?.controls || []}
-          chOnScreenData={onDataChange}
-        />
-      </StyledControlsWrap>
-    );
-  }
+    if (errMessage || session?.status === "complete" || session?.status === "error") {
+      return (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 100,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "5px",
+            }}
+          >
+            {errMessage || "Complete"}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   /**
    * This is the content (no sidebar/menu)
@@ -242,8 +248,8 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
         })}
         screen={session.screen}
         controlComponents={controlComponents}
-        next={lastStep ? undefined : __next}
-        back={__back}
+        next={(lastStep || errMessage) ? undefined : goNext}
+        back={goBack}
         backDisabled={
           buttons?.back === false ||
           containerState.isRequestPending ||
@@ -270,6 +276,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
         // biome-ignore lint/style/noNonNullAssertion: <explanation>
         interviewProvider={interviewProvider!}
         interactionId={session.interactionId}
+        subinterviewRequired={required}
       />
     );
   }
@@ -281,6 +288,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
     >
       {/* {renderControls()} */}
       {renderContent()}
+      {renderOverlay()}
     </NestedInterviewContainer>
   );
 });

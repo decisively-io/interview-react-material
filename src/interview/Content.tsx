@@ -117,6 +117,7 @@ export const NestedInterviewContainer = styled.div`
   ${LOADING_ANIMATION_CSS}
 
   display: flex;
+  position: relative;
   flex-direction: column;
   flex-grow: 1;
   overflow: auto;
@@ -132,6 +133,7 @@ export const NestedInterviewContainer = styled.div`
   overflow-x: hidden;
 
   max-height: 60vh
+  min-height: 20vh;
 `;
 
 export const StyledControlsWrap = styled.div`
@@ -215,6 +217,8 @@ export interface ContentRootProps {
   rhfMode?: UseFormProps["mode"];
   rhfReValidateMode?: UseFormProps["reValidateMode"];
   interactionId: string;
+  /** applicable only to nested interviews */
+  subinterviewRequired?: boolean;
 }
 
 const Content = Object.assign(
@@ -235,9 +239,11 @@ const Content = Object.assign(
       rhfReValidateMode = "onChange",
       interviewProvider,
       interactionId,
+      subinterviewRequired = false,
     } = props;
     const {
       registerInterview,
+      deRegisterInterview,
       markInteractionAsComplete,
       checkInteractionBelowStillRunning,
     } = useApp();
@@ -252,13 +258,18 @@ const Content = Object.assign(
       if (formRef.current) {
         registerInterview(formRef, interactionId);
       }
+
+      return () => {
+        deRegisterInterview(interactionId);
+      };
     }, []);
 
     React.useEffect(() => {
-      if (!next) {
+      if (next === undefined || (subinterviewRequired === false)) {
         markInteractionAsComplete(interactionId);
       }
-    }, [next]);
+      // otherwise we wait for the subinterview to complete
+    }, [next, subinterviewRequired]);
 
     const methods = useForm({
       defaultValues,
