@@ -7,7 +7,7 @@ import type { FileControl } from "@decisively-io/interview-sdk";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import AddIcon from "@material-ui/icons/Add";
+import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
 import styled from "styled-components";
@@ -37,14 +37,30 @@ const HiddenInput = styled.input`
   display: none;
 `;
 
-const StyledIconButton = styled(IconButton)`
-  align-self: flex-start;
+const AddIconButton = styled(IconButton)`
+  &, svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 `;
 const SmallIconBtn = styled(IconButton)`
   &, svg {
     width: 1rem;
     height: 1rem;
   }
+`;
+
+const BottomWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const SelectFileTypography = styled(Typography)`
+  font-size: 0.875rem;
+`;
+const AddIconAndTextsWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 const toBase64 = (file: File): Promise<string> =>
@@ -139,15 +155,26 @@ export default (p: FileControlWidgetProps) => {
             ))}
           </FilesWrap>
 
-          {max <= normalizedValue.fileRefs.length ? null : (
-            <StyledIconButton onClick={triggerAddFile}>
-              <AddIcon />
-            </StyledIconButton>
-          )}
+          <BottomWrap>
+            {max <= normalizedValue.fileRefs.length ? null : (
+              <AddIconAndTextsWrap>
+                <SelectFileTypography>Select a file to upload</SelectFileTypography>
 
-          {error === undefined || error.message === undefined ? null : (
-            <FormHelperText error>{error.message}</FormHelperText>
-          )}
+                <AddIconButton onClick={triggerAddFile}>
+                  <AttachFileIcon />
+                </AddIconButton>
+              </AddIconAndTextsWrap>
+            )}
+            {max <= 1 ? null : (
+              <Typography variant="caption">
+                {normalizedValue.fileRefs.length} of {max} files (maximum)
+              </Typography>
+            )}
+
+            {error === undefined || error.message === undefined ? null : (
+              <FormHelperText error>{error.message}</FormHelperText>
+            )}
+          </BottomWrap>
         </Wrap>
       );
     },
