@@ -1,15 +1,23 @@
-import { getCurrentStep, type SessionConfig, type ControlsValue, type RenderableInterviewContainerControl, type RenderableRepeatingContainerControl, type Session, type SessionInstance } from "@decisively-io/interview-sdk";
+import {
+  type ControlsValue,
+  type RenderableInterviewContainerControl,
+  type RenderableRepeatingContainerControl,
+  type Session,
+  type SessionConfig,
+  type SessionInstance,
+  getCurrentStep,
+} from "@decisively-io/interview-sdk";
 import clsx from "clsx";
 import React from "react";
+import { CLASS_NAMES, DEFAULT_STEP } from "../../Constants";
+import { useApp } from "../../hooks/HooksApp";
+import { normalizeControlsValue } from "../../util";
 import Content, { NestedInterviewContainer, StyledControlsWrap } from "../Content";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
 import type { ControlComponents } from "./index";
 import Controls from "./index";
-import { CLASS_NAMES, DEFAULT_STEP } from "../../Constants";
-import { normalizeControlsValue } from "../../util";
-import { useApp } from "../../hooks/HooksApp";
 
 export interface InterviewContainerControlWidgetProps extends ControlWidgetProps<RenderableInterviewContainerControl> {
   controlComponents: ControlComponents;
@@ -24,16 +32,11 @@ type ContainerState = {
 };
 
 const InterviewContainerWidget = React.memo((props: InterviewContainerControlWidgetProps) => {
-
   const { control, controlComponents, className, interviewProvider } = props;
-  const {
-    interviewRef,
-    initialData = "",
-    required = false,
-  } = control;
+  const { interviewRef, initialData = "", required = false } = control;
 
-  const [ session, setSession ] = React.useState<SessionInstance | null>(null);
-  const [ errMessage, setErrMessage ] = React.useState<string | null>(null);
+  const [session, setSession] = React.useState<SessionInstance | null>(null);
+  const [errMessage, setErrMessage] = React.useState<string | null>(null);
   const [containerState, setContainerState] = React.useState<ContainerState>({
     backDisabled: false,
     isSubmitting: false,
@@ -66,7 +69,6 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   })();
 
   React.useEffect(() => {
-
     if (interviewProvider && interviewRef) {
       (async () => {
         try {
@@ -104,7 +106,6 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   // -- helpers (TODO move to commons/shared)
 
   const isFirstStep = (steps: Session["steps"], id: string): boolean => {
-
     if (!Array.isArray(steps) || steps.length === 0) return false;
     const first = steps[0];
     if (first.id === id) {
@@ -117,7 +118,6 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   };
 
   const isLastStep = (steps: Session["steps"], id: string): boolean => {
-
     if (!Array.isArray(steps) || steps.length === 0) return false;
     const last = steps[steps.length - 1];
     if (last.id === id) {
@@ -154,7 +154,6 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   };
 
   const goNext = (data: ControlsValue, reset: () => unknown) => {
-
     if (!session) {
       return;
     }
@@ -193,7 +192,6 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   // -- rendering
 
   const renderOverlay = () => {
-
     if (errMessage || session?.status === "complete" || session?.status === "error") {
       return (
         <div
@@ -230,7 +228,6 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
    * This is the content (no sidebar/menu)
    */
   const renderContent = () => {
-
     if (!session) {
       return null;
     }
@@ -244,11 +241,11 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
         // keyForRemount={session.screen.id}
         step={getCurrentStep({
           ...DEFAULT_STEP,
-          steps
+          steps,
         })}
         screen={session.screen}
         controlComponents={controlComponents}
-        next={(lastStep || errMessage) ? undefined : goNext}
+        next={lastStep || errMessage ? undefined : goNext}
         back={goBack}
         backDisabled={
           buttons?.back === false ||
@@ -279,7 +276,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
         subinterviewRequired={required}
       />
     );
-  }
+  };
 
   return (
     <NestedInterviewContainer

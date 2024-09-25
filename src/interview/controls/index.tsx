@@ -1,8 +1,8 @@
-import React from "react";
-import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { Control, InterviewProvider } from "@decisively-io/interview-sdk";
+import React from "react";
 import BooleanControlWidget, { type BooleanControlWidgetProps } from "./BooleanControlWidget";
 import CertaintyContainerWidget, { type CertaintyContainerControlWidgetProps } from "./CertaintyContainerWidget";
+import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import CurrencyControlWidget, { type CurrencyControlWidgetProps } from "./CurrencyControlWidget";
 import DataContainerWidget, { type DataContainerControlWidgetProps } from "./DataContainerWidget";
 import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWidget";
@@ -11,6 +11,7 @@ import EntityControlWidget, { type EntityControlWidgetProps } from "./EntityCont
 import FileControlWidget, { type FileControlWidgetProps } from "./FileControlWidget";
 import GenerativeChatControlWidget, { type GenerativeChatControlWidgetProps } from "./GenerativeChatControlWidget";
 import ImageControlWidget, { type ImageControlWidgetProps } from "./ImageControlWidget";
+import InterviewContainerWidget, { type InterviewContainerControlWidgetProps } from "./InterviewContainerWidget";
 import NumberOfInstancesControlWidget, {
   type NumberOfInstancesControlWidgetProps,
 } from "./NumberOfInstancesControlWidget";
@@ -21,7 +22,6 @@ import SwitchContainerWidget, { type SwitchContainerControlWidgetProps } from ".
 import TextControlWidget, { type TextControlWidgetProps } from "./TextControlWidget";
 import TimeControlWidget, { type TimeControlWidgetProps } from "./TimeControlWidget";
 import TypographyControlWidget, { type TypographyControlWidgetProps } from "./TypographyControlWidget";
-import InterviewContainerWidget, { type InterviewContainerControlWidgetProps } from "./InterviewContainerWidget";
 
 export interface ControlsProps {
   controls: Control[];

@@ -3,10 +3,6 @@ import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decis
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
-import type { ThemedCompProps, ThemedComponent } from "../themes/types";
-import { normalizeControlsValue } from "../util";
-import Content, { type ContentProps } from "./Content";
-import Frame from "./Frame";
 import {
   InterviewContext,
   type InterviewContextState,
@@ -14,9 +10,13 @@ import {
   fallbackRemoveFile,
   fallbackUploadFile,
 } from "../providers/InterviewContext";
+import UberProvider from "../providers/UberProvider";
+import type { ThemedCompProps, ThemedComponent } from "../themes/types";
+import { normalizeControlsValue } from "../util";
+import Content, { type ContentProps } from "./Content";
+import Frame from "./Frame";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
-import UberProvider from "../providers/UberProvider";
 
 export interface InterviewProps {
   interviewProvider: InterviewProvider;
@@ -235,6 +235,8 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       chOnScreenData: this.session.chOnScreenData,
       rhfMode,
       rhfReValidateMode,
+      interviewProvider: this.props.interviewProvider,
+      interactionId: session.interactionId,
     };
 
     let content: React.ReactNode;
@@ -247,7 +249,6 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
         />
       );
     } else {
-
       content = (
         <Frame
           contentJSX={
@@ -255,8 +256,6 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
               key={contentProps.keyForRemount}
               onDataChange={onDataChange}
               {...contentProps}
-              interviewProvider={this.props.interviewProvider}
-              interactionId={session.interactionId}
             />
           }
           // the sidebar with the numbers...

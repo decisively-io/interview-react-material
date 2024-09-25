@@ -8,18 +8,11 @@ interface UberProviderProps {
 }
 
 const UberProvider = ({ children, registration, sessionId }: React.PropsWithChildren<UberProviderProps>) => {
-
   return (
-    <InterviewContext.Provider
-      value={registration}
-    >
-      <AppProvider
-        sessionId={sessionId}
-      >
-        {children}
-      </AppProvider>
+    <InterviewContext.Provider value={registration}>
+      <AppProvider sessionId={sessionId}>{children}</AppProvider>
     </InterviewContext.Provider>
   );
 };
 
-export default (UberProvider);
+export default UberProvider;

@@ -2,9 +2,9 @@ import DateFnsUtils from "@date-io/date-fns";
 import {
   type AttributeValues,
   type ControlsValue,
+  type InterviewProvider,
   type Screen,
   type Step,
-  type InterviewProvider,
   deriveDefaultControlsValue,
 } from "@decisively-io/interview-sdk";
 import { CircularProgress } from "@material-ui/core";
@@ -15,9 +15,9 @@ import React, { useContext } from "react";
 import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { CLASS_NAMES, DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
+import { useApp } from "../hooks/HooksApp";
 import { InterviewContext } from "../providers/InterviewContext";
 import Controls, { type ControlComponents } from "./controls";
-import { useApp } from "../hooks/HooksApp";
 
 /**
  * @deprecated - use `CLASS_NAMES.CONTENT` instead
@@ -241,12 +241,8 @@ const Content = Object.assign(
       interactionId,
       subinterviewRequired = false,
     } = props;
-    const {
-      registerInterview,
-      deRegisterInterview,
-      markInteractionAsComplete,
-      checkInteractionBelowStillRunning,
-    } = useApp();
+    const { registerInterview, deRegisterInterview, markInteractionAsComplete, checkInteractionBelowStillRunning } =
+      useApp();
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
 
@@ -265,7 +261,7 @@ const Content = Object.assign(
     }, []);
 
     React.useEffect(() => {
-      if (next === undefined || (subinterviewRequired === false)) {
+      if (next === undefined || subinterviewRequired === false) {
         markInteractionAsComplete(interactionId);
       }
       // otherwise we wait for the subinterview to complete
@@ -311,9 +307,7 @@ const Content = Object.assign(
 
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <FormProvider
-          {...methods}
-        >
+        <FormProvider {...methods}>
           <Wrap
             ref={formRef}
             onSubmit={methods.handleSubmit(onSubmit)}
@@ -361,7 +355,11 @@ const Content = Object.assign(
                       onClick={onSubmit}
                       variant="contained"
                       color="primary"
-                      disabled={nextDisabled || (!methods.formState.isValid && methods.formState.isSubmitted) || checkInteractionBelowStillRunning(interactionId)}
+                      disabled={
+                        nextDisabled ||
+                        (!methods.formState.isValid && methods.formState.isSubmitted) ||
+                        checkInteractionBelowStillRunning(interactionId)
+                      }
                       className={submitClss[">next"]}
                     >
                       <Typography>Next</Typography>
@@ -403,6 +401,8 @@ export type ContentProps = Pick<
   | "chOnScreenData"
   | "rhfMode"
   | "rhfReValidateMode"
+  | "interactionId"
+  | "interviewProvider"
 >;
 
 // export const _: React.FC< IProps > = React.memo(

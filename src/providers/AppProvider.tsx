@@ -29,15 +29,15 @@ const defaultProviderState: AppProviderCtx = {
 
 export const AppCtx: React.Context<AppProviderCtx> = React.createContext(defaultProviderState);
 
-// biome-ignore lint/complexity/noBannedTypes: <because>
-const AppProvider: React.FC<React.PropsWithChildren<{sessionId: string}>> = (props): JSX.Element => {
-
-  const [runningInterviews, setRunningInterviews] = React.useState<{
-    ref: React.RefObject<HTMLDivElement>,
-    interactionId: string,
-    completed: boolean,
-    depth: number,
-  }[]>([]);
+const AppProvider: React.FC<React.PropsWithChildren<{ sessionId: string }>> = (props): JSX.Element => {
+  const [runningInterviews, setRunningInterviews] = React.useState<
+    {
+      ref: React.RefObject<HTMLDivElement>;
+      interactionId: string;
+      completed: boolean;
+      depth: number;
+    }[]
+  >([]);
 
   const getElementDepth = (element: HTMLDivElement): number => {
     let depth = 0;
@@ -53,13 +53,12 @@ const AppProvider: React.FC<React.PropsWithChildren<{sessionId: string}>> = (pro
   };
 
   const registerInterview = (ref: React.RefObject<HTMLDivElement>, interactionId: string) => {
-
     if (!ref.current) {
       return;
     }
 
     const domDepthElement = getElementDepth(ref.current);
-    setRunningInterviews((prev) => ([
+    setRunningInterviews((prev) => [
       ...prev,
       {
         ref,
@@ -67,13 +66,12 @@ const AppProvider: React.FC<React.PropsWithChildren<{sessionId: string}>> = (pro
         completed: false,
         depth: domDepthElement,
       },
-    ]));
+    ]);
 
     console.log(LogGroup, `registered interaction: ${interactionId} at depth ${domDepthElement}`);
   };
 
   const deRegisterInterview = (interactionId: string) => {
-
     setRunningInterviews((prev) => {
       return prev.filter((ri) => ri.interactionId !== interactionId);
     });
@@ -82,7 +80,6 @@ const AppProvider: React.FC<React.PropsWithChildren<{sessionId: string}>> = (pro
   };
 
   const markInteractionAsComplete = (interactionId: string) => {
-
     setRunningInterviews((prev) => {
       return prev.map((ri) => {
         if (ri.interactionId === interactionId) {
@@ -96,10 +93,9 @@ const AppProvider: React.FC<React.PropsWithChildren<{sessionId: string}>> = (pro
     });
 
     console.log(LogGroup, `marked interaction as complete: ${interactionId}`);
-  }
+  };
 
   const checkInteractionBelowStillRunning = (parentInteractionId: string) => {
-
     const parentInteraction = runningInterviews.find((ri) => ri.interactionId === parentInteractionId);
     if (!parentInteraction) {
       return false;
@@ -109,22 +105,24 @@ const AppProvider: React.FC<React.PropsWithChildren<{sessionId: string}>> = (pro
     const childrenStillRunning = children.some((ri) => !ri.completed);
 
     return childrenStillRunning;
-  }
+  };
 
   // -- rendering
 
   return (
-    <AppCtx.Provider value={{
-      sessionId: props.sessionId,
-      registerInterview,
-      deRegisterInterview,
-      markInteractionAsComplete,
-      checkInteractionBelowStillRunning,
-    }}>
+    <AppCtx.Provider
+      value={{
+        sessionId: props.sessionId,
+        registerInterview,
+        deRegisterInterview,
+        markInteractionAsComplete,
+        checkInteractionBelowStillRunning,
+      }}
+    >
       {/* {isBlockScreenInteraction.state ? renderLoadingOverlay() : null} */}
       {props.children}
     </AppCtx.Provider>
   );
 };
 
-export default (AppProvider);
+export default AppProvider;

@@ -84,7 +84,7 @@ const DataContainerControlWidget = (props: DataContainerControlWidgetProps) => {
         const value = ((): string[] => {
           if (it.type === "file") {
             // TODO finalize this when file control branch is merged in
-            return ((it as any).value || { fileRefs: [] }).fileRefs.map((it: any) => (it));
+            return ((it as any).value || { fileRefs: [] }).fileRefs.map((it: any) => it);
           }
 
           if (it.type === "currency") {
