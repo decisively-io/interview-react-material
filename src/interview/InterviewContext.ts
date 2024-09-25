@@ -2,6 +2,7 @@ import type { SessionInstance } from "@decisively-io/interview-sdk";
 import type { ControlsValue } from "@decisively-io/interview-sdk";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
+import type { InterviewState } from "./InterviewStateType";
 import type { OnFileTooBig, RemoveFile, UploadFile } from "./controls/FileControlWidget_types";
 
 export interface InterviewContextState {
@@ -11,6 +12,7 @@ export interface InterviewContextState {
   uploadFile: UploadFile;
   onFileTooBig: OnFileTooBig;
   removeFile: RemoveFile;
+  enclosedSetState: (s: Partial<InterviewState>) => unknown;
 }
 
 export const fallbackUploadFile: InterviewContextState["uploadFile"] = () => Promise.resolve({ reference: "", id: "" });
@@ -24,6 +26,7 @@ export const InterviewContext = React.createContext<InterviewContextState>({
   uploadFile: fallbackUploadFile,
   onFileTooBig: fallbackOnFileTooBig,
   removeFile: fallbackRemoveFile,
+  enclosedSetState: () => null,
 });
 
 export const useInterviewContext = () => React.useContext(InterviewContext);

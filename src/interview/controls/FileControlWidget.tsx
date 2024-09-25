@@ -8,9 +8,10 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import CachedIcon from "@material-ui/icons/Cached";
 import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useFormControl } from "../../FormControl";
 import { useInterviewContext } from "../InterviewContext";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
@@ -63,6 +64,14 @@ const AddIconAndTextsWrap = styled.div`
   gap: 0.5rem;
 `;
 
+const rotate = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+`;
+const RotatingCachedIcon = styled(CachedIcon)`
+  animation: ${rotate} 2s linear infinite;
+`;
+
 const toBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -73,10 +82,23 @@ const toBase64 = (file: File): Promise<string> =>
 
 export type FileControlWidgetProps = ControlWidgetProps<FileControl>;
 
+type LoadingState = { type: "idle" } | { type: "add" } | { type: "remove"; ref: FileAttributeValue["fileRefs"][0] };
+
 export default (p: FileControlWidgetProps) => {
   const { control, chOnScreenData } = p;
   const { file_type, max = 1, max_size } = control;
-  const { uploadFile, onFileTooBig, removeFile } = useInterviewContext();
+  const { uploadFile, onFileTooBig, removeFile, enclosedSetState } = useInterviewContext();
+
+  const [isLoading, setIsLoadingRaw] = React.useState<LoadingState>({ type: "idle" });
+  const setIsLoading = React.useCallback(
+    (v: LoadingState) => {
+      setIsLoadingRaw(v);
+
+      const btnDisabled = v.type !== "idle";
+      enclosedSetState({ backDisabled: btnDisabled, nextDisabled: btnDisabled });
+    },
+    [setIsLoadingRaw, enclosedSetState],
+  );
 
   const hiddenInputRef = React.useRef<HTMLInputElement>(null);
   const triggerAddFile = React.useCallback(() => {
@@ -95,42 +117,57 @@ export default (p: FileControlWidgetProps) => {
 
       const uploadFileHandler: React.ChangeEventHandler<HTMLInputElement> = ({ currentTarget }) => {
         (async () => {
-          const [file] = (currentTarget.files || []) as File[];
-          if (!file) return;
+          try {
+            const [file] = (currentTarget.files || []) as File[];
+            if (!file) return;
 
-          if (normalizedValue.fileRefs.some((it) => getNameFromFileAttributeRef(it) === file.name)) return;
+            if (normalizedValue.fileRefs.some((it) => getNameFromFileAttributeRef(it) === file.name)) return;
 
-          if (max_size !== undefined && max_size * 1_000_000 < file.size) {
-            return void onFileTooBig(file);
+            if (max_size !== undefined && max_size * 1_000_000 < file.size) {
+              return void onFileTooBig(file);
+            }
+
+            setIsLoading({ type: "add" });
+            const result = await toBase64(file);
+            const uploadaArg: UploadFileArg = {
+              data: result,
+              name: file.name,
+            };
+
+            const uploadRes = await uploadFile(uploadaArg);
+            const nextValue: FileAttributeValue = {
+              ...normalizedValue,
+              fileRefs: normalizedValue.fileRefs.concat(uploadRes.reference),
+            };
+
+            onChange(nextValue);
+            // clear file input so that we can select the same file again (if necessary)
+            currentTarget.value = "";
+          } catch (e) {
+            console.error("B63GW6NYcM | interview-react-material error, FileControlWidget, uploadFileHandler:", e);
+          } finally {
+            setIsLoading({ type: "idle" });
           }
-
-          const result = await toBase64(file);
-          const uploadaArg: UploadFileArg = {
-            data: result,
-            name: file.name,
-          };
-
-          const uploadRes = await uploadFile(uploadaArg);
-          const nextValue: FileAttributeValue = {
-            ...normalizedValue,
-            fileRefs: normalizedValue.fileRefs.concat(uploadRes.reference),
-          };
-
-          onChange(nextValue);
-          // clear file input so that we can select the same file again (if necessary)
-          currentTarget.value = "";
         })();
       };
 
       const deleteFile = (refValue: FileAttributeValue["fileRefs"][0]) => {
         (async function removeFileHandler() {
-          await removeFile(refValue);
+          try {
+            setIsLoading({ type: "remove", ref: refValue });
 
-          const nextValue: FileAttributeValue = {
-            ...normalizedValue,
-            fileRefs: normalizedValue.fileRefs.filter((it) => it !== refValue),
-          };
-          onChange(nextValue);
+            await removeFile(refValue);
+
+            const nextValue: FileAttributeValue = {
+              ...normalizedValue,
+              fileRefs: normalizedValue.fileRefs.filter((it) => it !== refValue),
+            };
+            onChange(nextValue);
+          } catch (e) {
+            console.error("IIZXKueFeb | interview-react-material error, FileControlWidget, deleteFile:", e);
+          } finally {
+            setIsLoading({ type: "idle" });
+          }
         })();
       };
 
@@ -147,7 +184,7 @@ export default (p: FileControlWidgetProps) => {
             {normalizedValue.fileRefs.map((it) => (
               <FileRow key={it}>
                 <SmallIconBtn onClick={() => deleteFile(it)}>
-                  <DeleteIcon />
+                  {isLoading.type === "remove" && isLoading.ref === it ? <RotatingCachedIcon /> : <DeleteIcon />}
                 </SmallIconBtn>
 
                 <Typography>{getNameFromFileAttributeRef(it)}</Typography>
@@ -161,7 +198,7 @@ export default (p: FileControlWidgetProps) => {
                 <SelectFileTypography>Select a file to upload</SelectFileTypography>
 
                 <AddIconButton onClick={triggerAddFile}>
-                  <AttachFileIcon />
+                  {isLoading.type === "add" ? <RotatingCachedIcon /> : <AttachFileIcon />}
                 </AddIconButton>
               </AddIconAndTextsWrap>
             )}

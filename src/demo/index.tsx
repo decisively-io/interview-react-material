@@ -134,13 +134,13 @@ const App = () => {
               const id = Math.random().toString();
 
               r({ reference: `data:id=${id};base64,${btoa(name)}`, id });
-            }, 1_000);
+            }, 2_000);
           });
         }}
         removeFile={(ref) => {
           console.log(`removing file with ref: ${ref}`);
 
-          return new Promise((r) => void setTimeout(r, 1_000));
+          return new Promise((r) => void setTimeout(r, 2_000));
         }}
         onFileTooBig={(f) => {
           alert(`file ${f.name} is too big`);
