@@ -4,6 +4,7 @@ import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { SidebarOverrides } from "../sidebar/SidebarPanel";
 import type { OnFileTooBig, RemoveFile, UploadFile } from "./controls/FileControlWidget_types";
+import type { InterviewState } from "./InterviewStateType";
 
 export interface InterviewContextState {
   registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;
@@ -13,6 +14,7 @@ export interface InterviewContextState {
   onFileTooBig: OnFileTooBig;
   removeFile: RemoveFile;
   sidebarOverrides: SidebarOverrides;
+  enclosedSetState: (s: Partial<InterviewState>) => unknown;
 }
 
 export const fallbackUploadFile: InterviewContextState["uploadFile"] = () => Promise.resolve({ reference: "", id: "" });
@@ -26,6 +28,7 @@ export const InterviewContext = React.createContext<InterviewContextState>({
   uploadFile: fallbackUploadFile,
   onFileTooBig: fallbackOnFileTooBig,
   removeFile: fallbackRemoveFile,
+  enclosedSetState: () => null,
   sidebarOverrides: {},
 });
 

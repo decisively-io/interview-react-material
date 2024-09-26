@@ -1,5 +1,6 @@
 import type { AttributeValues, Session } from "@decisively-io/interview-sdk";
 import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
+import fastDeepEqual from "fast-deep-equal";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
@@ -15,6 +16,7 @@ import {
   fallbackRemoveFile,
   fallbackUploadFile,
 } from "./InterviewContext";
+import type { InterviewState } from "./InterviewStateType";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
 
@@ -33,12 +35,7 @@ export interface InterviewProps {
   sidebarOverrides?: SidebarOverrides;
 }
 
-export interface InterviewState {
-  backDisabled: boolean;
-  isSubmitting: boolean;
-  isRequestPending: boolean;
-  nextDisabled: boolean;
-}
+export type { InterviewState };
 
 export default class Interview<P extends InterviewProps = InterviewProps> extends React.Component<P, InterviewState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Interview`;
@@ -93,6 +90,8 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
     if (nextProps.ThemedComp !== this.props.ThemedComp) {
       return true;
     }
+    if (!fastDeepEqual(this.state, nextState)) return true;
+
     return false;
   }
 
@@ -167,6 +166,13 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
   }
 
   // ===================================================================================
+
+  /**
+   * in File control component we need to be able to set next/back buttons\
+   * to disabled state, so we use this method to pass "setState" to any\
+   * InterviewContext consumer
+   */
+  enclosedSetState = (s: Partial<InterviewState>) => this.setState((prev) => ({ ...prev, ...s }));
 
   renderWrapper = (content: React.ReactNode): React.ReactNode => {
     return (
