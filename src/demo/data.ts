@@ -1,4 +1,4 @@
-import type { Session } from "@decisively-io/interview-sdk";
+import type { FileCtrlTypesNS, Session, SessionInstance } from "@decisively-io/interview-sdk";
 
 const defaultStep: Session["steps"][0] = {
   complete: false,
@@ -10,6 +10,29 @@ const defaultStep: Session["steps"][0] = {
   visitable: true,
   visited: false,
   steps: [],
+};
+
+const fileUtils: Pick<SessionInstance, "uploadFile" | "onFileTooBig" | "removeFile"> = {
+  uploadFile: ({ name }) => {
+    console.log(`uploading file "${name}" to temporary storage`);
+
+    return new Promise<FileCtrlTypesNS.UploadFileRtrn>((r) => {
+      setTimeout(() => {
+        console.log("upload finished");
+        const id = Math.random().toString();
+
+        r({ reference: `data:id=${id};base64,${btoa(name)}`, id });
+      }, 2_000);
+    });
+  },
+  removeFile: (ref) => {
+    console.log(`removing file with ref: ${ref}`);
+
+    return new Promise((r) => void setTimeout(r, 2_000));
+  },
+  onFileTooBig: (f) => {
+    alert(`file ${f.name} is too big`);
+  },
 };
 
 export const session: Session = {
@@ -520,4 +543,5 @@ export const session: Session = {
 
     return Promise.resolve(this);
   },
+  ...fileUtils,
 };

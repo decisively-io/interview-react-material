@@ -3,7 +3,7 @@ import {
   getNameFromFileAttributeRef,
   isFileAttributeValue,
 } from "@decisively-io/interview-sdk";
-import type { FileControl } from "@decisively-io/interview-sdk";
+import type { FileControl, FileCtrlTypesNS } from "@decisively-io/interview-sdk";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -15,7 +15,6 @@ import styled, { keyframes } from "styled-components";
 import { useFormControl } from "../../FormControl";
 import { useInterviewContext } from "../InterviewContext";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import type { UploadFileArg, UploadFileRtrn } from "./FileControlWidget_types";
 
 const Wrap = styled.div`
   display: flex;
@@ -87,7 +86,7 @@ type LoadingState = { type: "idle" } | { type: "add" } | { type: "remove"; ref: 
 export default (p: FileControlWidgetProps) => {
   const { control, chOnScreenData } = p;
   const { file_type, max = 1, max_size } = control;
-  const { uploadFile, onFileTooBig, removeFile, enclosedSetState } = useInterviewContext();
+  const { session, enclosedSetState } = useInterviewContext();
 
   const [isLoading, setIsLoadingRaw] = React.useState<LoadingState>({ type: "idle" });
   const setIsLoading = React.useCallback(
@@ -124,17 +123,17 @@ export default (p: FileControlWidgetProps) => {
             if (normalizedValue.fileRefs.some((it) => getNameFromFileAttributeRef(it) === file.name)) return;
 
             if (max_size !== undefined && max_size * 1_000_000 < file.size) {
-              return void onFileTooBig(file);
+              return void session.onFileTooBig(file);
             }
 
             setIsLoading({ type: "add" });
             const result = await toBase64(file);
-            const uploadaArg: UploadFileArg = {
+            const uploadaArg: FileCtrlTypesNS.UploadFileArg = {
               data: result,
               name: file.name,
             };
 
-            const uploadRes = await uploadFile(uploadaArg);
+            const uploadRes = await session.uploadFile(uploadaArg);
             const nextValue: FileAttributeValue = {
               ...normalizedValue,
               fileRefs: normalizedValue.fileRefs.concat(uploadRes.reference),
@@ -156,7 +155,7 @@ export default (p: FileControlWidgetProps) => {
           try {
             setIsLoading({ type: "remove", ref: refValue });
 
-            await removeFile(refValue);
+            await session.removeFile(refValue);
 
             const nextValue: FileAttributeValue = {
               ...normalizedValue,
