@@ -34,6 +34,7 @@ type ContainerState = {
 const InterviewContainerWidget = React.memo((props: InterviewContainerControlWidgetProps) => {
   const { control, controlComponents, className, interviewProvider } = props;
   const { interviewRef, initialData = "", required = false } = control;
+  const [interviewLoaded, setInterviewLoaded] = React.useState<boolean>(false);
 
   const [session, setSession] = React.useState<SessionInstance | null>(null);
   const [errMessage, setErrMessage] = React.useState<string | null>(null);
@@ -47,12 +48,9 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
 
   console.log("====> interview_container control", control);
 
-  const isSelfReferencing = (() => {
-    if (interviewRef) {
-      // TODO
-    }
-    return true;
-  })();
+  // const isSelfReferencing = (() => {
+  //   return true;
+  // })();
 
   const initalDataMarshalled = (() => {
     if (initialData) {
@@ -98,15 +96,22 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
         } catch (e: any) {
           console.error("====> interview_container Error creating interview", e);
           setErrMessage(`Error creating interview: ${e.message || "Unknown error"}`);
+        } finally {
+          setInterviewLoaded(true);
         }
       })();
+    } else if (!interviewProvider) {
+      setErrMessage("Interview provider not available");
+      setInterviewLoaded(true);
     }
   }, [interviewProvider, interviewRef]);
 
-  // -- helpers (TODO move to commons/shared)
+  // -- helpers
 
   const isFirstStep = (steps: Session["steps"], id: string): boolean => {
-    if (!Array.isArray(steps) || steps.length === 0) return false;
+    if (!Array.isArray(steps) || steps.length === 0) {
+      return false;
+    }
     const first = steps[0];
     if (first.id === id) {
       return true;
@@ -118,7 +123,9 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   };
 
   const isLastStep = (steps: Session["steps"], id: string): boolean => {
-    if (!Array.isArray(steps) || steps.length === 0) return false;
+    if (!Array.isArray(steps) || steps.length === 0) {
+      return false;
+    }
     const last = steps[steps.length - 1];
     if (last.id === id) {
       return true;
@@ -191,8 +198,8 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
 
   // -- rendering
 
-  const renderOverlay = () => {
-    if (errMessage || session?.status === "complete" || session?.status === "error") {
+  const renderErrorOverlay = () => {
+    if (errMessage || session?.status === "error") {
       return (
         <div
           style={{
@@ -209,13 +216,13 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
           }}
         >
           <div
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "5px",
-            }}
+            // style={{
+            //   backgroundColor: "white",
+            //   padding: "20px",
+            //   borderRadius: "5px",
+            // }}
           >
-            {errMessage || "Complete"}
+            {errMessage || "Error loading interview"}
           </div>
         </div>
       );
@@ -281,11 +288,16 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   return (
     <NestedInterviewContainer
       data-id={control.id}
-      data-loading={(control as any).loading ? "true" : undefined}
+      data-loading={((control as any).loading || !interviewLoaded) ? "true" : undefined}
     >
       {/* {renderControls()} */}
+      <legend
+        className="label"
+      >
+        {control.label || "Interview"}
+      </legend>
       {renderContent()}
-      {renderOverlay()}
+      {renderErrorOverlay()}
     </NestedInterviewContainer>
   );
 });

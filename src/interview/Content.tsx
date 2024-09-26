@@ -113,16 +113,13 @@ const Wrap = styled.div`
   }
 `;
 
-export const NestedInterviewContainer = styled.div`
+export const NestedInterviewContainer = styled.fieldset`
   ${LOADING_ANIMATION_CSS}
 
-  display: flex;
+  display: block;
   position: relative;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow: auto;
 
-  border: 1px solid grey;
+  border: 0.5px solid grey;
   border-radius: 0.5rem;
   padding: 1rem 2rem;
   width: 100%;
@@ -130,10 +127,18 @@ export const NestedInterviewContainer = styled.div`
   scrollbar-width: thin;
   scrollbar-color: grey transparent;
   overflow-y: auto;
-  overflow-x: hidden;
+  // overflow-x: hidden;
 
-  max-height: 60vh
-  min-height: 20vh;
+  max-height: 800px;
+  min-height: 450px;
+  height: 50vh;
+
+  .label {
+    padding: 0 5px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
 `;
 
 export const StyledControlsWrap = styled.div`
