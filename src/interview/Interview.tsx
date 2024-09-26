@@ -185,6 +185,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
           onFileTooBig: this.onFileTooBig.bind(this),
           removeFile: this.removeFile?.bind(this) || fallbackRemoveFile,
           sidebarOverrides: this.props.sidebarOverrides || {},
+          enclosedSetState: this.enclosedSetState.bind(this),
         }}
       >
         {content}

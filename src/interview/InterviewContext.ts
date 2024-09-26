@@ -3,8 +3,8 @@ import type { ControlsValue } from "@decisively-io/interview-sdk";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { SidebarOverrides } from "../sidebar/SidebarPanel";
-import type { OnFileTooBig, RemoveFile, UploadFile } from "./controls/FileControlWidget_types";
 import type { InterviewState } from "./InterviewStateType";
+import type { OnFileTooBig, RemoveFile, UploadFile } from "./controls/FileControlWidget_types";
 
 export interface InterviewContextState {
   registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;
