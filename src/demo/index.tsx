@@ -1,11 +1,10 @@
 import type { ResponseData, Session } from "@decisively-io/interview-sdk";
 import { type SessionInstance, transformResponse } from "@decisively-io/interview-sdk";
-import { CssBaseline, ThemeProvider, Typography, createTheme } from "@material-ui/core";
+import { CssBaseline, ThemeProvider, createTheme } from "@material-ui/core";
 import React, { useCallback, useState } from "react";
 import ReactDom from "react-dom";
 import * as FontNS from "../font";
 import * as Parts from "../interview";
-import type { UploadFileRtrn } from "../interview/controls/FileControlWidget_types";
 import TextControlRender from "../interview/controls/TextControlWidget";
 import { session as dataSession } from "./data";
 import { PWD, provider } from "./interviews";
@@ -125,26 +124,6 @@ const App = () => {
           },
         }}
         rhfMode="onChange"
-        uploadFile={({ name }) => {
-          console.log(`uploading file "${name}" to temporary storage`);
-
-          return new Promise<UploadFileRtrn>((r) => {
-            setTimeout(() => {
-              console.log("upload finished");
-              const id = Math.random().toString();
-
-              r({ reference: `data:id=${id};base64,${btoa(name)}`, id });
-            }, 2_000);
-          });
-        }}
-        removeFile={(ref) => {
-          console.log(`removing file with ref: ${ref}`);
-
-          return new Promise((r) => void setTimeout(r, 2_000));
-        }}
-        onFileTooBig={(f) => {
-          alert(`file ${f.name} is too big`);
-        }}
       />
     </ThemeProvider>
   );
