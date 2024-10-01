@@ -1,5 +1,6 @@
 import type { AttributeValues, InterviewProvider, Session } from "@decisively-io/interview-sdk";
 import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
+import fastDeepEqual from "fast-deep-equal";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
@@ -17,6 +18,7 @@ import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
+import type { InterviewState } from "./InterviewStateType";
 
 export interface InterviewProps {
   interviewProvider: InterviewProvider;
@@ -29,27 +31,13 @@ export interface InterviewProps {
   controlComponents?: ControlComponents;
   rhfMode?: ContentProps["rhfMode"];
   rhfReValidateMode?: ContentProps["rhfReValidateMode"];
-  uploadFile: InterviewContextState["uploadFile"];
-  removeFile: InterviewContextState["removeFile"];
-  onFileTooBig?: InterviewContextState["onFileTooBig"];
 }
 
-export interface InterviewState {
-  backDisabled: boolean;
-  isSubmitting: boolean;
-  isRequestPending: boolean;
-  nextDisabled: boolean;
-}
+export type { InterviewState };
 
 export default class Interview<P extends InterviewProps = InterviewProps> extends React.Component<P, InterviewState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Interview`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
-
-  uploadFile: InterviewProps["uploadFile"] = fallbackUploadFile;
-
-  removeFile: InterviewProps["removeFile"] = fallbackRemoveFile;
-
-  onFileTooBig: NonNullable<InterviewProps["onFileTooBig"]> = fallbackOnFileTooBig;
 
   constructor(props: P) {
     super(props);
@@ -60,10 +48,6 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       isRequestPending: false,
       nextDisabled: false,
     };
-
-    this.uploadFile = props.uploadFile || this.uploadFile;
-    this.removeFile = props.removeFile || this.removeFile;
-    this.onFileTooBig = props.onFileTooBig || this.onFileTooBig;
   }
 
   // ===================================================================================
@@ -94,6 +78,8 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
     if (nextProps.ThemedComp !== this.props.ThemedComp) {
       return true;
     }
+    if (!fastDeepEqual(this.state, nextState)) return true;
+
     return false;
   }
 
@@ -168,6 +154,13 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
   }
 
   // ===================================================================================
+
+  /**
+   * in File control component we need to be able to set next/back buttons\
+   * to disabled state, so we use this method to pass "setState" to any\
+   * InterviewContext consumer
+   */
+  enclosedSetState = (s: Partial<InterviewState>) => this.setState((prev) => ({ ...prev, ...s }));
 
   renderWrapper = (content: React.ReactNode): React.ReactNode => {
     return (

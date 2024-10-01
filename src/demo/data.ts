@@ -1,4 +1,4 @@
-import type { Session } from "@decisively-io/interview-sdk";
+import type { FileCtrlTypesNS, Session, SessionInstance } from "@decisively-io/interview-sdk";
 
 const defaultStep: Session["steps"][0] = {
   complete: false,
@@ -10,6 +10,29 @@ const defaultStep: Session["steps"][0] = {
   visitable: true,
   visited: false,
   steps: [],
+};
+
+const fileUtils: Pick<SessionInstance, "uploadFile" | "onFileTooBig" | "removeFile"> = {
+  uploadFile: ({ name }) => {
+    console.log(`uploading file "${name}" to temporary storage`);
+
+    return new Promise<FileCtrlTypesNS.UploadFileRtrn>((r) => {
+      setTimeout(() => {
+        console.log("upload finished");
+        const id = Math.random().toString();
+
+        r({ reference: `data:id=${id};base64,${btoa(name)}`, id });
+      }, 2_000);
+    });
+  },
+  removeFile: (ref) => {
+    console.log(`removing file with ref: ${ref}`);
+
+    return new Promise((r) => void setTimeout(r, 2_000));
+  },
+  onFileTooBig: (f) => {
+    alert(`file ${f.name} is too big`);
+  },
 };
 
 export const session: Session = {
@@ -29,149 +52,162 @@ export const session: Session = {
     controls: [
       {
         type: "file",
-        attribute: "attr-file",
-        id: "attr-file-id",
-        label: "Add identity document(-s)",
+        attribute: "attr-file1",
+        id: "attr-file-id1",
+        label: "Add identity document(-s) separate",
         labelDisplay: "separate",
         max: 2,
-        file_type: [
-          ".txt",
-          // '.json',
-        ],
+        file_type: [".txt", ".json"],
         // max_size: 0.005,
         required: true,
       },
       {
-        id: "faa57800-227a-473a-b30a-c12eed0eaef4",
-        label: "Submitted Data",
-        // "createdAt": 1725032263381,
-        version: 2,
-        // "kind": "static",
-        type: "data_container",
-        controls: [
-          {
-            id: "booleanid",
-            type: "boolean",
-            required: true,
-            attribute: "booleanattr",
-            label: "Boolean Control (1)",
-            labelDisplay: "automatic",
-            showExplanation: false,
-            readOnly: false,
-            value: true,
-          },
-          {
-            id: "currencyid",
-            type: "currency",
-            required: true,
-            attribute: "currencyattr",
-            label: "Currency Control (2)",
-            labelDisplay: "automatic",
-            showExplanation: false,
-            readOnly: false,
-            value: 123,
-          },
-          {
-            id: "dateid",
-            type: "date",
-            required: true,
-            attribute: "dateattr",
-            label: "Date Control (3)",
-            labelDisplay: "automatic",
-            showExplanation: false,
-            readOnly: false,
-            value: "2020-01-01",
-          },
-          {
-            id: "timeid",
-            type: "time",
-            required: true,
-            attribute: "timeattr",
-            label: "Time Control (4)",
-            labelDisplay: "automatic",
-            showExplanation: false,
-            readOnly: false,
-            value: "15:23:14",
-          },
-          {
-            id: "datetimeid",
-            type: "datetime",
-            required: true,
-            attribute: "datetimeattr",
-            label: "DateTime Control (5)",
-            labelDisplay: "automatic",
-            showExplanation: false,
-            readOnly: false,
-            value: "2000-01-01 11:13:29",
-          },
-          {
-            id: "optionsid",
-            type: "options",
-            required: true,
-            attribute: "optionsattr",
-            label: "Options control (6)",
-            labelDisplay: "automatic",
-            showExplanation: false,
-            readOnly: true,
-            value: "option2",
-            options: [
-              { value: "option1", label: "Option 1" },
-              { value: "option2", label: "Option 2" },
-            ],
-          },
-          {
-            id: "numberofinstancesid",
-            type: "number_of_instances",
-            required: true,
-            attribute: "number_of_instances_attr",
-            label: "Num. of instances (7)",
-            labelDisplay: "automatic",
-            readOnly: true,
-            entity: "testentity",
-            value: [{ "@id": "1" }, { "@id": "2" }],
-          },
-          {
-            id: "textid",
-            type: "text",
-            required: true,
-            attribute: "textattr",
-            label: "Text control (8)",
-            labelDisplay: "automatic",
-            showExplanation: false,
-            readOnly: true,
-            value: "test value",
-            // value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.            ',
-          },
-          {
-            id: "textid2",
-            type: "text",
-            required: true,
-            attribute: "textattr2",
-            label: "Text control (9)",
-            labelDisplay: "automatic",
-            showExplanation: false,
-            readOnly: true,
-            value: "test 2 value",
-            // value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.            ',
-          },
-          {
-            id: "fileid",
-            type: "file",
-            required: true,
-            attribute: "fileaattr",
-            label: "File control (10)",
-            labelDisplay: "automatic",
-            showExplanation: false,
-            value: {
-              fileRefs: [
-                "data:id=53eefeab-b0a4-40de-83d5-7eb063c909d2;base64,cmVhbGx5IGxvbmcgZmlsZW5hbWUgdG8gdGVzdCBvdmVyZmxvdyBvZiB0aGUgZmlsZSBjb250cm9sIGluIGRhdGEgY29udGFpbmVyLnR4dA==",
-                "data:id=6bbf79d2-6e84-49cc-9473-3bc3c3dfbcc1;base64,dGVzdC5qc29u",
-              ],
-            },
-          },
-        ],
-        columns: 2,
+        type: "file",
+        attribute: "attr-file2",
+        id: "attr-file-id2",
+        label: "Add identity document(-s) automatic",
+        labelDisplay: "automatic",
+        file_type: [".txt", ".json"],
       },
+      {
+        type: "file",
+        attribute: "attr-file3",
+        id: "attr-file-id3",
+        label: "Add identity document(-s) inline",
+        labelDisplay: "inline",
+        file_type: [".txt", ".json"],
+      },
+      // {
+      //   id: "faa57800-227a-473a-b30a-c12eed0eaef4",
+      //   label: "Submitted Data",
+      //   // "createdAt": 1725032263381,
+      //   version: 2,
+      //   // "kind": "static",
+      //   type: "data_container",
+      //   controls: [
+      //     {
+      //       id: "booleanid",
+      //       type: "boolean",
+      //       required: true,
+      //       attribute: "booleanattr",
+      //       label: "Boolean Control (1)",
+      //       labelDisplay: "automatic",
+      //       showExplanation: false,
+      //       readOnly: false,
+      //       value: true,
+      //     },
+      //     {
+      //       id: "currencyid",
+      //       type: "currency",
+      //       required: true,
+      //       attribute: "currencyattr",
+      //       label: "Currency Control (2)",
+      //       labelDisplay: "automatic",
+      //       showExplanation: false,
+      //       readOnly: false,
+      //       value: 123,
+      //     },
+      //     {
+      //       id: "dateid",
+      //       type: "date",
+      //       required: true,
+      //       attribute: "dateattr",
+      //       label: "Date Control (3)",
+      //       labelDisplay: "automatic",
+      //       showExplanation: false,
+      //       readOnly: false,
+      //       value: "2020-01-01",
+      //     },
+      //     {
+      //       id: "timeid",
+      //       type: "time",
+      //       required: true,
+      //       attribute: "timeattr",
+      //       label: "Time Control (4)",
+      //       labelDisplay: "automatic",
+      //       showExplanation: false,
+      //       readOnly: false,
+      //       value: "15:23:14",
+      //     },
+      //     {
+      //       id: "datetimeid",
+      //       type: "datetime",
+      //       required: true,
+      //       attribute: "datetimeattr",
+      //       label: "DateTime Control (5)",
+      //       labelDisplay: "automatic",
+      //       showExplanation: false,
+      //       readOnly: false,
+      //       value: "2000-01-01 11:13:29",
+      //     },
+      //     {
+      //       id: "optionsid",
+      //       type: "options",
+      //       required: true,
+      //       attribute: "optionsattr",
+      //       label: "Options control (6)",
+      //       labelDisplay: "automatic",
+      //       showExplanation: false,
+      //       readOnly: true,
+      //       value: "option2",
+      //       options: [
+      //         { value: "option1", label: "Option 1" },
+      //         { value: "option2", label: "Option 2" },
+      //       ],
+      //     },
+      //     {
+      //       id: "numberofinstancesid",
+      //       type: "number_of_instances",
+      //       required: true,
+      //       attribute: "number_of_instances_attr",
+      //       label: "Num. of instances (7)",
+      //       labelDisplay: "automatic",
+      //       readOnly: true,
+      //       entity: "testentity",
+      //       value: [{ "@id": "1" }, { "@id": "2" }],
+      //     },
+      //     {
+      //       id: "textid",
+      //       type: "text",
+      //       required: true,
+      //       attribute: "textattr",
+      //       label: "Text control (8)",
+      //       labelDisplay: "automatic",
+      //       showExplanation: false,
+      //       readOnly: true,
+      //       value: "test value",
+      //       // value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.            ',
+      //     },
+      //     {
+      //       id: "textid2",
+      //       type: "text",
+      //       required: true,
+      //       attribute: "textattr2",
+      //       label: "Text control (9)",
+      //       labelDisplay: "automatic",
+      //       showExplanation: false,
+      //       readOnly: true,
+      //       value: "test 2 value",
+      //       // value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.            ',
+      //     },
+      //     {
+      //       id: "fileid",
+      //       type: "file",
+      //       required: true,
+      //       attribute: "fileaattr",
+      //       label: "File control (10)",
+      //       labelDisplay: "automatic",
+      //       showExplanation: false,
+      //       value: {
+      //         fileRefs: [
+      //           "data:id=53eefeab-b0a4-40de-83d5-7eb063c909d2;base64,cmVhbGx5IGxvbmcgZmlsZW5hbWUgdG8gdGVzdCBvdmVyZmxvdyBvZiB0aGUgZmlsZSBjb250cm9sIGluIGRhdGEgY29udGFpbmVyLnR4dA==",
+      //           "data:id=6bbf79d2-6e84-49cc-9473-3bc3c3dfbcc1;base64,dGVzdC5qc29u",
+      //         ],
+      //       },
+      //     },
+      //   ],
+      //   columns: 2,
+      // },
 
       // {
       //   type: "text",
@@ -507,4 +543,5 @@ export const session: Session = {
 
     return Promise.resolve(this);
   },
+  ...fileUtils,
 };
