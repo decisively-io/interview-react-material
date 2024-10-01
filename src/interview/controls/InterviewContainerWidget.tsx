@@ -291,11 +291,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
       data-loading={(control as any).loading || !interviewLoaded ? "true" : undefined}
     >
       {/* {renderControls()} */}
-      {
-        control.label
-        ? <legend className="label">{control.label}</legend>
-        : null
-      }
+      {control.label ? <legend className="label">{control.label}</legend> : null}
       {renderContent()}
       {renderErrorOverlay()}
     </NestedInterviewContainer>

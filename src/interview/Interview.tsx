@@ -9,9 +9,9 @@ import type { ThemedCompProps, ThemedComponent } from "../themes/types";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
+import type { InterviewState } from "./InterviewStateType";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
-import type { InterviewState } from "./InterviewStateType";
 
 export interface InterviewProps {
   interviewProvider: InterviewProvider;

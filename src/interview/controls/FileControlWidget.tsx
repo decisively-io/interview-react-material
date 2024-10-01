@@ -13,8 +13,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import { useFormControl } from "../../FormControl";
-import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import { useInterviewContext } from "../../providers/InterviewContext";
+import type { ControlWidgetProps } from "./ControlWidgetTypes";
 
 const Wrap = styled.div`
   display: flex;
