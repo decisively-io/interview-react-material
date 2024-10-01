@@ -216,11 +216,11 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
           }}
         >
           <div
-            // style={{
-            //   backgroundColor: "white",
-            //   padding: "20px",
-            //   borderRadius: "5px",
-            // }}
+          // style={{
+          //   backgroundColor: "white",
+          //   padding: "20px",
+          //   borderRadius: "5px",
+          // }}
           >
             {errMessage || "Error loading interview"}
           </div>
@@ -288,14 +288,14 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   return (
     <NestedInterviewContainer
       data-id={control.id}
-      data-loading={((control as any).loading || !interviewLoaded) ? "true" : undefined}
+      data-loading={(control as any).loading || !interviewLoaded ? "true" : undefined}
     >
       {/* {renderControls()} */}
-      <legend
-        className="label"
-      >
-        {control.label || "Interview"}
-      </legend>
+      {
+        control.label
+        ? <legend className="label">{control.label}</legend>
+        : null
+      }
       {renderContent()}
       {renderErrorOverlay()}
     </NestedInterviewContainer>

@@ -1,39 +1,39 @@
 {
-	"files": [
-		{
-			"path": "src/interview/Content.tsx",
-			"bookmarks": [
-				{
-					"line": 336,
-					"column": 24,
-					"label": ""
-				}
-			]
-		},
-		{
-			"path": "src/interview/controls/index.tsx",
-			"bookmarks": [
-				{
-					"line": 74,
-					"column": 55,
-					"label": ""
-				},
-				{
-					"line": 84,
-					"column": 19,
-					"label": ""
-				}
-			]
-		},
-		{
-			"path": "src/interview/Interview.tsx",
-			"bookmarks": [
-				{
-					"line": 20,
-					"column": 33,
-					"label": ""
-				}
-			]
-		}
-	]
+  "files": [
+    {
+      "path": "src/interview/Content.tsx",
+      "bookmarks": [
+        {
+          "line": 336,
+          "column": 24,
+          "label": ""
+        }
+      ]
+    },
+    {
+      "path": "src/interview/controls/index.tsx",
+      "bookmarks": [
+        {
+          "line": 74,
+          "column": 55,
+          "label": ""
+        },
+        {
+          "line": 84,
+          "column": 19,
+          "label": ""
+        }
+      ]
+    },
+    {
+      "path": "src/interview/Interview.tsx",
+      "bookmarks": [
+        {
+          "line": 20,
+          "column": 33,
+          "label": ""
+        }
+      ]
+    }
+  ]
 }
