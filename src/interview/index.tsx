@@ -1,6 +1,6 @@
 export { default as Frame, type FrameProps } from "./Frame";
 export { default as Interview, type InterviewProps } from "./Interview";
-export * from "./InterviewContext";
+export * from "../providers/InterviewContext";
 export { default as Menu, type MenuProps } from "./Menu";
 export * as Font from "../font";
 export { default as Content, type ContentProps } from "./Content";

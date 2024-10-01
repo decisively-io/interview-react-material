@@ -1,19 +1,21 @@
-import type { AttributeValues, Session } from "@decisively-io/interview-sdk";
+import type { AttributeValues, InterviewProvider, Session } from "@decisively-io/interview-sdk";
 import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
 import fastDeepEqual from "fast-deep-equal";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
+import UberProvider from "../providers/UberProvider";
 import type { ThemedCompProps, ThemedComponent } from "../themes/types";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
-import { InterviewContext } from "./InterviewContext";
-import type { InterviewState } from "./InterviewStateType";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
+import type { InterviewState } from "./InterviewStateType";
 
 export interface InterviewProps {
+  interviewProvider: InterviewProvider;
+  //--- session started from the client
   session: SessionInstance;
   onDataChange?: (data: AttributeValues, name: string | undefined) => void;
   // flag to indicate that the component is loading data from an external source
@@ -154,7 +156,14 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
   enclosedSetState = (s: Partial<InterviewState>) => this.setState((prev) => ({ ...prev, ...s }));
 
   renderWrapper = (content: React.ReactNode): React.ReactNode => {
-    return <InterviewContext.Provider value={this}>{content}</InterviewContext.Provider>;
+    return (
+      <UberProvider
+        registration={this}
+        sessionId={this.session.sessionId}
+      >
+        {content}
+      </UberProvider>
+    );
   };
 
   render() {
@@ -212,6 +221,8 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       chOnScreenData: this.session.chOnScreenData,
       rhfMode,
       rhfReValidateMode,
+      interviewProvider: this.props.interviewProvider,
+      interactionId: session.interactionId,
     };
 
     let content: React.ReactNode;
@@ -233,6 +244,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
               {...contentProps}
             />
           }
+          // the sidebar with the numbers...
           menuJSX={<Menu {...menuProps} />}
         />
       );

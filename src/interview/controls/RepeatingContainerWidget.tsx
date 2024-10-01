@@ -13,7 +13,7 @@ export interface RepeatingContainerControlWidgetProps extends ControlWidgetProps
 }
 
 const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerControlWidgetProps) => {
-  const { control, chOnScreenData, controlComponents, className } = props;
+  const { control, chOnScreenData, controlComponents, interviewProvider, className } = props;
   const { controls } = control;
   const isTable = control?.display === "table";
   // if `isTable`; each container is one row - so the number of elements in control.controls is the number of columns
@@ -101,6 +101,7 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
       {controls?.map((value, controlIndex) => {
         return (
           <RenderControl
+            interviewProvider={interviewProvider}
             chOnScreenData={chOnScreenData}
             key={controlIndex}
             control={value}

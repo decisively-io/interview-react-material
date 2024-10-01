@@ -1,7 +1,7 @@
 import type { ControlsValue, SessionInstance } from "@decisively-io/interview-sdk";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
-import type { InterviewState } from "./InterviewStateType";
+import type { InterviewState } from "../interview/InterviewStateType";
 
 export interface InterviewContextState {
   registerFormMethods: (methods: UseFormReturn<ControlsValue>) => void;

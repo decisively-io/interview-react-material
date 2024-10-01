@@ -2,6 +2,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import {
   type AttributeValues,
   type ControlsValue,
+  type InterviewProvider,
   type Screen,
   type Step,
   deriveDefaultControlsValue,
@@ -14,7 +15,8 @@ import React, { useContext } from "react";
 import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { CLASS_NAMES, DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
-import { InterviewContext } from "./InterviewContext";
+import { useApp } from "../hooks/HooksApp";
+import { InterviewContext } from "../providers/InterviewContext";
 import Controls, { type ControlComponents } from "./controls";
 
 /**
@@ -54,7 +56,8 @@ export const classes = {
 const formClss = classes[">formWrap"][">form"];
 const submitClss = classes[">btns"][">submit"];
 
-const Wrap = styled.form`
+// const Wrap = styled.form`
+const Wrap = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -108,6 +111,34 @@ const Wrap = styled.form`
 
 
   }
+`;
+
+export const NestedInterviewContainer = styled.fieldset`
+  ${LOADING_ANIMATION_CSS}
+
+  display: block;
+  position: relative;
+
+  border: 0.5px solid grey;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  width: 100%;
+
+  scrollbar-width: thin;
+  scrollbar-color: grey transparent;
+  overflow-y: auto;
+  // overflow-x: hidden;
+
+  max-height: 800px;
+  min-height: 450px;
+  height: 50vh;
+
+  .label {
+    padding: 0 5px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
 `;
 
 export const StyledControlsWrap = styled.div`
@@ -176,6 +207,7 @@ export const StyledControlsWrap = styled.div`
 `;
 
 export interface ContentRootProps {
+  interviewProvider: InterviewProvider;
   controlComponents?: ControlComponents;
   className?: string;
   step: Step | null;
@@ -189,6 +221,9 @@ export interface ContentRootProps {
   onDataChange?: (data: AttributeValues, name: string | undefined) => void;
   rhfMode?: UseFormProps["mode"];
   rhfReValidateMode?: UseFormProps["reValidateMode"];
+  interactionId: string;
+  /** applicable only to nested interviews */
+  subinterviewRequired?: boolean;
 }
 
 const Content = Object.assign(
@@ -207,11 +242,35 @@ const Content = Object.assign(
       onDataChange,
       rhfMode = "onSubmit",
       rhfReValidateMode = "onChange",
+      interviewProvider,
+      interactionId,
+      subinterviewRequired = false,
     } = props;
+    const { registerInterview, deRegisterInterview, markInteractionAsComplete, checkInteractionBelowStillRunning } =
+      useApp();
     const { controls } = screen ?? { controls: [] };
     const defaultValues = deriveDefaultControlsValue(controls);
 
     const interviewContext = useContext(InterviewContext);
+
+    const formRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+      if (formRef.current) {
+        registerInterview(formRef, interactionId);
+      }
+
+      return () => {
+        deRegisterInterview(interactionId);
+      };
+    }, []);
+
+    React.useEffect(() => {
+      if (next === undefined || subinterviewRequired === false) {
+        markInteractionAsComplete(interactionId);
+      }
+      // otherwise we wait for the subinterview to complete
+    }, [next, subinterviewRequired]);
 
     const methods = useForm({
       defaultValues,
@@ -255,6 +314,7 @@ const Content = Object.assign(
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <FormProvider {...methods}>
           <Wrap
+            ref={formRef}
             onSubmit={methods.handleSubmit(onSubmit)}
             className={className}
           >
@@ -272,6 +332,7 @@ const Content = Object.assign(
                     controlComponents={controlComponents}
                     controls={screen?.controls || []}
                     chOnScreenData={chOnScreenData}
+                    interviewProvider={interviewProvider}
                   />
                 </StyledControlsWrap>
               </div>
@@ -294,10 +355,16 @@ const Content = Object.assign(
                     {isSubmitting && <CircularProgress size="2rem" />}
                     <Button
                       size="medium"
-                      type="submit"
+                      // type="submit"
+                      // onClick={methods.handleSubmit(onSubmit)}
+                      onClick={onSubmit}
                       variant="contained"
                       color="primary"
-                      disabled={nextDisabled || (!methods.formState.isValid && methods.formState.isSubmitted)}
+                      disabled={
+                        nextDisabled ||
+                        (!methods.formState.isValid && methods.formState.isSubmitted) ||
+                        checkInteractionBelowStillRunning(interactionId)
+                      }
                       className={submitClss[">next"]}
                     >
                       <Typography>Next</Typography>
@@ -339,6 +406,8 @@ export type ContentProps = Pick<
   | "chOnScreenData"
   | "rhfMode"
   | "rhfReValidateMode"
+  | "interactionId"
+  | "interviewProvider"
 >;
 
 // export const _: React.FC< IProps > = React.memo(

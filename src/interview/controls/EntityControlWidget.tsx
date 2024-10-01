@@ -58,7 +58,7 @@ export interface EntityControlWidgetProps extends ControlWidgetProps<RenderableE
 
 const EntityControlWidget = Object.assign(
   (props: EntityControlWidgetProps) => {
-    const { control, chOnScreenData, controlComponents, className } = props;
+    const { control, chOnScreenData, controlComponents, interviewProvider, className } = props;
     const { entity, instances, template } = control;
     const { control: formControl } = useFormContext();
 
@@ -144,6 +144,7 @@ const EntityControlWidget = Object.assign(
                           key={controlIndex}
                           control={subControl}
                           controlComponents={controlComponents}
+                          interviewProvider={interviewProvider}
                         />
                       );
                     }
@@ -166,6 +167,7 @@ const EntityControlWidget = Object.assign(
                           chOnScreenData={chOnScreenData}
                           control={childControl}
                           controlComponents={controlComponents}
+                          interviewProvider={interviewProvider}
                         />
                       );
 
