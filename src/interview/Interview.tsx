@@ -4,13 +4,6 @@ import fastDeepEqual from "fast-deep-equal";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
-import {
-  InterviewContext,
-  type InterviewContextState,
-  fallbackOnFileTooBig,
-  fallbackRemoveFile,
-  fallbackUploadFile,
-} from "../providers/InterviewContext";
 import UberProvider from "../providers/UberProvider";
 import type { ThemedCompProps, ThemedComponent } from "../themes/types";
 import { normalizeControlsValue } from "../util";
