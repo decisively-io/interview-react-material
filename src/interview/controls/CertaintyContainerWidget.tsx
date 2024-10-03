@@ -12,7 +12,7 @@ export interface CertaintyContainerControlWidgetProps extends ControlWidgetProps
 }
 
 const CertaintyContainerControlWidget = React.memo((props: CertaintyContainerControlWidgetProps) => {
-  const { control, chOnScreenData, controlComponents, className } = props;
+  const { control, chOnScreenData, controlComponents, interviewProvider, className } = props;
   const { certain, uncertain, branch } = control;
 
   const controls = branch === "certain" ? certain : uncertain;
@@ -25,6 +25,7 @@ const CertaintyContainerControlWidget = React.memo((props: CertaintyContainerCon
       {controls?.map((value, controlIndex) => {
         return (
           <RenderControl
+            interviewProvider={interviewProvider}
             chOnScreenData={chOnScreenData}
             key={controlIndex}
             control={value}

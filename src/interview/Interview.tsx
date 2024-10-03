@@ -1,26 +1,22 @@
-import type { AttributeValues, Session } from "@decisively-io/interview-sdk";
+import type { AttributeValues, InterviewProvider, Session } from "@decisively-io/interview-sdk";
 import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decisively-io/interview-sdk";
 import fastDeepEqual from "fast-deep-equal";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
 import type { SidebarOverrides } from "../sidebar/SidebarPanel";
+import UberProvider from "../providers/UberProvider";
 import type { ThemedCompProps, ThemedComponent } from "../themes/types";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";
 import Frame from "./Frame";
-import {
-  InterviewContext,
-  type InterviewContextState,
-  fallbackOnFileTooBig,
-  fallbackRemoveFile,
-  fallbackUploadFile,
-} from "./InterviewContext";
 import type { InterviewState } from "./InterviewStateType";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
 
 export interface InterviewProps {
+  interviewProvider: InterviewProvider;
+  //--- session started from the client
   session: SessionInstance;
   onDataChange?: (data: AttributeValues, name: string | undefined) => void;
   // flag to indicate that the component is loading data from an external source
@@ -29,9 +25,6 @@ export interface InterviewProps {
   controlComponents?: ControlComponents;
   rhfMode?: ContentProps["rhfMode"];
   rhfReValidateMode?: ContentProps["rhfReValidateMode"];
-  uploadFile?: InterviewContextState["uploadFile"];
-  removeFile?: InterviewContextState["removeFile"];
-  onFileTooBig?: InterviewContextState["onFileTooBig"];
   sidebarOverrides?: SidebarOverrides;
 }
 
@@ -40,12 +33,6 @@ export type { InterviewState };
 export default class Interview<P extends InterviewProps = InterviewProps> extends React.Component<P, InterviewState> {
   static displayName = `${DISPLAY_NAME_PREFIX}/Interview`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
-
-  uploadFile: InterviewProps["uploadFile"] = fallbackUploadFile;
-
-  removeFile: InterviewProps["removeFile"] = fallbackRemoveFile;
-
-  onFileTooBig: NonNullable<InterviewProps["onFileTooBig"]> = fallbackOnFileTooBig;
 
   constructor(props: P) {
     super(props);
@@ -56,10 +43,6 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       isRequestPending: false,
       nextDisabled: false,
     };
-
-    this.uploadFile = props.uploadFile || this.uploadFile;
-    this.removeFile = props.removeFile || this.removeFile;
-    this.onFileTooBig = props.onFileTooBig || this.onFileTooBig;
   }
 
   // ===================================================================================
@@ -176,20 +159,12 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
 
   renderWrapper = (content: React.ReactNode): React.ReactNode => {
     return (
-      <InterviewContext.Provider
-        value={{
-          registerFormMethods: this.registerFormMethods.bind(this),
-          session: this.session,
-          getExplanation: this.getExplanation.bind(this),
-          uploadFile: this.uploadFile?.bind(this) || fallbackUploadFile,
-          onFileTooBig: this.onFileTooBig.bind(this),
-          removeFile: this.removeFile?.bind(this) || fallbackRemoveFile,
-          sidebarOverrides: this.props.sidebarOverrides || {},
-          enclosedSetState: this.enclosedSetState.bind(this),
-        }}
+      <UberProvider
+        registration={this}
+        sessionId={this.session.sessionId}
       >
         {content}
-      </InterviewContext.Provider>
+      </UberProvider>
     );
   };
 
@@ -248,6 +223,8 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       chOnScreenData: this.session.chOnScreenData,
       rhfMode,
       rhfReValidateMode,
+      interviewProvider: this.props.interviewProvider,
+      interactionId: session.interactionId,
     };
 
     let content: React.ReactNode;
@@ -269,6 +246,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
               {...contentProps}
             />
           }
+          // the sidebar with the numbers...
           menuJSX={<Menu {...menuProps} />}
         />
       );

@@ -4,7 +4,7 @@ import {
   TIME_FORMAT_12,
   TIME_FORMAT_24,
   formatDate,
-  isFileAttributeValue,
+  // isFileAttributeValue,
 } from "@decisively-io/interview-sdk";
 import {
   type Field,
@@ -331,7 +331,7 @@ export const generateValidatorForControl = (c: RenderableControl): yup.AnySchema
         .test("isNotEmpty", "Required", (v) => {
           if (v === null || v === undefined) return false;
 
-          if (isFileAttributeValue(v) === false) {
+          if (Boolean(v) === false) {
             // no idea how this would happen, but need to report at least soemthing
             console.error("0RsLCXOHdW | Interview-react-material: not a file attrib value");
             return false;

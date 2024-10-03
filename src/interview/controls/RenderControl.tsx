@@ -18,6 +18,7 @@ const NAME_MAP: Omit<Record<RenderableControlType, keyof ControlComponents>, "do
   switch_container: "SwitchContainer",
   certainty_container: "CertaintyContainer",
   repeating_container: "RepeatingContainer",
+  interview_container: "InterviewContainer",
   file: "File",
   data_container: "DataContainer",
   generative_chat: "GenerativeChat",
@@ -28,7 +29,7 @@ export interface RenderControlProps extends ControlWidgetProps<Control> {
 }
 
 const RenderControl = (props: RenderControlProps) => {
-  const { control, chOnScreenData, controlComponents } = props;
+  const { control, chOnScreenData, controlComponents, interviewProvider } = props;
   // @ts-ignore
   const component = controlComponents[NAME_MAP[control.type]];
   if (!component) {
@@ -40,6 +41,7 @@ const RenderControl = (props: RenderControlProps) => {
     control,
     controlComponents,
     chOnScreenData,
+    interviewProvider,
   });
 };
 
