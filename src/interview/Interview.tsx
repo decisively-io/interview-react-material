@@ -4,8 +4,8 @@ import fastDeepEqual from "fast-deep-equal";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
-import type { SidebarOverrides } from "../sidebar/SidebarPanel";
 import UberProvider from "../providers/UberProvider";
+import type { SidebarOverrides } from "../sidebar/SidebarPanel";
 import type { ThemedCompProps, ThemedComponent } from "../themes/types";
 import { normalizeControlsValue } from "../util";
 import Content, { type ContentProps } from "./Content";
@@ -160,7 +160,13 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
   renderWrapper = (content: React.ReactNode): React.ReactNode => {
     return (
       <UberProvider
-        registration={this}
+        registration={{
+          registerFormMethods: this.registerFormMethods.bind(this),
+          getExplanation: this.getExplanation.bind(this),
+          session: this.session,
+          enclosedSetState: this.enclosedSetState.bind(this),
+          sidebarOverrides: this.props.sidebarOverrides,
+        }}
         sessionId={this.session.sessionId}
       >
         {content}
