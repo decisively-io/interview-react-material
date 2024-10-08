@@ -23,16 +23,18 @@ const ExplanationTooltip = styled(Tooltip)`
 `;
 
 const FormControlStyled = styled(BaseFormControl)`
-  display: flex;
-  gap: 0.5rem;
-  flex-direction: row;
-  align-items: center;
+  && { display: flex;
+    gap: 0.5rem;
+    flex-direction: row;
+    align-items: center;
+  }
 `;
 
 const ReadOnlyContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
+  && { display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
 `;
 
 export interface FormControlOptions {
