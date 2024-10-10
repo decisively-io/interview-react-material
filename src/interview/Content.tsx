@@ -281,14 +281,12 @@ const Content = Object.assign(
 
     const { getValues, reset, watch } = methods;
 
-    const onSubmit = React.useCallback(
-      (data: ControlsValue) => {
-        if (next) {
-          next(data, reset);
-        }
-      },
-      [next, reset],
-    );
+    const onSubmit = React.useCallback(() => {
+      const values = getValues();
+      if (next) {
+        next(values, reset);
+      }
+    }, [next, reset, getValues]);
 
     const onBack = React.useCallback(() => {
       const values = getValues();
