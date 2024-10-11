@@ -160,11 +160,11 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
 
   let label: string | undefined = (control as any).label;
   let shouldInlineLabel = false;
-  if (control.type === "boolean") {
-    shouldInlineLabel = true;
-  }
+
   if (control.type === "file") {
     shouldInlineLabel = false;
+  } else if (control.type === "boolean") {
+    shouldInlineLabel = true;
   } else {
     const labelDisplay = ((control as any).labelDisplay as LabelDisplay | undefined) ?? "automatic";
     if (labelDisplay === "inline") {
