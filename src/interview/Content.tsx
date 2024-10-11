@@ -283,6 +283,8 @@ const Content = Object.assign(
 
     const onSubmit = React.useCallback(
       (data: ControlsValue) => {
+        // console.log("onSubmit values", data);
+        // console.log("onSubmit errors", methods.formState.errors);
         if (next) {
           next(data, reset);
         }
@@ -355,9 +357,8 @@ const Content = Object.assign(
                     {isSubmitting && <CircularProgress size="2rem" />}
                     <Button
                       size="medium"
-                      // type="submit"
-                      // onClick={methods.handleSubmit(onSubmit)}
-                      onClick={onSubmit}
+                      // type="submit" // we can't use this anymore as we may be nesting forms
+                      onClick={methods.handleSubmit(onSubmit)}
                       variant="contained"
                       color="primary"
                       disabled={

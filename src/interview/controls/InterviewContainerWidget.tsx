@@ -9,15 +9,13 @@ import {
 } from "@decisively-io/interview-sdk";
 import clsx from "clsx";
 import React from "react";
-import { CLASS_NAMES, DEFAULT_STEP } from "../../Constants";
+import { DEFAULT_STEP } from "../../Constants";
 import { useApp } from "../../hooks/HooksApp";
 import { normalizeControlsValue } from "../../util";
-import Content, { NestedInterviewContainer, StyledControlsWrap } from "../Content";
+import Content, { NestedInterviewContainer } from "../Content";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import RenderControl from "./RenderControl";
 import type { ControlComponents } from "./index";
-import Controls from "./index";
 
 export interface InterviewContainerControlWidgetProps extends ControlWidgetProps<RenderableInterviewContainerControl> {
   controlComponents: ControlComponents;
@@ -46,12 +44,6 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   });
   const { sessionId } = useApp();
 
-  console.log("====> interview_container control", control);
-
-  // const isSelfReferencing = (() => {
-  //   return true;
-  // })();
-
   const initalDataMarshalled = (() => {
     if (initialData) {
       try {
@@ -67,7 +59,8 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
   })();
 
   React.useEffect(() => {
-    if (interviewProvider && interviewRef) {
+    console.log("====> interview_container control", control);
+    if (interviewProvider && interviewRef && !interviewLoaded) {
       (async () => {
         try {
           const { interactionMode } = interviewRef;
@@ -83,6 +76,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
               createOpts.sessionId = sessionId || "";
             }
 
+            console.log("====> interview_container creating interview", createOpts);
             const res = await interviewProvider.create(
               interviewRef.projectId,
               createOpts,
@@ -222,7 +216,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
           //   borderRadius: "5px",
           // }}
           >
-            {errMessage || "Error loading interview"}
+            {errMessage || "Error running interview"}
           </div>
         </div>
       );
@@ -244,8 +238,7 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
 
     return (
       <Content
-        key={session.screen.id}
-        // keyForRemount={session.screen.id}
+        // key={session.screen.id}
         step={getCurrentStep({
           ...DEFAULT_STEP,
           steps,
@@ -290,13 +283,18 @@ const InterviewContainerWidget = React.memo((props: InterviewContainerControlWid
       data-id={control.id}
       data-loading={(control as any).loading || !interviewLoaded ? "true" : undefined}
     >
-      {/* {renderControls()} */}
       {control.label ? <legend className="label">{control.label}</legend> : null}
       {renderContent()}
       {renderErrorOverlay()}
     </NestedInterviewContainer>
   );
-});
+},
+(props, nextProps) => {
+  // this is pretty heavy, and we can remove it, but we really don't need re-renders from this level (lower down is fine)
+  // but absolutely fine to remove this if we think it's suppressing problems etc.
+  return props?.control?.id === nextProps?.control?.id;
+}
+);
 
 InterviewContainerWidget.displayName = `${DISPLAY_NAME_PREFIX}/InterviewContainer`;
 
