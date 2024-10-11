@@ -29,271 +29,272 @@ type ContainerState = {
   nextDisabled: boolean;
 };
 
-const InterviewContainerWidget = React.memo((props: InterviewContainerControlWidgetProps) => {
-  const { control, controlComponents, className, interviewProvider } = props;
-  const { interviewRef, initialData = "", required = false } = control;
-  const [interviewLoaded, setInterviewLoaded] = React.useState<boolean>(false);
+const InterviewContainerWidget = React.memo(
+  (props: InterviewContainerControlWidgetProps) => {
+    const { control, controlComponents, className, interviewProvider } = props;
+    const { interviewRef, initialData = "", required = false } = control;
+    const [interviewLoaded, setInterviewLoaded] = React.useState<boolean>(false);
 
-  const [session, setSession] = React.useState<SessionInstance | null>(null);
-  const [errMessage, setErrMessage] = React.useState<string | null>(null);
-  const [containerState, setContainerState] = React.useState<ContainerState>({
-    backDisabled: false,
-    isSubmitting: false,
-    isRequestPending: false,
-    nextDisabled: false,
-  });
-  const { sessionId } = useApp();
+    const [session, setSession] = React.useState<SessionInstance | null>(null);
+    const [errMessage, setErrMessage] = React.useState<string | null>(null);
+    const [containerState, setContainerState] = React.useState<ContainerState>({
+      backDisabled: false,
+      isSubmitting: false,
+      isRequestPending: false,
+      nextDisabled: false,
+    });
+    const { sessionId } = useApp();
 
-  const initalDataMarshalled = (() => {
-    if (initialData) {
-      try {
-        if (initialData && (typeof initialData === "string" || (initialData as any) instanceof String)) {
-          return JSON.parse(initialData);
-        }
-        // shouldn't be anything other than a string...
-      } catch (e) {
-        console.error("interview_container Error parsing initialData", e);
-      }
-    }
-    return undefined;
-  })();
-
-  React.useEffect(() => {
-    console.log("====> interview_container control", control);
-    if (interviewProvider && interviewRef && !interviewLoaded) {
-      (async () => {
+    const initalDataMarshalled = (() => {
+      if (initialData) {
         try {
-          const { interactionMode } = interviewRef;
-
-          if (["same-session", "new-session", "different-project"].includes(interactionMode)) {
-            const createOpts = {
-              interview: interviewRef.interviewId,
-              initialData: initalDataMarshalled,
-            } as SessionConfig;
-            if (interactionMode === "same-session" && !sessionId) {
-              throw new Error("sessionId is required for same-session interaction mode");
-            } else if (interactionMode === "same-session") {
-              createOpts.sessionId = sessionId || "";
-            }
-
-            console.log("====> interview_container creating interview", createOpts);
-            const res = await interviewProvider.create(
-              interviewRef.projectId,
-              createOpts,
-              // () => { console.log("196: interviewProvider.create callback") }
-            );
-
-            setSession(res);
-          } else {
-            throw new Error(`Invalid interaction mode: ${interactionMode}`);
+          if (initialData && (typeof initialData === "string" || (initialData as any) instanceof String)) {
+            return JSON.parse(initialData);
           }
-        } catch (e: any) {
-          console.error("====> interview_container Error creating interview", e);
-          setErrMessage(`Error creating interview: ${e.message || "Unknown error"}`);
-        } finally {
-          setInterviewLoaded(true);
+          // shouldn't be anything other than a string...
+        } catch (e) {
+          console.error("interview_container Error parsing initialData", e);
         }
-      })();
-    } else if (!interviewProvider) {
-      setErrMessage("Interview provider not available");
-      setInterviewLoaded(true);
-    }
-  }, [interviewProvider, interviewRef]);
+      }
+      return undefined;
+    })();
 
-  // -- helpers
+    React.useEffect(() => {
+      console.log("====> interview_container control", control);
+      if (interviewProvider && interviewRef && !interviewLoaded) {
+        (async () => {
+          try {
+            const { interactionMode } = interviewRef;
 
-  const isFirstStep = (steps: Session["steps"], id: string): boolean => {
-    if (!Array.isArray(steps) || steps.length === 0) {
+            if (["same-session", "new-session", "different-project"].includes(interactionMode)) {
+              const createOpts = {
+                interview: interviewRef.interviewId,
+                initialData: initalDataMarshalled,
+              } as SessionConfig;
+              if (interactionMode === "same-session" && !sessionId) {
+                throw new Error("sessionId is required for same-session interaction mode");
+              } else if (interactionMode === "same-session") {
+                createOpts.sessionId = sessionId || "";
+              }
+
+              console.log("====> interview_container creating interview", createOpts);
+              const res = await interviewProvider.create(
+                interviewRef.projectId,
+                createOpts,
+                // () => { console.log("196: interviewProvider.create callback") }
+              );
+
+              setSession(res);
+            } else {
+              throw new Error(`Invalid interaction mode: ${interactionMode}`);
+            }
+          } catch (e: any) {
+            console.error("====> interview_container Error creating interview", e);
+            setErrMessage(`Error creating interview: ${e.message || "Unknown error"}`);
+          } finally {
+            setInterviewLoaded(true);
+          }
+        })();
+      } else if (!interviewProvider) {
+        setErrMessage("Interview provider not available");
+        setInterviewLoaded(true);
+      }
+    }, [interviewProvider, interviewRef]);
+
+    // -- helpers
+
+    const isFirstStep = (steps: Session["steps"], id: string): boolean => {
+      if (!Array.isArray(steps) || steps.length === 0) {
+        return false;
+      }
+      const first = steps[0];
+      if (first.id === id) {
+        return true;
+      }
+      if (first.steps?.length) {
+        return isFirstStep(first.steps, id);
+      }
       return false;
-    }
-    const first = steps[0];
-    if (first.id === id) {
-      return true;
-    }
-    if (first.steps?.length) {
-      return isFirstStep(first.steps, id);
-    }
-    return false;
-  };
+    };
 
-  const isLastStep = (steps: Session["steps"], id: string): boolean => {
-    if (!Array.isArray(steps) || steps.length === 0) {
+    const isLastStep = (steps: Session["steps"], id: string): boolean => {
+      if (!Array.isArray(steps) || steps.length === 0) {
+        return false;
+      }
+      const last = steps[steps.length - 1];
+      if (last.id === id) {
+        return true;
+      }
+      if (last.steps?.length) {
+        return isLastStep(last.steps, id);
+      }
       return false;
-    }
-    const last = steps[steps.length - 1];
-    if (last.id === id) {
-      return true;
-    }
-    if (last.steps?.length) {
-      return isLastStep(last.steps, id);
-    }
-    return false;
-  };
+    };
 
-  // -- session mgmt
+    // -- session mgmt
 
-  const goBack = (data: ControlsValue, reset: () => unknown) => {
-    if (!session) {
-      return;
-    }
+    const goBack = (data: ControlsValue, reset: () => unknown) => {
+      if (!session) {
+        return;
+      }
 
-    setContainerState((prev) => ({
-      ...prev,
-      backDisabled: true,
-      isRequestPending: true,
-    }));
-
-    session.back().then((s) => {
-      reset?.();
-      console.log("back success, setting new session data", s);
       setContainerState((prev) => ({
         ...prev,
-        backDisabled: false,
-        isRequestPending: false,
+        backDisabled: true,
+        isRequestPending: true,
       }));
-    });
-  };
 
-  const goNext = (data: ControlsValue, reset: () => unknown) => {
-    if (!session) {
-      return;
-    }
+      session.back().then((s) => {
+        reset?.();
+        console.log("back success, setting new session data", s);
+        setContainerState((prev) => ({
+          ...prev,
+          backDisabled: false,
+          isRequestPending: false,
+        }));
+      });
+    };
 
-    const parentPropName = "@parent";
-    setContainerState((prev) => ({
-      ...prev,
-      nextDisabled: true,
-      isRequestPending: true,
-      isSubmitting: true,
-    }));
+    const goNext = (data: ControlsValue, reset: () => unknown) => {
+      if (!session) {
+        return;
+      }
 
-    const normalized = normalizeControlsValue(data, session.screen.controls);
-
-    if (data[parentPropName]) {
-      normalized[parentPropName] = data[parentPropName];
-    }
-
-    session.save(normalized).then((s) => {
-      console.log("next success, resetting");
-      reset?.();
-      console.log("next success, setting new session data", s);
+      const parentPropName = "@parent";
       setContainerState((prev) => ({
         ...prev,
-        nextDisabled: false,
-        isRequestPending: false,
-        isSubmitting: false,
+        nextDisabled: true,
+        isRequestPending: true,
+        isSubmitting: true,
       }));
-    });
-  };
 
-  const lastStep = !session
-    ? false
-    : isLastStep(session.steps || [], session.screen.id) && session.status !== "in-progress";
+      const normalized = normalizeControlsValue(data, session.screen.controls);
 
-  // -- rendering
+      if (data[parentPropName]) {
+        normalized[parentPropName] = data[parentPropName];
+      }
 
-  const renderErrorOverlay = () => {
-    if (errMessage || session?.status === "error") {
-      return (
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.1)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 100,
-          }}
-        >
+      session.save(normalized).then((s) => {
+        console.log("next success, resetting");
+        reset?.();
+        console.log("next success, setting new session data", s);
+        setContainerState((prev) => ({
+          ...prev,
+          nextDisabled: false,
+          isRequestPending: false,
+          isSubmitting: false,
+        }));
+      });
+    };
+
+    const lastStep = !session
+      ? false
+      : isLastStep(session.steps || [], session.screen.id) && session.status !== "in-progress";
+
+    // -- rendering
+
+    const renderErrorOverlay = () => {
+      if (errMessage || session?.status === "error") {
+        return (
           <div
-          // style={{
-          //   backgroundColor: "white",
-          //   padding: "20px",
-          //   borderRadius: "5px",
-          // }}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 100,
+            }}
           >
-            {errMessage || "Error running interview"}
+            <div
+            // style={{
+            //   backgroundColor: "white",
+            //   padding: "20px",
+            //   borderRadius: "5px",
+            // }}
+            >
+              {errMessage || "Error running interview"}
+            </div>
           </div>
-        </div>
-      );
-    }
+        );
+      }
 
-    return null;
-  };
-
-  /**
-   * This is the content (no sidebar/menu)
-   */
-  const renderContent = () => {
-    if (!session) {
       return null;
-    }
+    };
 
-    const buttons = (session.screen as any).buttons;
-    const steps = session.steps || [];
+    /**
+     * This is the content (no sidebar/menu)
+     */
+    const renderContent = () => {
+      if (!session) {
+        return null;
+      }
+
+      const buttons = (session.screen as any).buttons;
+      const steps = session.steps || [];
+
+      return (
+        <Content
+          // key={session.screen.id}
+          step={getCurrentStep({
+            ...DEFAULT_STEP,
+            steps,
+          })}
+          screen={session.screen}
+          controlComponents={controlComponents}
+          next={lastStep || errMessage ? undefined : goNext}
+          back={goBack}
+          backDisabled={
+            buttons?.back === false ||
+            containerState.isRequestPending ||
+            containerState.backDisabled ||
+            // externalLoading ||
+            session.externalLoading
+          }
+          isSubmitting={
+            containerState.isSubmitting ||
+            // externalLoading ||
+            containerState.isRequestPending
+          }
+          nextDisabled={
+            buttons?.next === false ||
+            containerState.isRequestPending ||
+            containerState.nextDisabled ||
+            // externalLoading ||
+            lastStep ||
+            session.externalLoading
+          }
+          // chOnScreenData={onDataChangeAll}
+          // rhfMode="onChange"
+          // rhfReValidateMode="onChange"
+          // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          interviewProvider={interviewProvider!}
+          interactionId={session.interactionId}
+          subinterviewRequired={required}
+        />
+      );
+    };
 
     return (
-      <Content
-        // key={session.screen.id}
-        step={getCurrentStep({
-          ...DEFAULT_STEP,
-          steps,
-        })}
-        screen={session.screen}
-        controlComponents={controlComponents}
-        next={lastStep || errMessage ? undefined : goNext}
-        back={goBack}
-        backDisabled={
-          buttons?.back === false ||
-          containerState.isRequestPending ||
-          containerState.backDisabled ||
-          // externalLoading ||
-          session.externalLoading
-        }
-        isSubmitting={
-          containerState.isSubmitting ||
-          // externalLoading ||
-          containerState.isRequestPending
-        }
-        nextDisabled={
-          buttons?.next === false ||
-          containerState.isRequestPending ||
-          containerState.nextDisabled ||
-          // externalLoading ||
-          lastStep ||
-          session.externalLoading
-        }
-        // chOnScreenData={onDataChangeAll}
-        // rhfMode="onChange"
-        // rhfReValidateMode="onChange"
-        // biome-ignore lint/style/noNonNullAssertion: <explanation>
-        interviewProvider={interviewProvider!}
-        interactionId={session.interactionId}
-        subinterviewRequired={required}
-      />
+      <NestedInterviewContainer
+        data-id={control.id}
+        data-loading={(control as any).loading || !interviewLoaded ? "true" : undefined}
+      >
+        {control.label ? <legend className="label">{control.label}</legend> : null}
+        {renderContent()}
+        {renderErrorOverlay()}
+      </NestedInterviewContainer>
     );
-  };
-
-  return (
-    <NestedInterviewContainer
-      data-id={control.id}
-      data-loading={(control as any).loading || !interviewLoaded ? "true" : undefined}
-    >
-      {control.label ? <legend className="label">{control.label}</legend> : null}
-      {renderContent()}
-      {renderErrorOverlay()}
-    </NestedInterviewContainer>
-  );
-},
-(props, nextProps) => {
-  // this is pretty heavy, and we can remove it, but we really don't need re-renders from this level (lower down is fine)
-  // but absolutely fine to remove this if we think it's suppressing problems etc.
-  return props?.control?.id === nextProps?.control?.id;
-}
+  },
+  (props, nextProps) => {
+    // this is pretty heavy, and we can remove it, but we really don't need re-renders from this level (lower down is fine)
+    // but absolutely fine to remove this if we think it's suppressing problems etc.
+    return props?.control?.id === nextProps?.control?.id;
+  },
 );
 
 InterviewContainerWidget.displayName = `${DISPLAY_NAME_PREFIX}/InterviewContainer`;
