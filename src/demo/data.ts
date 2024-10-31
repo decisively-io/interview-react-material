@@ -45,6 +45,8 @@ export const session: Session = {
     attributeDatetime: "date time",
     attributeOptions: "options explanation",
     attributeTime: "explanation",
+    'attr-file1-a-really-really-long-attribute-name-to-trigger-overflow-and-showcase-how-legend-behaves': 'file 1 explanation',
+    'attr-file2': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
   },
   screen: {
     id: "screen1",
@@ -52,7 +54,7 @@ export const session: Session = {
     controls: [
       {
         type: "file",
-        attribute: "attr-file1",
+        attribute: "attr-file1-a-really-really-long-attribute-name-to-trigger-overflow-and-showcase-how-legend-behaves",
         id: "attr-file-id1",
         label: "Add identity document(-s) separate",
         labelDisplay: "separate",
@@ -469,6 +471,76 @@ export const session: Session = {
       //   instances: [],
       // },
     ],
+    sidebars: [
+      {
+        type: 'explanation',
+        id: 'explanation_id',
+        title: 'Why we collect personal details',
+        data: {
+          text: 'Your privacy is important to us, but we do need to collect some details for our records. This is to ensure that we are processing information for the right person. Your details are safe with us. Please check our privacy policy on our website',
+        },
+        config: {
+          showAttributeExplanations: true,
+          text: 'Config - some text'
+        },
+        dynamicAttributes: [],
+      },
+      {
+        type: 'data',
+        id: 'data_id',
+        title: 'Data',
+        data: {
+          attributes: [],
+          data: [],
+        },
+        config: {
+          description: 'We have collected the following data from you so far.'
+        },
+        dynamicAttributes: [],
+      },
+      {
+        type: 'entity_list',
+        data: {
+          entities: [],
+
+        },
+        id: 'entity_list_id',
+        title: 'Entity list title',
+      },
+      // {
+      //   type: 'conversation',
+      //   id: 'conversation_id',
+      //   data: {
+      //     todo: undefined,
+      //   },
+      //   title: 'Conversation Some title 1',
+      //   config: {
+      //     aiOptions: {
+
+      //     },
+      //     goal: '',
+      //     interactionMode: 'same-session',
+      //     initialMessage: '',
+      //   },
+      //   dynamicAttributes: ['attr1', 'attr2'],
+      // },
+      // {
+      //   type: 'interview',
+      //   data: {
+      //     todo: undefined,
+      //   },
+      //   id: 'interview_id',
+      //   title: 'Interview Title',
+      //   config: {
+      //     interactionMode: 'different-project',
+      //     interviewId: '',
+      //     description: '',
+      //     projectId: '',
+      //     workspaceId: '',
+      //   },
+      //   dynamicAttributes: []
+      // }
+    ]
   },
   context: { entity: "" },
   sessionId: "",
