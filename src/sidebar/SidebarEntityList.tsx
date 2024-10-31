@@ -1,4 +1,4 @@
-import type { RenderableEntityListSidebar } from "@decisively-io/interview-sdk";
+import type { RenderableEntityListSidebar } from "@decisively-io/interview-sdk/dist/core/sidebars/sidebar";
 import { Card } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import styled from "styled-components";

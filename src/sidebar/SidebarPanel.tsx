@@ -4,6 +4,11 @@ import styled from "styled-components";
 import { CLASS_NAMES, LOADING_ANIMATION_CSS } from "../Constants";
 import { InterviewContext } from "../interview";
 import SidebarEntityList from "./SidebarEntityList";
+import SidebarExplanation from './SidebarExplanation';
+import { SidebarData } from './SidebarData';
+import { SidebarConversation } from './SidebarConversation';
+import SidebarInterview from './SidebarInterview';
+
 
 export interface SidebarProps<S extends RenderableSidebar = RenderableSidebar> {
   sidebar: S;
@@ -29,8 +34,12 @@ const Wrap = styled.div`
   padding: 1rem;
 `;
 
-const TYPE_COMPONENTS: Record<SidebarType, SidebarComponent> = {
+const TYPE_COMPONENTS: { [ T in SidebarType ]: SidebarComponent< Extract< RenderableSidebar, { type: T } > > } = {
   entity_list: SidebarEntityList,
+  explanation: SidebarExplanation,
+  data: SidebarData,
+  conversation: SidebarConversation,
+  interview: SidebarInterview,
 };
 
 const SidebarPanel = (props: SidebarPanelProps) => {
@@ -52,7 +61,9 @@ const SidebarPanel = (props: SidebarPanelProps) => {
         const override = sidebar.id && sidebarOverrides?.[sidebar.id];
 
         const sidebarComponent = override ?? TYPE_COMPONENTS[sidebar.type];
-        return sidebarComponent ? React.createElement(sidebarComponent, { sidebar, key: sidebar.id }) : null;
+        return sidebarComponent
+          ? React.createElement(sidebarComponent as SidebarComponent<RenderableSidebar>, { sidebar, key: sidebar.id })
+          : null;
       })}
     </Wrap>
   );
