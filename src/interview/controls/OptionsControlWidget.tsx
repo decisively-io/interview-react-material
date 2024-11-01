@@ -12,6 +12,7 @@ import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 const filter = createFilterOptions<Option>();
 
@@ -59,6 +60,8 @@ const OptionsControlWidget = Object.assign(
       .filter(Boolean)
       .join(" ");
 
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+
     return useFormControl({
       control,
       className: finalClsnm,
@@ -88,6 +91,8 @@ const OptionsControlWidget = Object.assign(
                   value={typedValue === undefined || typedValue === null ? null : typedValue}
                   onChange={setValueRadio}
                   id={forId}
+                  onFocus={markAsActiveForExplSidebar}
+                  onBlur={resetExplSidebarActive}
                 >
                   {radioOptionsJSX}
                 </RadioGroup>
@@ -151,6 +156,8 @@ const OptionsControlWidget = Object.assign(
                   />
                 )}
                 disabled={control.disabled || disabled}
+                onFocus={markAsActiveForExplSidebar}
+                onBlur={resetExplSidebarActive}
                 {...autocompleteProps}
               />
             )}

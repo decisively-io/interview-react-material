@@ -92,6 +92,8 @@ const DateControlWidget = Object.assign(
                 disabled: control.disabled || disabled,
                 style: datePickerStyle,
                 inputRef: datePickerRef,
+                // onFocus: markAsActiveForExplSidebar,
+                // onBlur: resetExplSidebarActive,
                 ...datePickerProps,
               }}
             />
@@ -107,8 +109,8 @@ const DateControlWidget = Object.assign(
                 <Box flexGrow="1">
                   {value === undefined || value === null ? (
                     <TextField
-                      // onFocus={markAsActiveForExplSidebar}
-                      // onBlur={resetExplSidebarActive}
+                      onFocus={markAsActiveForExplSidebar}
+                      onBlur={resetExplSidebarActive}
                       {...{
                         ...manualInputProps,
                         value: "",
@@ -116,8 +118,8 @@ const DateControlWidget = Object.assign(
                     />
                   ) : (
                     <TextField
-                      // onFocus={markAsActiveForExplSidebar}
-                      // onBlur={resetExplSidebarActive}
+                      onFocus={markAsActiveForExplSidebar}
+                      onBlur={resetExplSidebarActive}
                       {...manualInputProps}
                     />
                   )}
@@ -131,10 +133,10 @@ const DateControlWidget = Object.assign(
                     <CalendarTodayIcon />
                   </IconButton>
                 </Box>
-
-                {renderExplanation()}
               </ManualControlsWrap>
             )}
+
+            {renderExplanation()}
           </>
         );
       },
