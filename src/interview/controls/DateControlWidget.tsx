@@ -11,6 +11,7 @@ import { useFormControl } from "../../FormControl";
 import { resolveNowInDate } from "../../util";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 export interface DateControlWidgetProps
   extends ControlWidgetProps<DateControl & { manualControlsCssOverride?: string }> {
@@ -47,6 +48,8 @@ const DateControlWidget = Object.assign(
     );
 
     const emulateClickOnPicker = React.useCallback(() => datePickerRef.current?.click(), []);
+
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
 
     return useFormControl({
       control,
@@ -104,13 +107,19 @@ const DateControlWidget = Object.assign(
                 <Box flexGrow="1">
                   {value === undefined || value === null ? (
                     <TextField
+                      // onFocus={markAsActiveForExplSidebar}
+                      // onBlur={resetExplSidebarActive}
                       {...{
                         ...manualInputProps,
                         value: "",
                       }}
                     />
                   ) : (
-                    <TextField {...manualInputProps} />
+                    <TextField
+                      // onFocus={markAsActiveForExplSidebar}
+                      // onBlur={resetExplSidebarActive}
+                      {...manualInputProps}
+                    />
                   )}
                 </Box>
 
