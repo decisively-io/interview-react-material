@@ -6,6 +6,7 @@ import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 export interface BooleanControlWidgetProps extends ControlWidgetProps<BooleanControl> {
   checkboxProps?: CheckboxProps;
@@ -17,6 +18,7 @@ export interface BooleanControlWidgetProps extends ControlWidgetProps<BooleanCon
 const BooleanControlWidget = Object.assign(
   React.memo((props: BooleanControlWidgetProps) => {
     const { control, checkboxProps, chOnScreenData, className } = props;
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
 
     return useFormControl({
       control,
@@ -45,6 +47,8 @@ const BooleanControlWidget = Object.assign(
               htmlFor={forId}
               label={inlineLabel}
               disabled={props.formControlLabelProps ? props.formControlLabelProps.disabled : disabled}
+              onFocus={markAsActiveForExplSidebar}
+              onBlur={resetExplSidebarActive}
               {...props.formControlLabelProps}
             />
 

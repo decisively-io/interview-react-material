@@ -32,25 +32,21 @@ const AttributeExplanation = styled.fieldset`
 
 const SidebarExplanation: SidebarComponent<RenderableExplanationSidebar> = ({ sidebar }) => {
   const { data, title, config } = sidebar;
-  const { session } = useInterviewContext();
+  const { session, explSidebarActiveEl } = useInterviewContext();
 
   const showAttributeExplanations = Boolean(config && config.showAttributeExplanations || false);
-  const explanationsArr = React.useMemo< AttributeInfo[] >(() => {
+  const maybeExplanation = React.useMemo< AttributeInfo | null >(() => {
     const { explanations, screen: { controls } } = session;
-    if(showAttributeExplanations === false || !explanations) return [];
+    const { value: explSidebarActiveElVal } = explSidebarActiveEl;
+    if(showAttributeExplanations === false || !explanations || explSidebarActiveElVal.active === false) {
+      return null;
+    }
 
-    return controls.reduce< AttributeInfo[] >(
-      (a, { attribute }) => {
-        if(!attribute ) return a;
+    const maybeMatchedExpl = explanations[explSidebarActiveElVal.attributeId];
+    if(!maybeMatchedExpl) return null;
 
-        const maybeExplanation = explanations[attribute];
-        if(!maybeExplanation) return a;
-
-        return a.concat({value: attribute, label: maybeExplanation});
-      },
-      []
-    );
-  }, [showAttributeExplanations, session]);
+    return { value: explSidebarActiveElVal.attributeId, label: maybeMatchedExpl };
+  }, [showAttributeExplanations, explSidebarActiveEl, session]);
 
   return (
     <Wrap>
@@ -59,21 +55,19 @@ const SidebarExplanation: SidebarComponent<RenderableExplanationSidebar> = ({ si
       { data.text ? <Typography>{data.text}</Typography> : null }
 
       {
-        explanationsArr.length === 0 ? null : (
+        maybeExplanation && (
           <ExplanationsWrap>
-            {explanationsArr.map(it => (
-              <AttributeExplanation key={it.value}>
-                <legend>
-                  <Typography variant='caption'>
-                    {it.value}
-                  </Typography>
-                </legend>
-
-                <Typography>
-                  {it.label || ''}
+            <AttributeExplanation key={maybeExplanation.value}>
+              <legend>
+                <Typography variant='caption'>
+                  {maybeExplanation.value}
                 </Typography>
-              </AttributeExplanation>
-            ))}
+              </legend>
+
+              <Typography>
+                {maybeExplanation.label || ''}
+              </Typography>
+            </AttributeExplanation>
           </ExplanationsWrap>
         )
       }

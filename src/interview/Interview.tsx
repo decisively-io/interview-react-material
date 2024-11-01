@@ -13,6 +13,10 @@ import Frame from "./Frame";
 import type { InterviewState } from "./InterviewStateType";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
+import {
+  ExplSidebarActiveElMethods,
+} from "../providers/InterviewContext/explanationSidebarActiveElState";
+
 
 export interface InterviewProps {
   interviewProvider: InterviewProvider;
@@ -34,6 +38,12 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
   static displayName = `${DISPLAY_NAME_PREFIX}/Interview`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
 
+  /**
+   * not using "private" to avoid structural typing mismatch in \
+   * consumer projects where might be some version inconsistencies
+   */
+  __explSidebarActiveElMethods: ExplSidebarActiveElMethods;
+
   constructor(props: P) {
     super(props);
 
@@ -42,7 +52,12 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       isSubmitting: false,
       isRequestPending: false,
       nextDisabled: false,
+      explSidebarActiveElValue: { active: false },
     };
+    this.__explSidebarActiveElMethods = new ExplSidebarActiveElMethods(nextValue => this.setState(prev => ({
+      ...prev,
+      explSidebarActiveElValue: nextValue,
+    })));
   }
 
   // ===================================================================================
@@ -166,6 +181,10 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
           session: this.session,
           enclosedSetState: this.enclosedSetState.bind(this),
           sidebarOverrides: this.props.sidebarOverrides,
+          explSidebarActiveEl: {
+            value: this.state.explSidebarActiveElValue,
+            methods: this.__explSidebarActiveElMethods,
+          },
         }}
         sessionId={this.session.sessionId}
       >

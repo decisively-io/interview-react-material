@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 export interface TextControlWidgetProps extends ControlWidgetProps<TextControl> {
   textFieldProps?: TextFieldProps;
@@ -36,6 +37,8 @@ const TextControlWidget = Object.assign(
             type: variation.type,
           };
 
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+
     return useFormControl({
       control,
       className: className,
@@ -56,6 +59,8 @@ const TextControlWidget = Object.assign(
               error={error !== undefined}
               helperText={error?.message || " "}
               disabled={control.disabled || disabled}
+              onFocus={markAsActiveForExplSidebar}
+              onBlur={resetExplSidebarActive}
               {...maybeWithType}
               {...maybeWithMulti}
               {...textFieldProps}

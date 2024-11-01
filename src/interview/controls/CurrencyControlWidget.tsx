@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 export interface CurrencyControlWidgetProps extends ControlWidgetProps<CurrencyControl> {
   textFieldProps?: Omit<TextFieldProps, "value">;
@@ -30,7 +31,8 @@ const withFallback = (arg: IArg) =>
 const CurrencyControlWidget = Object.assign(
   React.memo((props: CurrencyControlWidgetProps) => {
     const { control, textFieldProps, chOnScreenData, className } = props;
-    const { attribute, symbol } = control;
+    const { symbol } = control;
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
 
     const InputProps = React.useMemo(
       () => ({
@@ -63,6 +65,8 @@ const CurrencyControlWidget = Object.assign(
               helperText: error?.message || " ",
               InputProps,
               disabled: control.disabled || disabled,
+              onFocus: markAsActiveForExplSidebar,
+              onBlur: resetExplSidebarActive,
               ...textFieldProps,
             })}
 
