@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 export interface TimeControlWidgetProps extends ControlWidgetProps<TimeControl> {
   timePickerProps?: Partial<TimePickerProps>;
@@ -23,6 +24,8 @@ const TimeControlWidget = Object.assign(
     const { control, timePickerProps, chOnScreenData, className } = props;
     const { amPmFormat, minutes_increment, allowSeconds } = control;
     let uiTimeFormat = amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24;
+
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
 
     // strip seconds from display
     if (!allowSeconds) {
@@ -53,6 +56,8 @@ const TimeControlWidget = Object.assign(
               minutesStep={minutes_increment}
               views={allowSeconds ? allViews : secondLessViews}
               disabled={control.disabled || disabled}
+              onFocus={markAsActiveForExplSidebar}
+              onBlur={resetExplSidebarActive}
               {...timePickerProps}
             />
 

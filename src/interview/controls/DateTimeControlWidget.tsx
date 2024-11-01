@@ -11,6 +11,7 @@ import { useFormControl } from "../../FormControl";
 import { resolveNowInDate } from "../../util";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 export interface DateTimeControlWidgetProps extends ControlWidgetProps<DateTimeControl> {
   dateTimePickerProps?: Partial<DateTimePickerProps>;
@@ -34,6 +35,8 @@ const DateTimeControlWidget = Object.assign(
     const maxDate = nowLessDateMax ? new Date(`${nowLessDateMax}T23:59:59`) : undefined;
     const minDate = nowLessDateMin ? new Date(`${nowLessDateMin}T23:59:59`) : undefined;
 
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+
     return useFormControl({
       control,
       className: className,
@@ -54,6 +57,8 @@ const DateTimeControlWidget = Object.assign(
             maxDate={maxDate}
             minDate={minDate}
             disabled={control.disabled || disabled}
+            onFocus={markAsActiveForExplSidebar}
+            onBlur={resetExplSidebarActive}
             {...dateTimePickerProps}
           />
 
