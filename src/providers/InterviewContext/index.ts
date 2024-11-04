@@ -30,16 +30,21 @@ export const InterviewContext = React.createContext<InterviewContextState>({
 
 export const useInterviewContext = () => React.useContext(InterviewContext);
 
+export type UseExplSidebarActiveElStateHelpersArg = {
+  attributeId: string;
+  label?: string;
+}
 export type UseExplSidebarActiveElStateHelpersRtrn = {
   markAsActiveForExplSidebar: () => unknown;
   resetExplSidebarActive: () => unknown;
 }
-export const useExplSidebarActiveElStateHelpers = (attributeId: string): UseExplSidebarActiveElStateHelpersRtrn => {
+export const useExplSidebarActiveElStateHelpers = (arg: UseExplSidebarActiveElStateHelpersArg): UseExplSidebarActiveElStateHelpersRtrn => {
   const { explSidebarActiveEl: { methods } } = useInterviewContext();
   const markAsActiveForExplSidebar = React.useCallback(() => methods.debouncedSetNextValue({
     active: true,
-    attributeId: attributeId,
-  }), [methods, attributeId]);
+    attributeId: arg.attributeId,
+    label: arg.label,
+  }), [methods, arg.attributeId, arg.label]);
   const resetExplSidebarActive = React.useCallback(
     () => methods.resetNextValueImmediateAndCancelDebounced(),
     [methods]

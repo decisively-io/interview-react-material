@@ -49,7 +49,10 @@ const DateControlWidget = Object.assign(
 
     const emulateClickOnPicker = React.useCallback(() => datePickerRef.current?.click(), []);
 
-    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers({
+      attributeId: control.attribute,
+      label: control.label,
+    });
 
     return useFormControl({
       control,
@@ -92,8 +95,8 @@ const DateControlWidget = Object.assign(
                 disabled: control.disabled || disabled,
                 style: datePickerStyle,
                 inputRef: datePickerRef,
-                // onFocus: markAsActiveForExplSidebar,
-                // onBlur: resetExplSidebarActive,
+                onFocus: markAsActiveForExplSidebar,
+                onBlur: resetExplSidebarActive,
                 ...datePickerProps,
               }}
             />

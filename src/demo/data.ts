@@ -66,14 +66,14 @@ export const session: Session = {
       //   // max_size: 0.005,
       //   required: true,
       // },
-      // {
-      //   type: "file",
-      //   attribute: "attr-file2",
-      //   id: "attr-file-id2",
-      //   label: "Add identity document(-s) automatic",
-      //   labelDisplay: "automatic",
-      //   file_type: [".txt", ".json"],
-      // },
+      {
+        type: "file",
+        attribute: "attr-file2",
+        id: "attr-file-id2",
+        label: "Add identity document(-s) automatic",
+        labelDisplay: "automatic",
+        file_type: [".txt", ".json"],
+      },
       // {
       //   type: "file",
       //   attribute: "attr-file3",

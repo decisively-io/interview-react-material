@@ -25,7 +25,10 @@ const TimeControlWidget = Object.assign(
     const { amPmFormat, minutes_increment, allowSeconds } = control;
     let uiTimeFormat = amPmFormat ? TIME_FORMAT_12 : TIME_FORMAT_24;
 
-    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers({
+      attributeId: control.attribute,
+      label: control.label,
+    });
 
     // strip seconds from display
     if (!allowSeconds) {

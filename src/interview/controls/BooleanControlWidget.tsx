@@ -18,7 +18,10 @@ export interface BooleanControlWidgetProps extends ControlWidgetProps<BooleanCon
 const BooleanControlWidget = Object.assign(
   React.memo((props: BooleanControlWidgetProps) => {
     const { control, checkboxProps, chOnScreenData, className } = props;
-    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers({
+      attributeId: control.attribute,
+      label: control.label,
+    });
 
     return useFormControl({
       control,

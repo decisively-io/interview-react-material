@@ -37,7 +37,10 @@ const TextControlWidget = Object.assign(
             type: variation.type,
           };
 
-    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers({
+      attributeId: control.attribute,
+      label: control.label,
+    });
 
     return useFormControl({
       control,

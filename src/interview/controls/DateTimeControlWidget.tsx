@@ -35,7 +35,10 @@ const DateTimeControlWidget = Object.assign(
     const maxDate = nowLessDateMax ? new Date(`${nowLessDateMax}T23:59:59`) : undefined;
     const minDate = nowLessDateMin ? new Date(`${nowLessDateMin}T23:59:59`) : undefined;
 
-    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers({
+      attributeId: control.attribute,
+      label: control.label,
+    });
 
     return useFormControl({
       control,

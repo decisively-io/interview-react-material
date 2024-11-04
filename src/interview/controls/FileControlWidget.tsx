@@ -13,7 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import { useFormControl } from "../../FormControl";
-import { useInterviewContext } from "../../providers/InterviewContext";
+import { useExplSidebarActiveElStateHelpers, useInterviewContext } from "../../providers/InterviewContext";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 
 const Wrap = styled.div`
@@ -107,6 +107,11 @@ export default (p: FileControlWidgetProps) => {
     current.click();
   }, []);
 
+  const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers({
+    attributeId: control.attribute,
+    label: control.label,
+  });
+
   return useFormControl({
     control,
     // className: className,
@@ -180,15 +185,19 @@ export default (p: FileControlWidgetProps) => {
           />
 
           <FilesWrap>
-            {normalizedValue.fileRefs.map((it) => (
-              <FileRow key={it}>
-                <SmallIconBtn onClick={() => deleteFile(it)}>
-                  {isLoading.type === "remove" && isLoading.ref === it ? <RotatingCachedIcon /> : <DeleteIcon />}
-                </SmallIconBtn>
+            {normalizedValue.fileRefs.map((it) => {
+              const isBeingDeleted = isLoading.type === "remove" && isLoading.ref === it;
 
-                <Typography>{getNameFromFileAttributeRef(it)}</Typography>
-              </FileRow>
-            ))}
+              return (
+                <FileRow key={it}>
+                  <SmallIconBtn onClick={() => deleteFile(it)} disabled={isBeingDeleted}>
+                    {isBeingDeleted ? <RotatingCachedIcon /> : <DeleteIcon />}
+                  </SmallIconBtn>
+
+                  <Typography>{getNameFromFileAttributeRef(it)}</Typography>
+                </FileRow>
+              );
+            })}
           </FilesWrap>
 
           <BottomWrap>
@@ -196,7 +205,12 @@ export default (p: FileControlWidgetProps) => {
               <AddIconAndTextsWrap>
                 <SelectFileTypography>Select a file to upload</SelectFileTypography>
 
-                <AddIconButton onClick={triggerAddFile}>
+                <AddIconButton
+                  onClick={triggerAddFile}
+                  disabled={isLoading.type === "add"}
+                  onFocus={markAsActiveForExplSidebar}
+                  onBlur={resetExplSidebarActive}
+                >
                   {isLoading.type === "add" ? <RotatingCachedIcon /> : <AttachFileIcon />}
                 </AddIconButton>
               </AddIconAndTextsWrap>
