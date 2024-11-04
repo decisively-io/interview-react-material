@@ -82,6 +82,15 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
   const [forId] = useState(() => Math.random().toString(36).substring(7));
 
   const renderExplanation = (props?: ExplanationProps) => {
+    /**
+     * special logic related to explanation sidebar: if we have an explanation\
+     * sidebar present in an array of all sidebars - we need to skip rendering\
+     * inline explanation icon with tooltip as we expect to have explanation\
+     * shown on focus (and possibly mouse over) in the explanation sidebar
+     */
+    const sidebars = interview.session.screen.sidebars || [];
+    if(sidebars.some(it => it.type === 'explanation')) return null;
+
     const otherProps = props;
     if (!("showExplanation" in controlInProps && controlInProps.showExplanation) || !explanation) {
       return null;

@@ -32,7 +32,10 @@ const CurrencyControlWidget = Object.assign(
   React.memo((props: CurrencyControlWidgetProps) => {
     const { control, textFieldProps, chOnScreenData, className } = props;
     const { symbol } = control;
-    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers({
+      attributeId: control.attribute,
+      label: control.label,
+    });
 
     const InputProps = React.useMemo(
       () => ({

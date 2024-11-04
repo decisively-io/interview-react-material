@@ -60,7 +60,10 @@ const OptionsControlWidget = Object.assign(
       .filter(Boolean)
       .join(" ");
 
-    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers(control.attribute);
+    const { markAsActiveForExplSidebar, resetExplSidebarActive } = useExplSidebarActiveElStateHelpers({
+      attributeId: control.attribute,
+      label: control.label,
+    });
 
     return useFormControl({
       control,

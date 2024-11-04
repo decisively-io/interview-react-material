@@ -36,7 +36,7 @@ const SidebarExplanation: SidebarComponent<RenderableExplanationSidebar> = ({ si
 
   const showAttributeExplanations = Boolean(config && config.showAttributeExplanations || false);
   const maybeExplanation = React.useMemo< AttributeInfo | null >(() => {
-    const { explanations, screen: { controls } } = session;
+    const { explanations } = session;
     const { value: explSidebarActiveElVal } = explSidebarActiveEl;
     if(showAttributeExplanations === false || !explanations || explSidebarActiveElVal.active === false) {
       return null;
@@ -45,7 +45,7 @@ const SidebarExplanation: SidebarComponent<RenderableExplanationSidebar> = ({ si
     const maybeMatchedExpl = explanations[explSidebarActiveElVal.attributeId];
     if(!maybeMatchedExpl) return null;
 
-    return { value: explSidebarActiveElVal.attributeId, label: maybeMatchedExpl };
+    return { value: explSidebarActiveElVal.label || explSidebarActiveElVal.attributeId, label: maybeMatchedExpl };
   }, [showAttributeExplanations, explSidebarActiveEl, session]);
 
   return (

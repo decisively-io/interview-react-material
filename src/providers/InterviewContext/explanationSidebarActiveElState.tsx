@@ -6,6 +6,7 @@ export type ExplSidebarActiveElValue = (
   | {
     active: true;
     attributeId: string;
+    label?: string;
   }
 );
 
