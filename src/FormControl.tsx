@@ -99,7 +99,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
     return (
       <ExplanationTooltip
         placement={"bottom-start"}
-        open={focus || helpHover}
+        open={helpHover}
         title={explanation || "no explanation"}
         {...otherProps}
       >
