@@ -6,7 +6,6 @@ import ChatInput, { type ChatInputProps } from "./ChatInput";
 import ChatInputCompact from "./ChatInputCompact";
 import ChatMessageBubble, { type ChatMessageBubbleProps } from "./ChatMessageBubble";
 
-
 interface RespondingConfig {
   isResponding: boolean;
   content?: string | null;
