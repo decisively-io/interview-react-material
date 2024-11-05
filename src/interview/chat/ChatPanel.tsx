@@ -6,6 +6,16 @@ import ChatInput, { type ChatInputProps } from "./ChatInput";
 import ChatInputCompact from "./ChatInputCompact";
 import ChatMessageBubble, { type ChatMessageBubbleProps } from "./ChatMessageBubble";
 
+
+interface RespondingConfig {
+  isResponding: boolean;
+  content?: string | null;
+}
+
+function isRespondingConfig(obj: any): obj is RespondingConfig {
+  return obj && typeof obj.isResponding === "boolean";
+}
+
 export interface ChatPanelProps {
   messages: ChatMessage[];
   setMessages: (messages: ChatMessage[]) => void;
@@ -13,7 +23,7 @@ export interface ChatPanelProps {
   style?: React.CSSProperties;
   className?: string;
   disabled?: boolean;
-  responding?: boolean;
+  responding?: boolean | RespondingConfig;
   components?: {
     input?: React.ComponentType<ChatInputProps>;
     messageBubble?: React.ComponentType<ChatMessageBubbleProps>;
@@ -80,7 +90,7 @@ export interface ChatPanelHandle {
 const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
   const {
     messages,
-    responding,
+    responding = false,
     disabled,
     setMessages,
     loading,
@@ -89,6 +99,7 @@ const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
     ...otherProps
   } = props;
 
+  const respondingConfig = isRespondingConfig(responding) ? responding : { isResponding: responding, content: null };
   const scrollableRef = useRef<any>();
   const handle: ChatPanelHandle = {
     scrollToBottom: () => {
@@ -125,13 +136,13 @@ const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
             message={msg}
           />
         ))}
-        {responding ? (
+        {respondingConfig?.isResponding ? (
           <ChatMessageBubbleComponent
             loading={true}
             id={"__responding"}
             message={{
               self: false,
-              content: "Typing...",
+              content: respondingConfig.content || "Typing...",
             }}
           />
         ) : null}
