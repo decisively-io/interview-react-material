@@ -112,7 +112,7 @@ const ChatPanel = React.forwardRef((props: ChatPanelProps, ref: any) => {
 
   useEffect(() => {
     handle.scrollToBottom();
-  }, [messages.length]);
+  }, [messages.length, respondingConfig.isResponding]);
 
   const onAddMessage = (msg: ChatMessage) => {
     messages.push(msg);
