@@ -40,24 +40,24 @@ const SwitchContainerControlWidget = (props: SwitchContainerControlWidgetProps) 
     });
   }, [controls, attribute]);
 
+  if (mappedControls.length === 0) return null;
+
   return (
     <StyledControlsWrap
       data-id={control.id}
       data-loading={(control as any).loading ? "true" : undefined}
     >
-      {mappedControls.length === 0
-        ? null
-        : mappedControls.map((value, controlIndex) => {
-            return (
-              <RenderControl
-                interviewProvider={interviewProvider}
-                chOnScreenData={chOnScreenData}
-                key={controlIndex}
-                control={value}
-                controlComponents={controlComponents}
-              />
-            );
-          })}
+      {mappedControls.map((value, controlIndex) => {
+        return (
+          <RenderControl
+            interviewProvider={interviewProvider}
+            chOnScreenData={chOnScreenData}
+            key={controlIndex}
+            control={value}
+            controlComponents={controlComponents}
+          />
+        );
+      })}
     </StyledControlsWrap>
   );
 };
