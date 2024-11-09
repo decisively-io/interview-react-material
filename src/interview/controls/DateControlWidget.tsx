@@ -8,10 +8,10 @@ import type { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 import { resolveNowInDate } from "../../util";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 export interface DateControlWidgetProps
   extends ControlWidgetProps<DateControl & { manualControlsCssOverride?: string }> {

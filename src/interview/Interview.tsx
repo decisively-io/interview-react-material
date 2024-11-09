@@ -4,6 +4,7 @@ import fastDeepEqual from "fast-deep-equal";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
+import { ExplSidebarActiveElMethods } from "../providers/InterviewContext/explanationSidebarActiveElState";
 import UberProvider from "../providers/UberProvider";
 import type { SidebarOverrides } from "../sidebar/SidebarPanel";
 import type { ThemedCompProps, ThemedComponent } from "../themes/types";
@@ -13,10 +14,6 @@ import Frame from "./Frame";
 import type { InterviewState } from "./InterviewStateType";
 import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
-import {
-  ExplSidebarActiveElMethods,
-} from "../providers/InterviewContext/explanationSidebarActiveElState";
-
 
 export interface InterviewProps {
   interviewProvider: InterviewProvider;
@@ -54,10 +51,12 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       nextDisabled: false,
       explSidebarActiveElValue: { active: false },
     };
-    this.__explSidebarActiveElMethods = new ExplSidebarActiveElMethods(nextValue => this.setState(prev => ({
-      ...prev,
-      explSidebarActiveElValue: nextValue,
-    })));
+    this.__explSidebarActiveElMethods = new ExplSidebarActiveElMethods((nextValue) =>
+      this.setState((prev) => ({
+        ...prev,
+        explSidebarActiveElValue: nextValue,
+      })),
+    );
   }
 
   // ===================================================================================

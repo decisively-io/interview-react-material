@@ -190,7 +190,10 @@ export default (p: FileControlWidgetProps) => {
 
               return (
                 <FileRow key={it}>
-                  <SmallIconBtn onClick={() => deleteFile(it)} disabled={isBeingDeleted}>
+                  <SmallIconBtn
+                    onClick={() => deleteFile(it)}
+                    disabled={isBeingDeleted}
+                  >
                     {isBeingDeleted ? <RotatingCachedIcon /> : <DeleteIcon />}
                   </SmallIconBtn>
 

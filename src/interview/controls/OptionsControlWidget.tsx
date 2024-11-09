@@ -9,10 +9,10 @@ import React from "react";
 import styled from "styled-components";
 import { CLASS_NAMES } from "../../Constants";
 import { useFormControl } from "../../FormControl";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 const filter = createFilterOptions<Option>();
 

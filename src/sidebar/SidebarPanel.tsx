@@ -3,12 +3,11 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { CLASS_NAMES, LOADING_ANIMATION_CSS } from "../Constants";
 import { InterviewContext } from "../interview";
+import { SidebarConversation } from "./SidebarConversation";
+import { SidebarData } from "./SidebarData";
 import SidebarEntityList from "./SidebarEntityList";
-import SidebarExplanation from './SidebarExplanation';
-import { SidebarData } from './SidebarData';
-import { SidebarConversation } from './SidebarConversation';
-import SidebarInterview from './SidebarInterview';
-
+import SidebarExplanation from "./SidebarExplanation";
+import SidebarInterview from "./SidebarInterview";
 
 export interface SidebarProps<S extends RenderableSidebar = RenderableSidebar> {
   sidebar: S;
@@ -34,7 +33,7 @@ const Wrap = styled.div`
   padding: 1rem;
 `;
 
-const TYPE_COMPONENTS: { [ T in SidebarType ]: SidebarComponent< Extract< RenderableSidebar, { type: T } > > } = {
+const TYPE_COMPONENTS: { [T in SidebarType]: SidebarComponent<Extract<RenderableSidebar, { type: T }>> } = {
   entity_list: SidebarEntityList,
   explanation: SidebarExplanation,
   data: SidebarData,

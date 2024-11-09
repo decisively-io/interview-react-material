@@ -3,9 +3,9 @@ import { TimePicker, type TimePickerProps } from "@material-ui/pickers";
 import React from "react";
 import styled from "styled-components";
 import { useFormControl } from "../../FormControl";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 export interface TimeControlWidgetProps extends ControlWidgetProps<TimeControl> {
   timePickerProps?: Partial<TimePickerProps>;

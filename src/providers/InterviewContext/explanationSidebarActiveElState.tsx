@@ -1,15 +1,12 @@
-import debounce from 'lodash.debounce';
+import debounce from "lodash.debounce";
 
-
-export type ExplSidebarActiveElValue = (
+export type ExplSidebarActiveElValue =
   | { active: false }
   | {
-    active: true;
-    attributeId: string;
-    label?: string;
-  }
-);
-
+      active: true;
+      attributeId: string;
+      label?: string;
+    };
 
 export type ExplSidebarActiveElSetNextValue = (nextValue: ExplSidebarActiveElValue) => unknown;
 
@@ -53,11 +50,11 @@ export type ExplSidebarActiveElSetNextValue = (nextValue: ExplSidebarActiveElVal
 export class ExplSidebarActiveElMethods {
   __setNextValue: ExplSidebarActiveElSetNextValue;
 
-  debouncedSetNextValue: ReturnType<typeof debounce< ExplSidebarActiveElSetNextValue > >;
+  debouncedSetNextValue: ReturnType<typeof debounce<ExplSidebarActiveElSetNextValue>>;
 
-  constructor(setNextState: ExplSidebarActiveElMethods['__setNextValue']) {
+  constructor(setNextState: ExplSidebarActiveElMethods["__setNextValue"]) {
     this.__setNextValue = setNextState;
-    this.debouncedSetNextValue = debounce(nextValue => {
+    this.debouncedSetNextValue = debounce((nextValue) => {
       this.__setNextValue(nextValue);
     }, 700);
   }
@@ -65,7 +62,7 @@ export class ExplSidebarActiveElMethods {
   resetNextValueImmediateAndCancelDebounced = () => {
     this.debouncedSetNextValue.cancel();
     this.__setNextValue({ active: false });
-  }
+  };
 }
 
 export type ExplSidebarActiveEl = {

@@ -89,7 +89,7 @@ export const useFormControl = (options: FormControlOptions): React.ReactElement 
      * shown on focus (and possibly mouse over) in the explanation sidebar
      */
     const sidebars = interview.session.screen.sidebars || [];
-    if(sidebars.some(it => it.type === 'explanation')) return null;
+    if (sidebars.some((it) => it.type === "explanation")) return null;
 
     const otherProps = props;
     if (!("showExplanation" in controlInProps && controlInProps.showExplanation) || !explanation) {

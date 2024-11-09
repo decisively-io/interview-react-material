@@ -1,18 +1,17 @@
-import React from 'react';
-import styled from 'styled-components';
-import TreeView, { TreeViewProps } from '@material-ui/lab/TreeView';
-import TreeItem from '@material-ui/lab/TreeItem';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import TreeItem from "@material-ui/lab/TreeItem";
+import TreeView, { type TreeViewProps } from "@material-ui/lab/TreeView";
+import React from "react";
+import styled from "styled-components";
 import {
-  DataSidebarTreeCtxState,
   DataSidebarTreeCtx,
-  useDataSidebarTreeCtx,
+  type DataSidebarTreeCtxState,
   findByIdInDataSidebarTree,
-} from './DataTree_consts';
-
+  useDataSidebarTreeCtx,
+} from "./DataTree_consts";
 
 const DataTreeNodeLabelWrap = styled.div`
   display: flex;
@@ -29,49 +28,51 @@ const DataTreeNodeLabelWrap = styled.div`
   }
 `;
 
-const DataTreeNodeLabel = React.memo< { id: string } >(({ id }) => {
-  const {
-    tree,
-  } = useDataSidebarTreeCtx();
+const DataTreeNodeLabel = React.memo<{ id: string }>(({ id }) => {
+  const { tree } = useDataSidebarTreeCtx();
 
   const maybeNode = React.useMemo(() => findByIdInDataSidebarTree({ id, node: tree }), [id, tree]);
-  if(maybeNode === null) return null;
+  if (maybeNode === null) return null;
 
-  const title = maybeNode.type === 'leaf' ? maybeNode.attributeName : maybeNode.title;
+  const title = maybeNode.type === "leaf" ? maybeNode.attributeName : maybeNode.title;
 
   return (
     <DataTreeNodeLabelWrap>
-      <Typography className={maybeNode.type === 'leaf' ? 'isLeaf' : undefined}>
-        { title }
-      </Typography>
+      <Typography className={maybeNode.type === "leaf" ? "isLeaf" : undefined}>{title}</Typography>
 
-      {maybeNode.type !== 'leaf' ? null : (
+      {maybeNode.type !== "leaf" ? null : (
         <TextField
-          variant='outlined'
+          variant="outlined"
           value={maybeNode.value}
           disabled
-          className='value'
+          className="value"
         />
       )}
     </DataTreeNodeLabelWrap>
-  )
+  );
 });
 
-const DataTreeNode = React.memo< { id: string } >(({ id }) => {
-  const {
-    tree,
-  } = useDataSidebarTreeCtx();
+const DataTreeNode = React.memo<{ id: string }>(({ id }) => {
+  const { tree } = useDataSidebarTreeCtx();
 
   const maybeNode = React.useMemo(() => findByIdInDataSidebarTree({ id, node: tree }), [id, tree]);
-  if(maybeNode === null) return null;
+  if (maybeNode === null) return null;
 
   return (
-    <TreeItem nodeId={id} label={<DataTreeNodeLabel id={id}/>}>
-      { maybeNode.type === 'leaf' ? null : (
-        maybeNode.children.map(child => <DataTreeNode key={child.id} id={child.id} />)
-      ) }
+    <TreeItem
+      nodeId={id}
+      label={<DataTreeNodeLabel id={id} />}
+    >
+      {maybeNode.type === "leaf"
+        ? null
+        : maybeNode.children.map((child) => (
+            <DataTreeNode
+              key={child.id}
+              id={child.id}
+            />
+          ))}
     </TreeItem>
-  );;
+  );
 });
 
 const StyledTreeView = styled(TreeView)`
@@ -86,19 +87,17 @@ const DataTreeCore = React.memo(() => {
     setValue,
   } = useDataSidebarTreeCtx();
 
-  const handleToggle = React.useCallback< NonNullable< TreeViewProps[ 'onNodeToggle'] >>(
-    ({ target }, nodeIds) => {
-      if(!(target instanceof HTMLElement) && !(target instanceof SVGElement)) return;
+  const handleToggle = React.useCallback<NonNullable<TreeViewProps["onNodeToggle"]>>(({ target }, nodeIds) => {
+    if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) return;
 
-      const clickedOnIcon = target.tagName === 'path'
-        || target.classList.contains('MuiSvgIcon-root')
-        || target.classList.contains('MuiTreeItem-iconContainer');
-      if(!clickedOnIcon) return;
+    const clickedOnIcon =
+      target.tagName === "path" ||
+      target.classList.contains("MuiSvgIcon-root") ||
+      target.classList.contains("MuiTreeItem-iconContainer");
+    if (!clickedOnIcon) return;
 
-      setValue(prev => ({ ...prev, expanded: nodeIds }));
-    },
-    []
-  );
+    setValue((prev) => ({ ...prev, expanded: nodeIds }));
+  }, []);
 
   return (
     <StyledTreeView
@@ -108,31 +107,39 @@ const DataTreeCore = React.memo(() => {
       onNodeToggle={handleToggle}
       selected={React.useMemo(() => [], [])}
     >
-      { tree.children.map(it => <DataTreeNode key={ it.id } id={it.id} />) }
+      {tree.children.map((it) => (
+        <DataTreeNode
+          key={it.id}
+          id={it.id}
+        />
+      ))}
     </StyledTreeView>
   );
 });
 
 export type DataTreeProps = {
-  tree: DataSidebarTreeCtxState['tree'];
-  setTree: DataSidebarTreeCtxState['setTree'];
-}
-export const DataTree: React.FC< DataTreeProps > = p => {
+  tree: DataSidebarTreeCtxState["tree"];
+  setTree: DataSidebarTreeCtxState["setTree"];
+};
+export const DataTree: React.FC<DataTreeProps> = (p) => {
   const { setTree, tree } = p;
 
-  const [ctxStateValue, setCtxStateValue] = React.useState< DataSidebarTreeCtxState['value'] >({
+  const [ctxStateValue, setCtxStateValue] = React.useState<DataSidebarTreeCtxState["value"]>({
     expanded: [],
-  })
-  const ctxState = React.useMemo< DataSidebarTreeCtxState >(() => ({
-    tree,
-    setTree,
-    value: ctxStateValue,
-    setValue: setCtxStateValue
-  }), [tree, setTree, ctxStateValue, setCtxStateValue]);
+  });
+  const ctxState = React.useMemo<DataSidebarTreeCtxState>(
+    () => ({
+      tree,
+      setTree,
+      value: ctxStateValue,
+      setValue: setCtxStateValue,
+    }),
+    [tree, setTree, ctxStateValue, setCtxStateValue],
+  );
 
   return (
     <DataSidebarTreeCtx.Provider value={ctxState}>
       <DataTreeCore />
     </DataSidebarTreeCtx.Provider>
   );
-}
+};

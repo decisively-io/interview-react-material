@@ -3,10 +3,10 @@ import Checkbox, { type CheckboxProps } from "@material-ui/core/Checkbox";
 import FormControlLabel, { type FormControlLabelProps } from "@material-ui/core/FormControlLabel";
 import React from "react";
 import { useFormControl } from "../../FormControl";
+import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import ControlError from "./ControlError";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
-import { useExplSidebarActiveElStateHelpers } from "../../providers/InterviewContext";
 
 export interface BooleanControlWidgetProps extends ControlWidgetProps<BooleanControl> {
   checkboxProps?: CheckboxProps;

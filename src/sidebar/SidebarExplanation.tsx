@@ -1,10 +1,12 @@
-import type { AttributeInfo, RenderableExplanationSidebar } from "@decisively-io/interview-sdk/dist/core/sidebars/sidebar";
+import type {
+  AttributeInfo,
+  RenderableExplanationSidebar,
+} from "@decisively-io/interview-sdk/dist/core/sidebars/sidebar";
 import Typography from "@material-ui/core/Typography";
-import styled from "styled-components";
-import type { SidebarComponent } from "./SidebarPanel";
-import { useInterviewContext } from "../interview";
 import React from "react";
-
+import styled from "styled-components";
+import { useInterviewContext } from "../interview";
+import type { SidebarComponent } from "./SidebarPanel";
 
 const Wrap = styled.div`
   display: flex;
@@ -34,43 +36,42 @@ const SidebarExplanation: SidebarComponent<RenderableExplanationSidebar> = ({ si
   const { data, title, config } = sidebar;
   const { session, explSidebarActiveEl } = useInterviewContext();
 
-  const showAttributeExplanations = Boolean(config && config.showAttributeExplanations || false);
-  const maybeExplanation = React.useMemo< AttributeInfo | null >(() => {
+  const showAttributeExplanations = Boolean(config?.showAttributeExplanations || false);
+  const maybeExplanation = React.useMemo<AttributeInfo | null>(() => {
     const { explanations } = session;
     const { value: explSidebarActiveElVal } = explSidebarActiveEl;
-    if(showAttributeExplanations === false || !explanations || explSidebarActiveElVal.active === false) {
+    if (showAttributeExplanations === false || !explanations || explSidebarActiveElVal.active === false) {
       return null;
     }
 
     const maybeMatchedExpl = explanations[explSidebarActiveElVal.attributeId];
-    if(!maybeMatchedExpl) return null;
+    if (!maybeMatchedExpl) return null;
 
     return { value: explSidebarActiveElVal.label || explSidebarActiveElVal.attributeId, label: maybeMatchedExpl };
   }, [showAttributeExplanations, explSidebarActiveEl, session]);
 
   return (
     <Wrap>
-      <Typography variant='h6' style={{ fontWeight: 700 }}>{title}</Typography>
+      <Typography
+        variant="h6"
+        style={{ fontWeight: 700 }}
+      >
+        {title}
+      </Typography>
 
-      { data.text ? <Typography>{data.text}</Typography> : null }
+      {data.text ? <Typography>{data.text}</Typography> : null}
 
-      {
-        maybeExplanation && (
-          <ExplanationsWrap>
-            <AttributeExplanation key={maybeExplanation.value}>
-              <legend>
-                <Typography variant='caption'>
-                  {maybeExplanation.value}
-                </Typography>
-              </legend>
+      {maybeExplanation && (
+        <ExplanationsWrap>
+          <AttributeExplanation key={maybeExplanation.value}>
+            <legend>
+              <Typography variant="caption">{maybeExplanation.value}</Typography>
+            </legend>
 
-              <Typography>
-                {maybeExplanation.label || ''}
-              </Typography>
-            </AttributeExplanation>
-          </ExplanationsWrap>
-        )
-      }
+            <Typography>{maybeExplanation.label || ""}</Typography>
+          </AttributeExplanation>
+        </ExplanationsWrap>
+      )}
     </Wrap>
   );
 };
