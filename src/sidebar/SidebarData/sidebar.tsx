@@ -4,6 +4,9 @@ import React from "react";
 import styled from "styled-components";
 import type { SidebarComponent } from "../SidebarPanel";
 import { DataTree, type DataTreeProps } from "./DataTree";
+import { dataSidebarUtilsNS } from "./utils_reexport";
+import { defaultDataSidebarTreeCtxState } from "./DataTree_consts";
+
 
 const Wrap = styled.div`
   display: flex;
@@ -20,37 +23,10 @@ export const SidebarData: SidebarComponent<RenderableDataSidebar> = ({ sidebar }
   } = sidebar;
   const maybeDesc = config ? config.description : undefined;
 
-  const [tree, setTreeRaw] = React.useState<DataTreeProps["tree"]>({
-    type: "dir",
-    id: "",
-    title: "",
-    children: [
-      {
-        type: "leaf",
-        id: "1",
-        attributeName: "the person's age",
-        value: 19,
-      },
-      {
-        type: "dir",
-        id: "2",
-        title: "residencies",
-        children: [
-          {
-            type: "leaf",
-            id: "21",
-            attributeName: "the residency street address",
-            value: "12 Main St.",
-          },
-          {
-            type: "leaf",
-            id: "22",
-            attributeName: "the residency suburb",
-            value: "Curtin",
-          },
-        ],
-      },
-    ],
+  const [tree, setTreeRaw] = React.useState<DataTreeProps["tree"]>(() => {
+    const maybeTree = dataSidebarUtilsNS.build({data});
+
+    return maybeTree.type === 'leaf' ? defaultDataSidebarTreeCtxState.tree : maybeTree;
   });
   const setTree = React.useCallback<DataTreeProps["setTree"]>((cb) => setTreeRaw((prev) => cb(prev)), [setTreeRaw]);
 

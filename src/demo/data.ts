@@ -509,7 +509,25 @@ export const session: Session = {
         title: "Data",
         data: {
           attributes: [],
-          data: [],
+          data: {
+            attrBool: false,
+            attrNum: 123,
+            attrStr: 'test',
+            participants: [
+              {
+                '@id': 1,
+                participantAttrBool: true,
+                participantAttrNum: 2,
+                participantAttrString: 'str',
+                emergency_contacts: [
+                  {
+                    '@id': 1,
+                    emergencyContactAttrBool: false,
+                  }
+                ]
+              }
+            ]
+          },
         },
         config: {
           description: "We have collected the following data from you so far.",

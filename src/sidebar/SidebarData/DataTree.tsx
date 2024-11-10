@@ -1,24 +1,33 @@
-import TextField from "@material-ui/core/TextField";
+import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView, { type TreeViewProps } from "@material-ui/lab/TreeView";
 import React from "react";
+import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import styled from "styled-components";
 import {
   DataSidebarTreeCtx,
   type DataSidebarTreeCtxState,
-  findByIdInDataSidebarTree,
   useDataSidebarTreeCtx,
 } from "./DataTree_consts";
+import * as utilsNS from './utils';
 
-const DataTreeNodeLabelWrap = styled.div`
+
+const DataTreeNodeLabelWrap = styled.label`
   display: flex;
   gap: 1rem;
+  align-items: center;
 
   .isLeaf, .value {
     width: calc(50% - 0.5rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .MuiCheckbox-root {
+    padding: 0.125rem;
   }
 
   .value {
@@ -29,9 +38,56 @@ const DataTreeNodeLabelWrap = styled.div`
 `;
 
 const DataTreeNodeLabel = React.memo<{ id: string }>(({ id }) => {
-  const { tree } = useDataSidebarTreeCtx();
+  const { tree, setTree } = useDataSidebarTreeCtx();
 
-  const maybeNode = React.useMemo(() => findByIdInDataSidebarTree({ id, node: tree }), [id, tree]);
+  const maybeNode = React.useMemo(() => utilsNS.findById({ id, node: tree }), [id, tree]);
+
+  const onChangeStrOrNum = React.useCallback< NonNullable< TextFieldProps['onChange'] > >(e => {
+    const { value } = e.currentTarget;
+    if(maybeNode === null || maybeNode.type !== 'leaf') return;
+
+    const { value: nodeValue } = maybeNode;
+
+    if(typeof nodeValue === 'string') {
+      // with "string value" tree node -> just set next value
+      setTree(prev => utilsNS.setValue({ tree: prev, id, value }));
+
+      return;
+    }
+
+
+  }, [maybeNode, setTree, id]);
+
+  const onChangeBool = React.useCallback< NonNullable< CheckboxProps['onChange'] > >((e) => {
+    const { currentTarget: { checked } } = e;
+    if(maybeNode === null || maybeNode.type !== 'leaf') return;
+
+    if(typeof maybeNode.value === 'boolean') {
+      setTree(prev => utilsNS.setValue({ tree: prev, id, value: checked }));
+    }
+  }, [maybeNode, setTree, id]);
+
+  /**
+   * treeview has this internal logic that makes treeItems focused \
+   * (using tabIndex) after those are clicked. And because for this\
+   * treeView we need to have form controls (textFields and checkboxes\
+   * ) inside - this conflicts with normal focusing logic. As I have\
+   * no idea if it is possible to override this behavior in treeView\
+   * (public API doesn't have anything related to that), instead the\
+   * idea is to listen to focus event on a TextField and then recheck\
+   * after relatively small period of time (like 100ms) to see if it is\
+   * still focused. And if not - return focus automatically (we kinda \
+   * expect user to not move focus during those 100ms)
+   */
+  const onTextFieldFocus = React.useCallback< NonNullable< TextFieldProps['onFocus'] > >(({ currentTarget }) => {
+    setTimeout(() => {
+      if(document.activeElement === currentTarget) return;
+
+      currentTarget.focus();
+    }, 100);
+  }, []);
+
+
   if (maybeNode === null) return null;
 
   const title = maybeNode.type === "leaf" ? maybeNode.attributeName : maybeNode.title;
@@ -40,14 +96,24 @@ const DataTreeNodeLabel = React.memo<{ id: string }>(({ id }) => {
     <DataTreeNodeLabelWrap>
       <Typography className={maybeNode.type === "leaf" ? "isLeaf" : undefined}>{title}</Typography>
 
-      {maybeNode.type !== "leaf" ? null : (
-        <TextField
-          variant="outlined"
-          value={maybeNode.value}
-          disabled
-          className="value"
-        />
-      )}
+      {(() => {
+        if(maybeNode.type !== "leaf" || maybeNode.value === null) return null;
+
+        const { value } = maybeNode;
+        if(typeof value === 'boolean') {
+          return <Checkbox checked={value} onChange={onChangeBool} />;
+        }
+
+        return (
+          <TextField
+            variant="outlined"
+            value={value}
+            className="value"
+            onChange={onChangeStrOrNum}
+            onFocus={onTextFieldFocus}
+          />
+        );
+      })()}
     </DataTreeNodeLabelWrap>
   );
 });
@@ -55,7 +121,7 @@ const DataTreeNodeLabel = React.memo<{ id: string }>(({ id }) => {
 const DataTreeNode = React.memo<{ id: string }>(({ id }) => {
   const { tree } = useDataSidebarTreeCtx();
 
-  const maybeNode = React.useMemo(() => findByIdInDataSidebarTree({ id, node: tree }), [id, tree]);
+  const maybeNode = React.useMemo(() => utilsNS.findById({ id, node: tree }), [id, tree]);
   if (maybeNode === null) return null;
 
   return (
@@ -78,6 +144,16 @@ const DataTreeNode = React.memo<{ id: string }>(({ id }) => {
 const StyledTreeView = styled(TreeView)`
   overflow: auto;
   max-height: 400px;
+
+  .MuiTreeItem-label {
+    &:hover, &:focus {
+      background-color: transparent;
+    }
+  }
+
+  .MuiTreeItem-root:focus > .MuiTreeItem-content .MuiTreeItem-label {
+    background-color: transparent;
+  }
 `;
 
 const DataTreeCore = React.memo(() => {
@@ -97,7 +173,7 @@ const DataTreeCore = React.memo(() => {
     if (!clickedOnIcon) return;
 
     setValue((prev) => ({ ...prev, expanded: nodeIds }));
-  }, []);
+  }, [setValue]);
 
   return (
     <StyledTreeView
@@ -106,6 +182,7 @@ const DataTreeCore = React.memo(() => {
       expanded={expanded}
       onNodeToggle={handleToggle}
       selected={React.useMemo(() => [], [])}
+      disableSelection
     >
       {tree.children.map((it) => (
         <DataTreeNode
