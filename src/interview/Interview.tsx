@@ -222,6 +222,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       nextDisabled:
         buttons?.next === false ||
         isRequestPending ||
+        !session.canProgress ||
         nextDisabled ||
         externalLoading ||
         lastStep ||
