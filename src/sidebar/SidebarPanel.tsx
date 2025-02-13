@@ -30,6 +30,7 @@ const Wrap = styled.div`
 `;
 
 const TYPE_COMPONENTS: Record<SidebarType, SidebarComponent> = {
+  // @ts-ignore
   entity_list: SidebarEntityList,
 };
 

@@ -3,6 +3,7 @@ import { Typography } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import { DownloadFileButton } from "./DownloadFileButton";
 import type { ControlComponents } from "./index";
 
 const Wrap = styled.div`
@@ -47,7 +48,7 @@ type LabelValue = {
    * file control could potentially have multiple, which then\
    * should be displayed one under another
    */
-  value: string[];
+  value: any[];
 };
 
 export interface DataContainerControlWidgetProps extends ControlWidgetProps<RenderableDataContainerControl> {
@@ -81,10 +82,20 @@ const DataContainerControlWidget = (props: DataContainerControlWidgetProps) => {
 
         const labelStr = `${it.label}:`;
 
-        const value = ((): string[] => {
+        const value = ((): any[] => {
           if (it.type === "file") {
+            if (!it.value?.fileRefs || it.value.fileRefs.length === 0) return ["No file data provided"];
+            else
+              return it.value.fileRefs.map((ref, index) => {
+                return (
+                  <DownloadFileButton
+                    key={index}
+                    reference={ref}
+                    hideName={false}
+                  />
+                );
+              });
             // TODO finalize this when file control branch is merged in
-            return ((it as any).value || { fileRefs: [] }).fileRefs.map((it: any) => it);
           }
 
           if (it.type === "currency") {
@@ -141,9 +152,10 @@ const DataContainerControlWidget = (props: DataContainerControlWidgetProps) => {
                   </td>
 
                   <td>
-                    {value.map((it, i) => (
-                      <ValueLabel key={i}>{it}</ValueLabel>
-                    ))}
+                    {value.map((it, i) => {
+                      if (typeof it === "string") return <ValueLabel key={i}>{it}</ValueLabel>;
+                      else return it;
+                    })}
                   </td>
                 </tr>
               ))}
