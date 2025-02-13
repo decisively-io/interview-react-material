@@ -1,7 +1,6 @@
 import type { RenderableSwitchContainerControl } from "@decisively-io/interview-sdk";
 import React from "react";
 import { StyledControlsWrap } from "../Content";
-import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
 import type { ControlComponents } from "./index";
@@ -44,8 +43,8 @@ const SwitchContainerControlWidget = (props: SwitchContainerControlWidgetProps) 
 
   return (
     <StyledControlsWrap
-      data-id={control.id}
-      data-loading={(control as any).loading ? "true" : undefined}
+      data-deci-id={control.id}
+      data-deci-loading={(control as any).loading ? "true" : undefined}
     >
       {mappedControls.map((value, controlIndex) => {
         return (
@@ -61,7 +60,5 @@ const SwitchContainerControlWidget = (props: SwitchContainerControlWidgetProps) 
     </StyledControlsWrap>
   );
 };
-
-SwitchContainerControlWidget.displayName = `${DISPLAY_NAME_PREFIX}/SwitchContainer`;
 
 export default SwitchContainerControlWidget;

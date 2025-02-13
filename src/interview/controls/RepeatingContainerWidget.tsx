@@ -2,7 +2,6 @@ import type { RenderableRepeatingContainerControl } from "@decisively-io/intervi
 import clsx from "clsx";
 import React from "react";
 import { StyledControlsWrap } from "../Content";
-import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
 import type { ControlComponents } from "./index";
@@ -94,8 +93,8 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
         { last_row: isLastRow },
       )}
       style={colLayout}
-      data-id={control}
-      data-loading={(control as any).loading ? "true" : undefined}
+      data-deci-id={control}
+      data-deci-loading={(control as any).loading ? "true" : undefined}
     >
       {renderHeaderRow()}
       {controls?.map((value, controlIndex) => {
@@ -112,7 +111,5 @@ const RepeatingContainerControlWidget = React.memo((props: RepeatingContainerCon
     </StyledControlsWrap>
   );
 });
-
-RepeatingContainerControlWidget.displayName = `${DISPLAY_NAME_PREFIX}/RepeatingContainer`;
 
 export default RepeatingContainerControlWidget;

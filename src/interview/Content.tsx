@@ -14,7 +14,7 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import React, { useContext } from "react";
 import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import styled from "styled-components";
-import { CLASS_NAMES, DISPLAY_NAME_PREFIX, LOADING_ANIMATION_CSS } from "../Constants";
+import { CLASS_NAMES, LOADING_ANIMATION_CSS } from "../Constants";
 import { useApp } from "../hooks/HooksApp";
 import { InterviewContext } from "../providers/InterviewContext";
 import Controls, { type ControlComponents } from "./controls";
@@ -320,16 +320,26 @@ const Content = Object.assign(
             onSubmit={methods.handleSubmit(onSubmit)}
             className={className}
           >
-            <div className={CLASS_NAMES.CONTENT.FORM_WRAP}>
-              <div className={CLASS_NAMES.CONTENT.FORM}>
+            <div
+              data-deci-component={"ContentFormWrap"}
+              className={CLASS_NAMES.CONTENT.FORM_WRAP}
+            >
+              <div
+                data-deci-component={"ContentForm"}
+                className={CLASS_NAMES.CONTENT.FORM}
+              >
                 <Typography
+                  data-deci-component={"ContentFormHeading"}
                   variant="h4"
                   className={CLASS_NAMES.CONTENT.FORM_HEADING}
                 >
                   {pageTitle}
                 </Typography>
 
-                <StyledControlsWrap className={CLASS_NAMES.CONTENT.FORM_CONTROLS}>
+                <StyledControlsWrap
+                  data-deci-component={"ContentFormControls"}
+                  className={CLASS_NAMES.CONTENT.FORM_CONTROLS}
+                >
                   <Controls
                     controlComponents={controlComponents}
                     controls={screen?.controls || []}
@@ -340,9 +350,13 @@ const Content = Object.assign(
               </div>
             </div>
             {(next || back) && (
-              <div className={CLASS_NAMES.CONTENT.BUTTONS}>
+              <div
+                data-deci-component={"ContentButtons"}
+                className={CLASS_NAMES.CONTENT.BUTTONS}
+              >
                 {back && (
                   <Button
+                    data-deci-component={"ContentBackButton"}
                     size="medium"
                     variant="outlined"
                     disabled={backDisabled}
@@ -353,9 +367,13 @@ const Content = Object.assign(
                   </Button>
                 )}
                 {next && (
-                  <div className={CLASS_NAMES.CONTENT.BUTTONS_SUBMIT}>
+                  <div
+                    data-deci-component={"ContentSubmitPanel"}
+                    className={CLASS_NAMES.CONTENT.BUTTONS_SUBMIT}
+                  >
                     {isSubmitting && <CircularProgress size="2rem" />}
                     <Button
+                      data-deci-component={"ContentNextButton"}
                       size="medium"
                       // type="submit" // we can't use this anymore as we may be nesting forms
                       onClick={methods.handleSubmit(onSubmit)}
@@ -380,7 +398,6 @@ const Content = Object.assign(
     );
   },
   {
-    displayName: `${DISPLAY_NAME_PREFIX}/Content`,
     classes,
     /*** @deprecated use `Content` directly */
     _: undefined as any as React.ComponentType<ContentRootProps>,
@@ -410,12 +427,3 @@ export type ContentProps = Pick<
   | "interactionId"
   | "interviewProvider"
 >;
-
-// export const _: React.FC< IProps > = React.memo(
-//   props => {
-//     if(props.screen === null) return null;
-
-//     return <__Root {...props} />;
-//   },
-// );
-// _.displayName = CONTENT_DISPLAY_NAME;

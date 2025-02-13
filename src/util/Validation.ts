@@ -337,6 +337,7 @@ export const generateValidatorForControl = (c: RenderableControl): yup.AnySchema
             return false;
           }
 
+          // @ts-ignore
           return v.fileRefs.length > 0;
         });
 

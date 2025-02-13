@@ -1,7 +1,6 @@
 import type { Session } from "@decisively-io/interview-sdk";
 import { css, keyframes } from "styled-components";
 
-export const DISPLAY_NAME_PREFIX = "Decisively/Interview";
 export const SHOW_UNVISITED_MENU_ITEMS = false;
 
 const loadingAnimation = keyframes`
@@ -19,7 +18,7 @@ const loadingAnimation = keyframes`
 `;
 
 export const LOADING_ANIMATION_CSS = css`
-  &[data-loading="true"] {
+  &[data-deci-loading="true"] {
     cursor: wait;
     animation: ${loadingAnimation} 1s infinite;
 

@@ -13,7 +13,6 @@ import { DEFAULT_STEP } from "../../Constants";
 import { useApp } from "../../hooks/HooksApp";
 import { normalizeControlsValue } from "../../util";
 import Content, { NestedInterviewContainer } from "../Content";
-import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import type { ControlComponents } from "./index";
 
@@ -281,8 +280,8 @@ const InterviewContainerWidget = React.memo(
 
     return (
       <NestedInterviewContainer
-        data-id={control.id}
-        data-loading={(control as any).loading || !interviewLoaded ? "true" : undefined}
+        data-deci-id={control.id}
+        data-deci-loading={(control as any).loading || !interviewLoaded ? "true" : undefined}
       >
         {control.label ? <legend className="label">{control.label}</legend> : null}
         {renderContent()}
@@ -296,7 +295,5 @@ const InterviewContainerWidget = React.memo(
     return props?.control?.id === nextProps?.control?.id;
   },
 );
-
-InterviewContainerWidget.displayName = `${DISPLAY_NAME_PREFIX}/InterviewContainer`;
 
 export default InterviewContainerWidget;

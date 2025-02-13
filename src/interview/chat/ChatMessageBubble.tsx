@@ -24,7 +24,7 @@ const Bubble = styled(Box)`
     }
   }
 
-  &[data-loading="true"] {
+  &[data-deci-loading="true"] {
     animation: loading 1s infinite;
   }
 `;
@@ -66,7 +66,7 @@ const ChatMessageBubble = (props: ChatMessageBubbleProps) => {
               bgcolor={backgroundColor}
               color={color}
               borderRadius={4}
-              data-loading={loading ? "true" : undefined}
+              data-deci-loading={loading ? "true" : undefined}
               boxShadow={2}
             >
               <Typography

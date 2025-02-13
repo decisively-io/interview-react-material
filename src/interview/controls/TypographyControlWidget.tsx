@@ -3,15 +3,12 @@ import MuiTypography, { type TypographyProps as MuiTypographyProps } from "@mate
 import React from "react";
 import styled from "styled-components";
 import { LOADING_ANIMATION_CSS } from "../../Constants";
-import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 
 export interface TypographyControlWidgetProps extends ControlWidgetProps<TypographyControl & { loading?: boolean }> {
   typographyProps?: MuiTypographyProps;
   className?: string;
 }
-
-const DISPLAY_NAME = `${DISPLAY_NAME_PREFIX}/Typography`;
 
 const BannerBase = styled.div`
   border-left: 4px solid rgb(255, 66, 67);
@@ -58,7 +55,7 @@ const Banner = React.memo((props: BannerProps) => {
         dangerouslySetInnerHTML={{ __html: emoji || "" }}
       />
       <StyledTypography
-        data-loading={control.loading}
+        data-deci-loading={control.loading}
         variant="body1"
       >
         {text}
@@ -66,7 +63,6 @@ const Banner = React.memo((props: BannerProps) => {
     </Comp>
   );
 });
-Banner.displayName = `${DISPLAY_NAME}/BannerComp`;
 
 export const TypographyControlWidget = Object.assign(
   React.memo((props: TypographyControlWidgetProps) => {
@@ -88,7 +84,7 @@ export const TypographyControlWidget = Object.assign(
 
           return (
             <StyledTypography
-              data-loading={control.loading}
+              data-deci-loading={control.loading}
               variant={style}
               {...typographyProps}
             >
@@ -106,9 +102,7 @@ export const TypographyControlWidget = Object.assign(
       </div>
     );
   }),
-  {
-    displayName: DISPLAY_NAME,
-  },
+  {},
 );
 
 export default TypographyControlWidget;

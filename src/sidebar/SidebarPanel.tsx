@@ -29,7 +29,7 @@ const Wrap = styled.div`
   padding: 1rem;
 `;
 
-const TYPE_COMPONENTS: Record<SidebarType, SidebarComponent> = {
+const TYPE_COMPONENTS: Partial<Record<SidebarType, SidebarComponent<any>>> = {
   entity_list: SidebarEntityList,
 };
 
@@ -45,7 +45,7 @@ const SidebarPanel = (props: SidebarPanelProps) => {
 
   return (
     <Wrap
-      data-loading={anyLoading ? "true" : undefined}
+      data-deci-loading={anyLoading ? "true" : undefined}
       className={CLASS_NAMES.SIDEBAR.CONTAINER}
     >
       {sidebars.map((sidebar) => {

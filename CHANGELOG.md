@@ -1,3 +1,8 @@
+## 0.8.2
+
+- remove `displayName`
+- add `data-deci-component`
+
 ## 0.5.0
 
 - allow dynamic text in an entity control

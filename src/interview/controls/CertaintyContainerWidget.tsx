@@ -1,7 +1,6 @@
 import type { RenderableCertaintyContainerControl } from "@decisively-io/interview-sdk";
 import React from "react";
 import { StyledControlsWrap } from "../Content";
-import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
 import RenderControl from "./RenderControl";
 import type { ControlComponents } from "./index";
@@ -19,8 +18,8 @@ const CertaintyContainerControlWidget = React.memo((props: CertaintyContainerCon
 
   return (
     <StyledControlsWrap
-      data-id={control}
-      data-loading={(control as any).loading ? "true" : undefined}
+      data-deci-id={control}
+      data-deci-loading={(control as any).loading ? "true" : undefined}
     >
       {controls?.map((value, controlIndex) => {
         return (
@@ -36,7 +35,5 @@ const CertaintyContainerControlWidget = React.memo((props: CertaintyContainerCon
     </StyledControlsWrap>
   );
 });
-
-CertaintyContainerControlWidget.displayName = `${DISPLAY_NAME_PREFIX}/CertaintyContainer`;
 
 export default CertaintyContainerControlWidget;

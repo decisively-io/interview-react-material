@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { CLASS_NAMES, DISPLAY_NAME_PREFIX } from "../Constants";
+import { CLASS_NAMES } from "../Constants";
 import SidebarPanel, { type SidebarOverrides } from "../sidebar/SidebarPanel";
 
 /**
@@ -47,7 +47,6 @@ const Frame = Object.assign(
     );
   }),
   {
-    displayName: `${DISPLAY_NAME_PREFIX}/Frame`,
     classes,
     /*** @deprecated use Frame directly */
     _: undefined as any as React.ComponentType<FrameProps>,

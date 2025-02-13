@@ -3,7 +3,7 @@ import { type ControlsValue, type SessionInstance, getCurrentStep } from "@decis
 import fastDeepEqual from "fast-deep-equal";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { DEFAULT_STEP, DISPLAY_NAME_PREFIX } from "../Constants";
+import { DEFAULT_STEP } from "../Constants";
 import UberProvider from "../providers/UberProvider";
 import type { SidebarOverrides } from "../sidebar/SidebarPanel";
 import type { ThemedCompProps, ThemedComponent } from "../themes/types";
@@ -31,7 +31,6 @@ export interface InterviewProps {
 export type { InterviewState };
 
 export default class Interview<P extends InterviewProps = InterviewProps> extends React.Component<P, InterviewState> {
-  static displayName = `${DISPLAY_NAME_PREFIX}/Interview`;
   private formMethods: UseFormReturn<ControlsValue> | undefined;
 
   constructor(props: P) {

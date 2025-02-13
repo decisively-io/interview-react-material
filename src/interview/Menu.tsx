@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import { addSeconds, formatDistanceToNow } from "date-fns";
 import React from "react";
 import styled from "styled-components";
-import { CLASS_NAMES, DISPLAY_NAME_PREFIX } from "../Constants";
+import { CLASS_NAMES } from "../Constants";
 import MenuItem, { getClassNameForLevel, isStepVisibleInMenu, type MenuItemProps } from "./MenuItem";
 
 /**
@@ -50,8 +50,6 @@ const BorderLinearProgress = styled(LinearProgress)`
     border-radius: 0.2rem;
   }
 `;
-
-const displayName = `${DISPLAY_NAME_PREFIX}/Menu`;
 
 const Wrap = styled.div`
   display: flex;
@@ -176,17 +174,30 @@ const Menu = Object.assign(
 
     return (
       <Wrap className={className}>
-        <List className={`${CLASS_NAMES.MENU.LIST} ${getClassNameForLevel(0)}`}>{menuItems}</List>
+        <List
+          data-deci-component={"MenuList"}
+          className={`${CLASS_NAMES.MENU.LIST} ${getClassNameForLevel(0)}`}
+        >
+          {menuItems}
+        </List>
 
         {progress && (
-          <div className={CLASS_NAMES.MENU.PROGRESS}>
+          <div
+            data-deci-component={"MenuProgress"}
+            className={CLASS_NAMES.MENU.PROGRESS}
+          >
             <BorderLinearProgress
+              data-deci-component={"MenuProgressBar"}
               className={CLASS_NAMES.MENU.PROGRESS_BAR}
               variant="determinate"
               value={progress.percentage}
             />
-            <div className={CLASS_NAMES.MENU.PROGRESS_INFO}>
+            <div
+              data-deci-component={"MenuProgressInfo"}
+              className={CLASS_NAMES.MENU.PROGRESS_INFO}
+            >
               <Typography
+                data-deci-component={"MenuProgressSummary"}
                 variant="caption"
                 className={CLASS_NAMES.MENU.PROGRESS_SUMMARY}
               >
@@ -194,6 +205,7 @@ const Menu = Object.assign(
               </Typography>
               {progress.time > 0 && (
                 <Typography
+                  data-deci-component={"MenuProgressSummary"}
                   variant="caption"
                   className={CLASS_NAMES.MENU.PROGRESS_SUMMARY}
                 >
@@ -211,7 +223,6 @@ const Menu = Object.assign(
     /*** @deprecated use Menu directly */
     _: undefined as any as React.ComponentType<MenuProps>,
     classes: classes,
-    displayName,
   },
 );
 Menu._ = Menu;

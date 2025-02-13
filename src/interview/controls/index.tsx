@@ -2,7 +2,6 @@ import type { Control, InterviewProvider } from "@decisively-io/interview-sdk";
 import React from "react";
 import BooleanControlWidget, { type BooleanControlWidgetProps } from "./BooleanControlWidget";
 import CertaintyContainerWidget, { type CertaintyContainerControlWidgetProps } from "./CertaintyContainerWidget";
-import { DISPLAY_NAME_PREFIX } from "./ControlConstants";
 import CurrencyControlWidget, { type CurrencyControlWidgetProps } from "./CurrencyControlWidget";
 import DataContainerWidget, { type DataContainerControlWidgetProps } from "./DataContainerWidget";
 import DateControlWidget, { type DateControlWidgetProps } from "./DateControlWidget";
@@ -93,6 +92,5 @@ const Controls = React.memo((props: ControlsProps) => {
     </>
   );
 });
-Controls.displayName = `${DISPLAY_NAME_PREFIX}`;
 
 export default Object.assign(Controls, DEFAULT_CONTROL_COMPONENTS);

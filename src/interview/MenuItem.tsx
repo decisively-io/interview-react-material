@@ -8,7 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
 import React from "react";
-import { CLASS_NAMES, DISPLAY_NAME_PREFIX, SHOW_UNVISITED_MENU_ITEMS } from "../Constants";
+import { CLASS_NAMES, SHOW_UNVISITED_MENU_ITEMS } from "../Constants";
 import { makeStyles } from "../themes/types";
 
 const useStyles = makeStyles((theme) => ({
@@ -54,8 +54,12 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
   const classNameForLevel = getClassNameForLevel(level);
   const AvatarJSX = React.useMemo(
     () => (
-      <Avatar className={clsx(CLASS_NAMES.MENU.LIST_ITEM_AVATAR, classNameForLevel)}>
+      <Avatar
+        data-deci-component={"MenuListItemAvatar"}
+        className={clsx(CLASS_NAMES.MENU.LIST_ITEM_AVATAR, classNameForLevel)}
+      >
         <Typography
+          data-deci-component={"MenuListItemAvatarText"}
           className={CLASS_NAMES.MENU.LIST_ITEM_AVATAR_TEXT}
           variant="h4"
         >
@@ -89,6 +93,7 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
   return (
     <>
       <ListItem
+        data-deci-component={"MenuListItem"}
         onClick={clickOnItem}
         disabled={disableNavigation}
         button
@@ -96,17 +101,22 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
       >
         {AvatarJSX}
         <ListItemText
+          data-deci-component={"MenuListItemText"}
           primary={step.title}
           className={textClassName}
         />
       </ListItem>
       {step.steps === undefined || step.steps.length === 0 ? null : (
         <Collapse
+          data-deci-component={"MenuListItemCollapse"}
           in={open}
           timeout="auto"
           className={collapseClassName}
         >
-          <List className={listClassName}>
+          <List
+            data-deci-component={"MenuList"}
+            className={listClassName}
+          >
             {step.steps.map((it: Step) => (
               <MenuItem
                 key={it.id}
@@ -122,5 +132,4 @@ const MenuItem: React.FC<MenuItemProps> = React.memo((props: MenuItemProps) => {
     </>
   );
 });
-MenuItem.displayName = `${DISPLAY_NAME_PREFIX}/MenuItem`;
 export default MenuItem;
