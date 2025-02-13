@@ -13,7 +13,7 @@
     "outDir": "./dist"
   },
   "include": ["src"],
-  "exclude": ["src/demo"],
+  "exclude": ["demo"],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],
     "out": "docs"

@@ -2,10 +2,10 @@ import type { ResponseData, Session } from "@decisively-io/interview-sdk";
 import { type SessionInstance, transformResponse } from "@decisively-io/interview-sdk";
 import { CssBaseline, ThemeProvider, createTheme } from "@material-ui/core";
 import React, { useCallback, useState } from "react";
-import ReactDom from "react-dom";
-import * as FontNS from "../font";
-import * as Parts from "../interview";
-import TextControlRender from "../interview/controls/TextControlWidget";
+import ReactDOM from "react-dom/client";
+import * as FontNS from "../src/font";
+import * as Parts from "../src/interview";
+import TextControlRender from "../src/interview/controls/TextControlWidget";
 import { session as dataSession } from "./data";
 import { PWD, provider } from "./interviews";
 
@@ -129,4 +129,4 @@ const App = () => {
   );
 };
 
-ReactDom.render(<App />, rootDiv);
+ReactDOM.createRoot(rootDiv).render(<App />);

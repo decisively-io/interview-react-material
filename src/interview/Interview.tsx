@@ -15,7 +15,10 @@ import Menu, { type MenuProps } from "./Menu";
 import type { ControlComponents } from "./controls";
 
 export interface InterviewProps {
-  interviewProvider: InterviewProvider;
+  /**
+   * @deprecated - no longer required as we can get the provider from the session
+   */
+  interviewProvider?: InterviewProvider;
   //--- session started from the client
   session: SessionInstance;
   onDataChange?: (data: AttributeValues, name: string | undefined) => void;
@@ -56,6 +59,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
   };
 
   __setCurrentStep = (stepId: Session["steps"][0]["id"]): void => {
+    console.log(this.session);
     this.session.navigate(stepId);
   };
 
@@ -229,7 +233,7 @@ export default class Interview<P extends InterviewProps = InterviewProps> extend
       chOnScreenData: this.session.chOnScreenData,
       rhfMode,
       rhfReValidateMode,
-      interviewProvider: this.props.interviewProvider,
+      interviewProvider: session.provider ?? this.props.interviewProvider,
       interactionId: session.interactionId,
     };
 
