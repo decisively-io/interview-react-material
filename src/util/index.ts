@@ -7,6 +7,8 @@ import {
   type Screen,
   formatDate,
 } from "@decisively-io/interview-sdk";
+import CachedIcon from "@material-ui/icons/Cached";
+import styled, { keyframes } from "styled-components";
 
 export const VALUE_ROWS_CONST = "valueRows";
 
@@ -171,3 +173,11 @@ export function normalizeControlsValue(
     return a;
   }, {});
 }
+
+const rotate = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+`;
+export const RotatingCachedIcon = styled(CachedIcon)`
+  animation: ${rotate} 2s linear infinite;
+`;

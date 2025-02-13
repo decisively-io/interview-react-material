@@ -8,14 +8,21 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import CachedIcon from "@material-ui/icons/Cached";
 import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import { useFormControl } from "../../FormControl";
 import { useInterviewContext } from "../../providers/InterviewContext";
+import { RotatingCachedIcon } from "../../util";
 import type { ControlWidgetProps } from "./ControlWidgetTypes";
+import { DownloadFileButton } from "./DownloadFileButton";
 
+const StyledDownloadFileButton = styled(DownloadFileButton)`
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: -0.375rem;
+  margin-left: 0.5rem;
+`;
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -63,14 +70,6 @@ const AddIconAndTextsWrap = styled.div`
   gap: 0.5rem;
 `;
 
-const rotate = keyframes`
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
-`;
-const RotatingCachedIcon = styled(CachedIcon)`
-  animation: ${rotate} 2s linear infinite;
-`;
-
 const toBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -113,6 +112,7 @@ export default (p: FileControlWidgetProps) => {
     onScreenDataChange: chOnScreenData,
     render: ({ onChange, value, forId, error, inlineLabel, renderExplanation }) => {
       const normalizedValue: FileAttributeValue = isFileAttributeValue(value) ? value : { fileRefs: [] };
+      console.log("FILE CONTROL", value);
 
       const uploadFileHandler: React.ChangeEventHandler<HTMLInputElement> = ({ currentTarget }) => {
         (async () => {
@@ -182,35 +182,42 @@ export default (p: FileControlWidgetProps) => {
           <FilesWrap>
             {normalizedValue.fileRefs.map((it) => (
               <FileRow key={it}>
-                <SmallIconBtn onClick={() => deleteFile(it)}>
-                  {isLoading.type === "remove" && isLoading.ref === it ? <RotatingCachedIcon /> : <DeleteIcon />}
-                </SmallIconBtn>
-
+                {!control.readOnly && (
+                  <SmallIconBtn onClick={() => deleteFile(it)}>
+                    {isLoading.type === "remove" && isLoading.ref === it ? <RotatingCachedIcon /> : <DeleteIcon />}
+                  </SmallIconBtn>
+                )}
                 <Typography>{getNameFromFileAttributeRef(it)}</Typography>
+                <StyledDownloadFileButton
+                  reference={it}
+                  hideName={true}
+                />
               </FileRow>
             ))}
           </FilesWrap>
 
-          <BottomWrap>
-            {max <= normalizedValue.fileRefs.length ? null : (
-              <AddIconAndTextsWrap>
-                <SelectFileTypography>Select a file to upload</SelectFileTypography>
+          {!control.readOnly && (
+            <BottomWrap>
+              {max <= normalizedValue.fileRefs.length ? null : (
+                <AddIconAndTextsWrap>
+                  <SelectFileTypography>Select a file to upload</SelectFileTypography>
 
-                <AddIconButton onClick={triggerAddFile}>
-                  {isLoading.type === "add" ? <RotatingCachedIcon /> : <AttachFileIcon />}
-                </AddIconButton>
-              </AddIconAndTextsWrap>
-            )}
-            {max <= 1 ? null : (
-              <Typography variant="caption">
-                {normalizedValue.fileRefs.length} of {max} files (maximum)
-              </Typography>
-            )}
+                  <AddIconButton onClick={triggerAddFile}>
+                    {isLoading.type === "add" ? <RotatingCachedIcon /> : <AttachFileIcon />}
+                  </AddIconButton>
+                </AddIconAndTextsWrap>
+              )}
+              {max <= 1 ? null : (
+                <Typography variant="caption">
+                  {normalizedValue.fileRefs.length} of {max} files (maximum)
+                </Typography>
+              )}
 
-            {error === undefined || error.message === undefined ? null : (
-              <FormHelperText error>{error.message}</FormHelperText>
-            )}
-          </BottomWrap>
+              {error === undefined || error.message === undefined ? null : (
+                <FormHelperText error>{error.message}</FormHelperText>
+              )}
+            </BottomWrap>
+          )}
         </Wrap>
       );
     },

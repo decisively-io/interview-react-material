@@ -30,6 +30,7 @@ const Wrap = styled.div`
 `;
 
 const TYPE_COMPONENTS: Partial<Record<SidebarType, SidebarComponent<any>>> = {
+  // @ts-ignore
   entity_list: SidebarEntityList,
 };
 
