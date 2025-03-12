@@ -1,6 +1,6 @@
 {
   "name": "@decisively-io/interview-react-material",
-  "version": "0.8.23",
+  "version": "0.8.24-alpha.2",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {

@@ -1,3 +1,5 @@
+# DEPRECATED: this code now lives in the main Decisively repository
+
 ### INTERVIEW-REACT-MATERIAL
 
 ## Development
